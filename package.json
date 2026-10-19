@@ -1,8 +1,15 @@
 {
   "name": "dinvolt",
   "version": "0.1.0",
-  "private": true,
   "description": "Create Next.js applications with editable UI, optional administration and context for AI coding agents.",
+  "keywords": [
+    "better-auth",
+    "cli",
+    "nextjs",
+    "react",
+    "shadcn",
+    "typescript"
+  ],
   "homepage": "https://github.com/nicoandrade/dinvolt#readme",
   "bugs": {
     "url": "https://github.com/nicoandrade/dinvolt/issues"
@@ -26,6 +33,10 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "dev": "bun run src/cli.ts",
     "build": "bun run scripts/build.ts",
@@ -41,6 +52,7 @@
     "playground:test": "bun run scripts/playground/check.ts",
     "playground:test:catalog": "bun run scripts/playground/check.ts --catalog",
     "prepack": "bun run build",
+    "prepublishOnly": "bun run check",
     "fix": "ultracite fix"
   },
   "dependencies": {

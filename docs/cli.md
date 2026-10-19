@@ -9,7 +9,7 @@ Dinvolt creates Next.js applications, completes database and administrator setup
 | `dinvolt ui add <components...>` | Install components or packaged Dinvolt blocks. |
 | `dinvolt vercel setup` | Configure Vercel environments and Git integration. |
 
-See the [README](../README.md#get-started) for installation from source. Use `dinvolt <command> --help` for available flags; every command also supports non-interactive execution, documented below.
+Run these commands with `npx dinvolt <command>`, or install the CLI with `npm install --global dinvolt` to use the short invocations below. Use `npx --yes dinvolt` in scripts to accept npm's package-install prompt before Dinvolt's own non-interactive execution. See the [README](../README.md#get-started) for the quickstart and use `npx dinvolt <command> --help` for available flags.
 
 ## Technology
 
@@ -34,7 +34,7 @@ CLI implementation lives in `src/`. The `catalog/` directory contains applicatio
 
 Using Bun for CLI development does not require users to install Bun unless they select it as the generated application's package manager. `create` checks that Node.js 24 or later and its selected package manager are available before writing files. The other CLI commands require Node.js 22.18 or later, matching Ultracite.
 
-Build and install the CLI from source using the README instructions. Global CLI installation is independent of the project-local skills and configuration created in each application.
+Building Dinvolt from source requires Bun; running its npm package does not. Source development instructions are in [Contributing](../CONTRIBUTING.md). Global CLI installation is independent of the project-local skills and configuration created in each application.
 
 `dinvolt create` starts an interactive wizard with four questions:
 

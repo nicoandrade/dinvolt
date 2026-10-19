@@ -70,7 +70,7 @@ async function completeCreatedDatabase(
       !["initialized", "ready", "credentials-pending"].includes(result.status)
     ) {
       prompts.log.warn(
-        `${result.environment}: database setup needs attention. Run dinvolt setup to check it and continue.`
+        `${result.environment}: database setup needs attention. Run npx dinvolt setup to check it and continue.`
       );
     }
   }
@@ -140,7 +140,7 @@ async function prepareCreate(options: CreateOptions, output: CreateOutput) {
     Object.keys(options).some((key) => !["cwd", "input", "json"].includes(key))
   ) {
     throw new CreateInputError(
-      "Use --no-input (or --json) when supplying create options, or run dinvolt create for the wizard.",
+      "Use --no-input (or --json) when supplying create options, or run npx dinvolt create for the wizard.",
       "no-input"
     );
   }
@@ -229,7 +229,7 @@ async function finishCreate(
     if (pending) {
       output.result.status = "needs-attention";
       output.result.nextSteps.push(
-        "Run dinvolt setup in the project to complete pending database or administrator setup."
+        "Run npx dinvolt setup in the project to complete pending database or administrator setup."
       );
     }
     if (

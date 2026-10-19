@@ -10,7 +10,7 @@ Use these conventions as defaults, adapting them to the current project and the 
 - Follow the area's form conventions, reusing React Hook Form, Zod and Field when available. Include realistic example-value placeholders wherever supported, such as `Alex` or `alex@example.com`, alongside meaningful labels. Match the area's language, validation and error feedback.
 - Where an icon clarifies the expected input, use `InputGroup`, `InputGroupInput` and `InputGroupAddon` from that area. Prefer shared Dinvolt icons in `@/components/icons`; if none fits, use the area's configured icon library, usually selected through shadcn/ui. Keep labels and placeholders alongside icons.
 - Explicit async actions should use the area's action component with real pending state, descriptive progress text and its existing spinner, animation, sizing and accessible feedback. Guard duplicate submissions, handle success/errors and clear pending on completion or failure.
-- For shadcn/ui additions, prefer `dinvolt ui add <component>`. It uses the default profile in `.dinvolt/ui/config.json`; pass `--target` to select another installed area explicitly.
+- For shadcn/ui additions, prefer `npx dinvolt ui add <component>`. It uses the default profile in `.dinvolt/ui/config.json`; pass `--target` to select another installed area explicitly.
 
 ### Admin area
 
@@ -34,7 +34,7 @@ Applies to `src/app/(public)` and its components, with primitives in `@/componen
 - Prefer the public `ActionButton` when available, with real `pending` and a descriptive `pendingLabel`, such as `Saving…`. In menus, reuse `ActionButtonContent` when available while preserving menu semantics, keyboard behavior and accessible progress.
 - For destructive actions, prefer the public `DeleteButton` when available (initially `@/components/ui/delete-button`). Connect the operation to `onDelete`, pass its real `pending` state and adapt the action, `confirmLabel` and `pendingLabel` text. Reuse its built-in confirmation and progress feedback; the caller owns the operation, duplicate-request guard and error handling.
 - Use the public theme and primitives. Reuse icons from `@/components/icons` when available.
-- When adding Dinvolt's public action components fits the project, use `dinvolt ui add @dinvolt/public-actions --target public`.
+- When adding Dinvolt's public action components fits the project, use `npx dinvolt ui add @dinvolt/public-actions --target public`.
 
 ### Rendering and loading
 

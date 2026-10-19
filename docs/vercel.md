@@ -1,6 +1,6 @@
 # Vercel setup through Git
 
-Run `dinvolt vercel setup --cwd ./my-app` in an interactive terminal after publishing your repository and its `main` branch. Dinvolt uses the pinned official Vercel CLI **64.5.0** through npm, with your normal Vercel login. Node.js/npm and Git must be available.
+Run `npx dinvolt vercel setup --cwd ./my-app` in an interactive terminal after publishing your repository and its `main` branch. Dinvolt uses the pinned official Vercel CLI **64.5.0** through npm, with your normal Vercel login. Node.js/npm and Git must be available.
 
 The workflow is **create → setup when credentials are available → publish the Git repository yourself → vercel setup → push/merge to main**. `create` requires no external account, initializes a local `main` branch when there is no Git marker, and never commits. Existing repositories/worktrees and their branches are preserved. Only you create the remote, commit and push.
 
@@ -19,7 +19,7 @@ Only `.vercel/project.json` and its Git ignore rule are saved locally. Dinvolt w
 | Production | Only the selected provider's `_PRODUCTION` keys | Verified domain actually assigned to the selected project |
 | Preview (opt in) | Only the selected provider's `_STAGING` keys | Exact deployment hostname from Vercel system variables |
 
-Public-only projects configure the site without asking for database, auth or recovery email. Admin projects use the existing Next.js dotenv precedence (including inherited values) to read only the applicable database keys. Missing environments/credentials offer `dinvolt setup`; entering that separate flow explicitly authorizes its connection checks and prompts. Hosting setup itself never queries or migrates a database.
+Public-only projects configure the site without asking for database, auth or recovery email. Admin projects use the existing Next.js dotenv precedence (including inherited values) to read only the applicable database keys. Missing environments/credentials offer `npx dinvolt setup`; entering that separate flow explicitly authorizes its connection checks and prompts. Hosting setup itself never queries or migrates a database.
 
 A new `BETTER_AUTH_SECRET` is generated independently for each remote target only when its remote key is absent. Repeated runs preserve unreadable remote secrets. Shared secrets across hosting targets require explicit remediation; Dinvolt never rotates them automatically or copies the local secret. Private database/auth/email credentials are sent as Secret through stdin. Replacements use the inspected variable ID and explicit Config/Secret visibility via the official CLI’s v10 API because CLI update cannot uniquely select a base Preview key when branch overrides exist. Public origins and the email sender use Config. If a Config value is encrypted in the inventory, Dinvolt reads that individual Config entry to compare it; retained database, auth and email secrets are never requested. Existing keys require a replacement decision; unrelated variables and branch overrides remain intact. Conflicting database keys, `DINVOLT_DATABASE_ENV`, `DEV_ADMIN_*` or `VERCEL_TOKEN` in managed hosting targets stop setup for explicit review.
 
@@ -55,7 +55,7 @@ The CLI has no production-branch setter; Dinvolt uses the same scoped `PATCH /v9
 The same hosting workflow supports explicit non-interactive choices:
 
 ```sh
-dinvolt vercel setup --team my-team --project my-project \
+npx dinvolt vercel setup --team my-team --project my-project \
   --origin https://my-project.vercel.app --apply --json
 ```
 

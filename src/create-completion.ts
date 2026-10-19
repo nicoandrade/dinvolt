@@ -33,7 +33,7 @@ export function developmentInstructions(options: {
         heading("3. Connect your database"),
         "   When your database credentials are ready, run:",
         "",
-        `   ${command("dinvolt setup")}`,
+        `   ${command("npx dinvolt setup")}`,
         "",
         detail(
           "   Checks existing environment variables, asks for missing credentials"
@@ -43,7 +43,7 @@ export function developmentInstructions(options: {
     );
   }
   sections.push(
-    "When ready to publish: create and push your Git repository/main branch yourself, then run dinvolt vercel setup. Future pushes or merges to main deploy through Vercel Git integration.",
+    "When ready to publish: create and push your Git repository/main branch yourself, then run npx dinvolt vercel setup. Future pushes or merges to main deploy through Vercel Git integration.",
     `Customize ${styleText("yellow", "src/config/site.ts")} for your name, description and SEO.`,
     [
       detail(

@@ -8,10 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## 0.1.0 - 2026-10-19
 
-Initial source baseline. Repository visibility and package publication are managed separately.
+Initial version of the Dinvolt CLI and application catalog.
 
 ### Added
 
+- Public npm package with `npx dinvolt create` and optional global installation.
 - Interactive and non-interactive CLI commands to create Next.js public websites or applications with administration.
 - Editable public and admin UI profiles, shared action components and a local component playground.
 - Optional Drizzle integration with Turso or PlanetScale Postgres, environment-specific database setup and guarded initial migrations.

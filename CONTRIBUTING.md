@@ -46,3 +46,5 @@ For bugs, include the Dinvolt version or commit, OS, Node.js and package-manager
 Keep pull requests focused, update documentation when behavior changes and describe the relevant validation. Please communicate respectfully and review AI-assisted contributions before submitting them. Contributions to Dinvolt's own code are provided under the [MIT license](LICENSE); third-party assets retain their respective terms.
 
 Record notable user-facing changes under `Unreleased` in [CHANGELOG.md](CHANGELOG.md), grouped by the applicable Keep a Changelog categories. At release time, move them into a dated version section; summarize behavior rather than copying commit messages.
+
+Maintainers can follow the [npm publishing guide](docs/publishing.md) for manual releases. Publishing does not require CI.

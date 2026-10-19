@@ -35,7 +35,7 @@ Replace the sample logos with your own SVG artwork. Keep the component exports a
 Explore the site with your existing dev command first. When you are ready, create a database in Turso or PlanetScale, then run this from anywhere inside the project:
 
 ```sh
-dinvolt setup
+npx dinvolt setup
 ```
 
 Setup checks your selected capabilities and existing connections, asks only for missing database fields, initializes only an unchanged initial migration on an empty database, and offers the first administrator only where none exists. You can choose environments to complete or **Add another environment** and leave credentials pending. It preserves existing auth secrets and accounts. It does not provision external services. Restart dev after changing environment variables.
@@ -81,12 +81,12 @@ Portless is used by `dev`; `start` serves the built app locally. Neither `NODE_E
 Dinvolt initializes a local repository without committing. Review your files, create your remote repository and publish `main` yourself. Existing repositories and branches are preserved. Once the remote is available, run:
 
 ```sh
-dinvolt vercel setup
+npx dinvolt vercel setup
 ```
 
 Choose the Vercel team/project, review the hosting and variable plan, and connect Git. The command configures hosting without uploading your local code. Subsequent pushes or merges to `main` trigger production deployments. Saving variables does not update existing deployments. Connecting Git can trigger an initial build of the published commit, so publish only code that is ready for its configured environment.
 
-Prepare production with `dinvolt setup` first; prepare staging too if you want Preview. Hosting uses only `_PRODUCTION` / `_STAGING` database keys and separate remote auth secrets. Password recovery email is optional per environment. Production uses your assigned verified domain; authenticated Preview uses its exact deployment URL. Apply reviewed migrations explicitly before a Git build, never in a build script.
+Prepare production with `npx dinvolt setup` first; prepare staging too if you want Preview. Hosting uses only `_PRODUCTION` / `_STAGING` database keys and separate remote auth secrets. Password recovery email is optional per environment. Production uses your assigned verified domain; authenticated Preview uses its exact deployment URL. Apply reviewed migrations explicitly before a Git build, never in a build script.
 
 For your next feature, see [tRPC and queries](docs/trpc.md). If you work with an AI coding agent, the project's `AGENTS.md` contains its development conventions. This is your project now—adapt this README as it grows.
 

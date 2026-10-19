@@ -27,41 +27,30 @@ Create a public website or a full application with administration, plus instruct
 
 ## Get started
 
-### 1. Install
+### 1. Create
 
-Use **Node.js 24+**, **Bun 1.4** and **Git** to build and install the CLI from source. Generated projects can use a different package manager selected in the wizard.
-
-```sh
-git clone https://github.com/nicoandrade/dinvolt.git
-cd dinvolt
-bun install
-bun run build
-npm install --global .
-```
-
-### 2. Create
+Use **Node.js 24+**, **npm** and **Git**. No global installation is needed. Choose an installed package manager in the wizard; Bun is optional.
 
 ```sh
-cd ..
-dinvolt create
+npx dinvolt create
 ```
 
 In the wizard:
 
 1. Name your project `my-app` and choose **Create a new folder**.
 2. Pick **Public website only** or **Public website + administration**.
-3. Use **Dinvolt defaults**, or customize your stack with **Advanced configuration**.
+3. Use **Dinvolt defaults** with Bun, or choose **Advanced configuration** to select npm or another installed package manager.
 
 You can leave database credentials for later and explore the site immediately.
 
-### 3. Run
+### 2. Run
 
 ```sh
 cd my-app
-bun run dev
+npm run dev
 ```
 
-Open [my-app.localhost](https://my-app.localhost). Follow Portless's certificate prompts on first run.
+With Bun, you can use `bun run dev`. Open [my-app.localhost](https://my-app.localhost). Follow Portless's certificate prompts on first run.
 
 Open the project in Codex, Claude Code or your preferred agent and start building. Your generated README covers customization and setup.
 
@@ -69,10 +58,22 @@ Open the project in Codex, Claude Code or your preferred agent and start buildin
 <summary>Creating projects from an agent or script</summary>
 
 ```sh
-dinvolt create --name my-app --location new --project-type public --json
+npx --yes dinvolt create --name my-app --location new --project-type public --package-manager npm --json
 ```
 
 No prompts; returns JSON. See [all options](docs/cli.md#non-interactive-creation).
+
+</details>
+
+<details>
+<summary>Optional global installation</summary>
+
+```sh
+npm install --global dinvolt
+dinvolt create
+```
+
+The global installation also makes `dinvolt setup`, `dinvolt ui add` and `dinvolt vercel setup` available directly. To work on Dinvolt itself, see [Contributing](CONTRIBUTING.md).
 
 </details>
 
@@ -82,10 +83,10 @@ Run these inside your generated project:
 
 | To… | Run |
 | --- | --- |
-| Finish database/admin setup (administration projects) | `dinvolt setup` |
-| Add public components | `dinvolt ui add button dialog --target public` |
-| Add admin components | `dinvolt ui add table sheet --target admin` |
-| Connect Vercel hosting | `dinvolt vercel setup` |
+| Finish database/admin setup (administration projects) | `npx dinvolt setup` |
+| Add public components | `npx dinvolt ui add button dialog --target public` |
+| Add admin components | `npx dinvolt ui add table sheet --target admin` |
+| Connect Vercel hosting | `npx dinvolt vercel setup` |
 
 - **Database:** create it with your provider first; `setup` completes credentials and initial tables.
 - **Hosting:** publish your repository and `main` first. See the [Vercel guide](docs/vercel.md).

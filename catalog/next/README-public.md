@@ -26,7 +26,7 @@ The development script uses **Portless** for a stable local HTTPS address. On fi
 
 Replace the sample logos with your SVG artwork, preserving exports and SVG props. Keep `LogoIso` compatible with server rendering so icon and social image generation work.
 
-Add components with `dinvolt ui add button dialog`; the project defaults to its public shadcn/ui profile. `--target public` also works. The project includes one UI theme and no database, authentication, admin panel or tRPC setup. `dinvolt setup` reports that there is nothing to configure for this project type; it does not add backend capabilities.
+Add components with `npx dinvolt ui add button dialog`; the project defaults to its public shadcn/ui profile. `--target public` also works. The project includes one UI theme and no database, authentication, admin panel or tRPC setup. `npx dinvolt setup` reports that there is nothing to configure for this project type; it does not add backend capabilities.
 
 ## Everyday commands
 
@@ -45,7 +45,7 @@ Before deploying, set `NEXT_PUBLIC_SITE_URL` to your public origin or update the
 Dinvolt initializes a local repository without committing. Review your files, create your remote repository and publish `main` yourself. Existing repositories and branches are preserved. Once the remote is available, run:
 
 ```sh
-dinvolt vercel setup
+npx dinvolt vercel setup
 ```
 
 Choose the Vercel team/project, review the hosting and variable plan, and connect Git. The command configures hosting without uploading your local code. Subsequent pushes or merges to `main` trigger production deployments. Saving variables does not update existing deployments. Connecting Git can trigger an initial build of the published commit, so publish only code that is ready for its configured environment.
