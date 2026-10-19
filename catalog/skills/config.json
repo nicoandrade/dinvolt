@@ -1,0 +1,43 @@
+{
+  "always": [
+    {
+      "source": "vercel-labs/agent-skills",
+      "skills": ["vercel-react-best-practices", "web-design-guidelines"]
+    },
+    {
+      "source": "vercel-labs/agent-browser",
+      "skills": ["agent-browser"]
+    },
+    {
+      "source": "shadcn-ui/ui",
+      "skills": ["shadcn"]
+    },
+    {
+      "source": "Jakubantalik/transitions.dev",
+      "skills": ["transitions-dev"]
+    }
+  ],
+  "database": {
+    "turso": [
+      {
+        "source": "tursodatabase/agent-skills",
+        "skills": ["turso-db"]
+      }
+    ],
+    "planetscale-postgres": [
+      {
+        "source": "planetscale/database-skills",
+        "skills": ["postgres"]
+      }
+    ]
+  },
+  "admin": [
+    {
+      "source": "better-auth/skills",
+      "skills": [
+        "better-auth-best-practices",
+        "better-auth-security-best-practices"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "name": "dinvolt",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Create Next.js applications with editable UI, optional administration and context for AI coding agents.",
+  "homepage": "https://github.com/nicoandrade/dinvolt#readme",
+  "bugs": {
+    "url": "https://github.com/nicoandrade/dinvolt/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoandrade/dinvolt.git"
+  },
+  "bin": {
+    "dinvolt": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "catalog",
+    "docs/cli.md",
+    "docs/vercel.md",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "bun run src/cli.ts",
+    "build": "bun run scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun run build && bun test",
+    "test:e2e": "bun run scripts/e2e.ts",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run check:package",
+    "check:package": "bun run scripts/check-package.ts",
+    "lint": "ultracite check",
+    "format:check": "oxfmt --check",
+    "playground": "bun run scripts/playground.ts",
+    "playground:setup": "bun run scripts/playground.ts --setup",
+    "playground:test": "bun run scripts/playground/check.ts",
+    "playground:test:catalog": "bun run scripts/playground/check.ts --catalog",
+    "prepack": "bun run build",
+    "fix": "ultracite fix"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.8.0",
+    "@next/env": "^16.4.2",
+    "commander": "15.0.0",
+    "create-next-app": "16.4.2",
+    "nypm": "0.6.10",
+    "pg": "^8.23.1",
+    "postcss": "8.5.30",
+    "shadcn": "4.22.0",
+    "skills": "1.5.18",
+    "ultracite": "8.0.1"
+  },
+  "devDependencies": {
+    "@shadcn/lint": "^0.2.0",
+    "@shadcn/registry": "0.2.0",
+    "@types/bun": "1.4.2",
+    "@types/node": "26.5.1",
+    "@types/pg": "^8.23.1",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "playwright": "^1.64.1",
+    "sharp": "0.35.5",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "packageManager": "bun@1.4.0"
+}

@@ -1,0 +1,319 @@
+[
+  {
+    "name": "accordion",
+    "file": "accordion-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "alert",
+    "file": "alert-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "alert-dialog",
+    "file": "alert-dialog-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "aspect-ratio",
+    "file": "aspect-ratio-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "attachment",
+    "file": "attachment-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "avatar",
+    "file": "avatar-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "badge",
+    "file": "badge-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "breadcrumb",
+    "file": "breadcrumb-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "bubble",
+    "file": "bubble-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "button",
+    "file": "button-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "button-group",
+    "file": "button-group-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "calendar",
+    "file": "calendar-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "card",
+    "file": "card-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "carousel",
+    "file": "carousel-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "chart",
+    "file": "chart-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "checkbox",
+    "file": "checkbox-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "code-block",
+    "file": "code-block-example.tsx",
+    "upstreamDependencies": [
+      "streamdown"
+    ]
+  },
+  {
+    "name": "collapsible",
+    "file": "collapsible-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "combobox",
+    "file": "combobox-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "command",
+    "file": "command-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "context-menu",
+    "file": "context-menu-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "dialog",
+    "file": "dialog-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "drawer",
+    "file": "drawer-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "dropdown-menu",
+    "file": "dropdown-menu-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "empty",
+    "file": "empty-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "field",
+    "file": "field-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "hover-card",
+    "file": "hover-card-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "input",
+    "file": "input-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "input-group",
+    "file": "input-group-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "input-otp",
+    "file": "input-otp-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "item",
+    "file": "item-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "kbd",
+    "file": "kbd-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "label",
+    "file": "label-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "marker",
+    "file": "marker-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "menubar",
+    "file": "menubar-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "message",
+    "file": "message-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "message-scroller",
+    "file": "message-scroller-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "native-select",
+    "file": "native-select-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "navigation-menu",
+    "file": "navigation-menu-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "pagination",
+    "file": "pagination-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "popover",
+    "file": "popover-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "progress",
+    "file": "progress-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "questionnaire",
+    "file": "questionnaire-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "radio-group",
+    "file": "radio-group-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "resizable",
+    "file": "resizable-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "scroll-area",
+    "file": "scroll-area-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "select",
+    "file": "select-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "separator",
+    "file": "separator-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "sheet",
+    "file": "sheet-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "sidebar",
+    "file": "sidebar-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "skeleton",
+    "file": "skeleton-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "slider",
+    "file": "slider-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "sonner",
+    "file": "sonner-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "spinner",
+    "file": "spinner-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "switch",
+    "file": "switch-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "table",
+    "file": "table-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "tabs",
+    "file": "tabs-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "textarea",
+    "file": "textarea-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "toast",
+    "file": "toast-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "toggle",
+    "file": "toggle-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "toggle-group",
+    "file": "toggle-group-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "tooltip",
+    "file": "tooltip-example.tsx",
+    "upstreamDependencies": []
+  },
+  {
+    "name": "trace",
+    "file": "trace-example.tsx",
+    "upstreamDependencies": []
+  }
+]

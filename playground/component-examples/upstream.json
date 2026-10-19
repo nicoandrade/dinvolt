@@ -1,0 +1,12 @@
+{
+  "source": "https://ui.shadcn.com/r/styles/base-vega/registry.json",
+  "importedOn": "2026-10-17",
+  "adaptations": [
+    "Canonical imports shared by both profiles",
+    "Fixed Lucide icons and profile configuration",
+    "Local sample-data examples for trace, message, message-scroller and code-block",
+    "Focused Questionnaire example to avoid the upstream multi-instance update loop",
+    "Direction example and Form-to-Field compatibility example",
+    "Plain image adapter for demo assets"
+  ]
+}

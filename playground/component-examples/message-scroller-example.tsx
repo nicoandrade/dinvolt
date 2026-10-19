@@ -1,0 +1,4 @@
+"use client";
+import { Example, ExampleWrapper } from "@/playground/showcase/example";
+import { MessageScrollerProvider, MessageScroller, MessageScrollerViewport, MessageScrollerContent, MessageScrollerItem, MessageScrollerButton } from "@/components/ui/message-scroller";
+export default function MessageScrollerExample() {return <ExampleWrapper><Example title="Message scroller"><div className="h-96 w-full"><MessageScrollerProvider><MessageScroller><MessageScrollerViewport><MessageScrollerContent>{Array.from({length: 20},(_,index)=><MessageScrollerItem key={index}><p className="rounded-lg bg-muted p-4 text-sm">Sample message {index+1}</p></MessageScrollerItem>)}</MessageScrollerContent></MessageScrollerViewport><MessageScrollerButton aria-label="Scroll to latest message"/></MessageScroller></MessageScrollerProvider></div></Example></ExampleWrapper>}

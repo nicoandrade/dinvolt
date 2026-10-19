@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "5.104.3",
+    "@trpc/client": "11.19.0",
+    "@trpc/server": "11.19.0",
+    "@trpc/tanstack-react-query": "11.19.0",
+    "superjson": "2.2.6",
+    "zod": "4.6.7"
+  }
+}

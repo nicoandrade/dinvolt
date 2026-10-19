@@ -1,0 +1,543 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "dinvolt",
+  "homepage": "https://github.com/nicoandrade/dinvolt",
+  "items": [
+    {
+      "name": "admin-spinner",
+      "type": "registry:ui",
+      "title": "Dinvolt admin spinner",
+      "description": "Dinvolt's filled SVG arc spinner with a 500 ms rotation and the shadcn/ui Spinner API.",
+      "dependencies": ["cn@0.5.0"],
+      "meta": {
+        "dinvolt": {
+          "version": "1.0.0",
+          "target": "admin"
+        }
+      },
+      "files": [
+        {
+          "path": "shared/spinner/spinner.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/admin/ui/spinner.tsx"
+        },
+        {
+          "path": "LICENSE.shadcn",
+          "type": "registry:file",
+          "target": "~/docs/licenses/shadcn-admin-spinner.txt"
+        },
+        {
+          "path": "../../LICENSE",
+          "type": "registry:file",
+          "target": "~/docs/licenses/dinvolt-admin-spinner.txt"
+        }
+      ]
+    },
+    {
+      "name": "admin-panel",
+      "type": "registry:block",
+      "title": "Dinvolt admin panel",
+      "description": "Administrator login, user management and example settings with shared page headers and layout navigation in a sidebar-08 layout.",
+      "registryDependencies": [
+        "button",
+        "spinner",
+        "field",
+        "input",
+        "input-group",
+        "skeleton",
+        "sidebar",
+        "breadcrumb",
+        "avatar",
+        "dropdown-menu",
+        "table",
+        "badge",
+        "native-select",
+        "select",
+        "sheet",
+        "textarea",
+        "switch"
+      ],
+      "dependencies": [
+        "react-hook-form@7.90.0",
+        "@hookform/resolvers@5.9.2",
+        "zod@4.6.7",
+        "@tanstack/react-table@9.3.1"
+      ],
+      "meta": {
+        "dinvolt": {
+          "version": "2.0.0",
+          "target": "admin",
+          "assets": [
+            {
+              "path": "admin-panel/auth/login-background.jpg",
+              "target": "~/src/components/admin/login-background.jpg"
+            }
+          ]
+        }
+      },
+      "files": [
+        {
+          "path": "shared/actions/action-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/admin/ui/action-button.tsx"
+        },
+        {
+          "path": "shared/actions/action-button.css",
+          "type": "registry:file",
+          "target": "~/src/components/admin/ui/action-button.css"
+        },
+        {
+          "path": "shared/actions/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/admin/ui/copy-button.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/copy.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/copy.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/check.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/check.tsx"
+        },
+        {
+          "path": "admin-panel/auth/password-visibility-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/admin/ui/password-visibility-button.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/trash.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/trash.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/circle-warning.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/circle-warning.tsx"
+        },
+        {
+          "path": "shared/actions/delete-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/admin/ui/delete-button.tsx"
+        },
+        {
+          "path": "admin-panel/auth/admin-auth.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/admin-auth.ts"
+        },
+        {
+          "path": "admin-panel/shell/admin-shell.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-shell.tsx"
+        },
+        {
+          "path": "admin-panel/shell/admin-breadcrumb.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-breadcrumb.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline-duo/home.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline-duo/home.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline-duo/users.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline-duo/users.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/open-external.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/open-external.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/search.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/search.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/sidebar-collapse.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/sidebar-collapse.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/sidebar-expand.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/sidebar-expand.tsx"
+        },
+        {
+          "path": "../ui/components/logo-complete.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/logo-complete.tsx"
+        },
+        {
+          "path": "admin-panel/components/logo-iso.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/logo-iso.tsx"
+        },
+        {
+          "path": "admin-panel/shell/admin-user-menu.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-user-menu.tsx"
+        },
+        {
+          "path": "admin-panel/home/admin-home.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-home.tsx"
+        },
+        {
+          "path": "../ui/components/icons/fill/user-circle.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/fill/user-circle.tsx"
+        },
+        {
+          "path": "../ui/components/icons/fill/circle-chevron-left.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/fill/circle-chevron-left.tsx"
+        },
+        {
+          "path": "../ui/components/icons/fill/at-sign.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/fill/at-sign.tsx"
+        },
+        {
+          "path": "../ui/components/icons/fill/password.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/fill/password.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/eye.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/eye.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/eye-slash.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/eye-slash.tsx"
+        },
+        {
+          "path": "admin-panel/auth/login-form.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/login-form.tsx"
+        },
+        {
+          "path": "admin-panel/auth/login-view.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/login-view.tsx"
+        },
+        {
+          "path": "admin-panel/auth/sign-out-button.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/sign-out-button.tsx"
+        },
+        {
+          "path": "admin-panel/auth/login-screen.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/login-screen.tsx"
+        },
+        {
+          "path": "admin-panel/auth/login-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(auth)/page.tsx"
+        },
+        {
+          "path": "admin-panel/shell/protected-layout.tsx",
+          "type": "registry:file",
+          "target": "~/src/app/(admin)/admin/(protected)/layout.tsx"
+        },
+        {
+          "path": "admin-panel/home/admin-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(protected)/home/page.tsx"
+        },
+        {
+          "path": "admin-panel/shell/admin-error.tsx",
+          "type": "registry:file",
+          "target": "~/src/app/(admin)/admin/error.tsx"
+        },
+        {
+          "path": "LICENSE.shadcn",
+          "type": "registry:file",
+          "target": "~/docs/licenses/shadcn-admin-login.txt"
+        },
+        {
+          "path": "admin-panel/users/admin-users.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-users.tsx"
+        },
+        {
+          "path": "admin-panel/users/admin-users-columns.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-users-columns.tsx"
+        },
+        {
+          "path": "admin-panel/users/users-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(protected)/users/page.tsx"
+        },
+        {
+          "path": "admin-panel/users/user-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(protected)/users/[userId]/page.tsx"
+        },
+        {
+          "path": "admin-panel/users/admin-user.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-user.tsx"
+        },
+        {
+          "path": "admin-panel/users/user-route-sync.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/user-route-sync.tsx"
+        },
+        {
+          "path": "admin-panel/users/edit-user-sheet.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/edit-user-sheet.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/edit.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/edit.tsx"
+        },
+        {
+          "path": "admin-panel/data-table/data-table.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/data-table.tsx"
+        },
+        {
+          "path": "admin-panel/data-table/data-table-pagination.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/data-table-pagination.tsx"
+        },
+        {
+          "path": "admin-panel/data-table/data-table-search.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/data-table-search.tsx"
+        },
+        {
+          "path": "admin-panel/data-table/use-data-table-state.ts",
+          "type": "registry:hook",
+          "target": "~/src/hooks/admin/use-data-table-state.ts"
+        },
+        {
+          "path": "admin-panel/shell/admin-identity.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/admin-identity.ts"
+        },
+        {
+          "path": "admin-panel/shell/use-admin-user.ts",
+          "type": "registry:hook",
+          "target": "~/src/hooks/admin/use-admin-user.ts"
+        },
+        {
+          "path": "admin-panel/data-table/data-table-export.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/data-table-export.tsx"
+        },
+        {
+          "path": "admin-panel/users/users-export-route.ts",
+          "type": "registry:file",
+          "target": "~/src/app/api/admin/users/export/route.ts"
+        },
+        {
+          "path": "../ui/components/icons/outline/file-download.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/file-download.tsx"
+        },
+        {
+          "path": "admin-panel/components/page-header.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/page-header.tsx"
+        },
+        {
+          "path": "admin-panel/components/back-button.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/back-button.tsx"
+        },
+        {
+          "path": "admin-panel/users/create-user-sheet.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/create-user-sheet.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/plus.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/plus.tsx"
+        },
+        {
+          "path": "admin-panel/auth/forgot-password-form.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/forgot-password-form.tsx"
+        },
+        {
+          "path": "admin-panel/auth/forgot-password-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(auth)/forgot-password/page.tsx"
+        },
+        {
+          "path": "admin-panel/auth/reset-password-form.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/reset-password-form.tsx"
+        },
+        {
+          "path": "admin-panel/auth/reset-password-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(auth)/reset-password/page.tsx"
+        },
+        {
+          "path": "admin-panel/components/admin-tabs.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-tabs.tsx"
+        },
+        {
+          "path": "admin-panel/settings/admin-settings-layout.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-settings-layout.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/configurations.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/configurations.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/preference.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/preference.tsx"
+        },
+        {
+          "path": "admin-panel/settings/admin-settings-general.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-settings-general.tsx"
+        },
+        {
+          "path": "admin-panel/settings/admin-settings-preferences.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/admin-settings-preferences.tsx"
+        },
+        {
+          "path": "admin-panel/settings/settings-section.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/settings-section.tsx"
+        },
+        {
+          "path": "admin-panel/settings/settings-form-actions.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/settings-form-actions.tsx"
+        },
+        {
+          "path": "admin-panel/components/image-upload.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/admin/image-upload.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/drag-image.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/drag-image.tsx"
+        },
+        {
+          "path": "admin-panel/settings/settings-layout.tsx",
+          "type": "registry:file",
+          "target": "~/src/app/(admin)/admin/(protected)/settings/layout.tsx"
+        },
+        {
+          "path": "admin-panel/settings/settings-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(protected)/settings/page.tsx"
+        },
+        {
+          "path": "admin-panel/settings/settings-preferences-page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(admin)/admin/(protected)/settings/preferences/page.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline-duo/configurations.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline-duo/configurations.tsx"
+        },
+        {
+          "path": "../ui/components/icons/LICENSE.nucleo",
+          "type": "registry:file",
+          "target": "~/src/components/icons/LICENSE.nucleo"
+        },
+        {
+          "path": "../../LICENSE",
+          "type": "registry:file",
+          "target": "~/docs/licenses/dinvolt-admin-panel.txt"
+        }
+      ]
+    },
+    {
+      "name": "public-actions",
+      "type": "registry:block",
+      "title": "Dinvolt public action buttons",
+      "description": "ActionButton, CopyButton and two-step DeleteButton using the public Button, Spinner and theme.",
+      "registryDependencies": ["button", "spinner"],
+      "dependencies": ["cn@0.5.0"],
+      "meta": {
+        "dinvolt": {
+          "version": "1.0.0",
+          "target": "public"
+        }
+      },
+      "files": [
+        {
+          "path": "shared/actions/action-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/action-button.tsx"
+        },
+        {
+          "path": "shared/actions/action-button.css",
+          "type": "registry:file",
+          "target": "~/src/components/ui/action-button.css"
+        },
+        {
+          "path": "shared/actions/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/copy-button.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/copy.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/copy.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/check.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/check.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/trash.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/trash.tsx"
+        },
+        {
+          "path": "../ui/components/icons/outline/circle-warning.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/icons/outline/circle-warning.tsx"
+        },
+        {
+          "path": "shared/actions/delete-button.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/delete-button.tsx"
+        },
+        {
+          "path": "shared/spinner/spinner.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/spinner.tsx"
+        },
+        {
+          "path": "../ui/components/icons/LICENSE.nucleo",
+          "type": "registry:file",
+          "target": "~/src/components/icons/LICENSE.nucleo"
+        },
+        {
+          "path": "../../LICENSE",
+          "type": "registry:file",
+          "target": "~/docs/licenses/dinvolt-public-actions.txt"
+        }
+      ]
+    }
+  ]
+}

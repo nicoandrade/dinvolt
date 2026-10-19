@@ -1,0 +1,80 @@
+import type { SVGProps } from "react";
+import React from "react";
+
+type IconProps = SVGProps<SVGSVGElement> & {
+  secondaryfill?: string;
+  strokewidth?: number;
+  title?: string;
+};
+
+const DragImage = ({
+  fill = "currentColor",
+  secondaryfill,
+  width = "1em",
+  height = "1em",
+  title = "Drag image",
+  ...props
+}: IconProps) => {
+  const secondaryFill = secondaryfill || fill;
+
+  return (
+    <svg
+      height={height}
+      width={width}
+      viewBox="0 0 18 18"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <title>{title}</title>
+      <g fill={fill}>
+        <path
+          d="m12.3417,4.7018l-.1786-1.2372c-.1578-1.0937-1.1715-1.8516-2.2652-1.6938l-1.2372.1786"
+          fill="none"
+          stroke={secondaryFill}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+        />
+        <path
+          d="m2.5207,10.1606l.1786,1.2372c.1578,1.0937,1.1715,1.8516,2.2652,1.6938l.2856-.0412"
+          fill="none"
+          stroke={secondaryFill}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+        />
+        <path
+          d="m4.7018,2.5207l-1.2372.1786c-1.0937.1578-1.8516,1.1715-1.6938,2.2652l.1786,1.2372"
+          fill="none"
+          stroke={secondaryFill}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+        />
+        <path
+          d="m6.602,15.642l5.105-5.099c.391-.391,1.024-.391,1.414,0l2.63,2.63"
+          fill="none"
+          stroke={secondaryFill}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+        />
+        <path
+          d="m8.501,9.5c-.551,0-1-.449-1-1s.449-1,1-1,1,.449,1,1-.449,1-1,1Z"
+          fill={secondaryFill}
+          strokeWidth="0"
+        />
+        <path
+          d="m13.75,5.25h-6.5c-1.105,0-2,.895-2,2v6.5c0,1.105.895,2,2,2h6.5c1.105,0,2-.895,2-2v-6.5c0-1.105-.895-2-2-2Z"
+          fill="none"
+          stroke={fill}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+        />
+      </g>
+    </svg>
+  );
+};
+
+export default DragImage;
