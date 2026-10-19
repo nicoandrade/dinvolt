@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Added
+
+- npm publication from published GitHub releases, with matching version/tag checks, package creation tests and registry integrity verification. Ordinary commits and pushes do not trigger publication.
+
 ## 0.1.0 - 2026-10-19
 
 Initial version of the Dinvolt CLI and application catalog.

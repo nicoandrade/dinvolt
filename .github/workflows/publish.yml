@@ -1,0 +1,57 @@
+name: Publish npm release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'nicoandrade/dinvolt'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version-file: package.json
+          no-cache: true
+      - name: Install npm with trusted publishing support
+        run: npm install --global npm@11.19.0
+      - name: Validate release tag and changelog
+        id: release
+        run: bun run scripts/release.ts validate
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Check source and package contents
+        run: bun run check
+      - name: Pack and test the exact archive
+        id: package
+        env:
+          RELEASE_DIRECTORY: ${{ runner.temp }}/dinvolt-release
+        run: bun run scripts/release.ts pack
+      - name: Publish using npm trusted publishing
+        env:
+          ARCHIVE: ${{ steps.package.outputs.archive }}
+          NPM_TAG: ${{ steps.release.outputs.npm-tag }}
+        run: npm publish "$ARCHIVE" --access public --tag "$NPM_TAG" --ignore-scripts --registry=https://registry.npmjs.org/
+      - name: Verify published package and CLI
+        env:
+          RELEASE_DIRECTORY: ${{ runner.temp }}/dinvolt-release
+        run: bun run scripts/release.ts verify

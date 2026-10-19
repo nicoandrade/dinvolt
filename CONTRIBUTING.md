@@ -47,4 +47,4 @@ Keep pull requests focused, update documentation when behavior changes and descr
 
 Record notable user-facing changes under `Unreleased` in [CHANGELOG.md](CHANGELOG.md), grouped by the applicable Keep a Changelog categories. At release time, move them into a dated version section; summarize behavior rather than copying commit messages.
 
-Maintainers can follow the [npm publishing guide](docs/publishing.md) for manual releases. Publishing does not require CI.
+Maintainers can follow the [npm publishing guide](docs/publishing.md). Publishing a GitHub release triggers npm publication; ordinary commits and pushes do not run the release workflow. A manual fallback is documented there as well.
