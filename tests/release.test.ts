@@ -1,7 +1,11 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 
-import { releaseMetadata, verifyRegistryArchive } from "../scripts/release.ts";
+import {
+  isRegistryPropagationError,
+  releaseMetadata,
+  verifyRegistryArchive,
+} from "../scripts/release.ts";
 
 const manifest = { name: "dinvolt", version: "0.1.1" };
 const release = { tag_name: "v0.1.1", prerelease: false };
@@ -70,4 +74,31 @@ test("release verification rejects a different published artifact", () => {
       dist: { integrity: "sha512-tested" },
     })
   ).toThrow("version differs");
+});
+
+test("registry propagation retries missing versions but exposes CLI and authentication failures", () => {
+  for (const code of ["ETARGET", "E404"]) {
+    expect(
+      isRegistryPropagationError(
+        Object.assign(new Error("npm failed"), {
+          stderr: `npm error code ${code}\nnpm error No matching version found for dinvolt@0.1.1`,
+        })
+      )
+    ).toBe(true);
+  }
+  for (const code of ["E401", "E403", "EINTEGRITY"]) {
+    expect(
+      isRegistryPropagationError(
+        Object.assign(new Error("npm failed"), {
+          stderr: `npm error code ${code}`,
+        })
+      )
+    ).toBe(false);
+  }
+  expect(isRegistryPropagationError(new Error("CLI version differs"))).toBe(
+    false
+  );
+  expect(isRegistryPropagationError({ stderr: "npm error code ETARGET" })).toBe(
+    false
+  );
 });

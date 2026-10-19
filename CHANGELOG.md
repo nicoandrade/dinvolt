@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Fixed
+
+- Release verification refreshes npm metadata and retries temporarily unavailable versions while the published package propagates through the registry.
+
 ## 0.1.1 - 2026-10-19
 
 ### Added

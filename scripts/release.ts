@@ -77,6 +77,15 @@ export function verifyRegistryArchive(
   );
 }
 
+export function isRegistryPropagationError(error: unknown) {
+  return (
+    error instanceof Error &&
+    "stderr" in error &&
+    typeof error.stderr === "string" &&
+    /npm error code E(?:TARGET|404)\b/u.test(error.stderr)
+  );
+}
+
 async function metadata() {
   const eventPath = process.env.GITHUB_EVENT_PATH;
   assert.ok(eventPath, "GITHUB_EVENT_PATH is required.");
@@ -105,6 +114,7 @@ async function smoke(packageSpec: string, version: string, create: boolean) {
   const args = [
     "exec",
     "--yes",
+    "--prefer-online",
     "--registry=https://registry.npmjs.org/",
     "--package",
     packageSpec,
@@ -194,7 +204,18 @@ async function main(command: string | undefined) {
         await setTimeout(10_000);
         continue;
       }
-      await smoke(`dinvolt@${release.version}`, release.version, false);
+      try {
+        await smoke(`dinvolt@${release.version}`, release.version, false);
+      } catch (error) {
+        if (!isRegistryPropagationError(error)) {
+          throw error;
+        }
+        console.log(
+          "npm metadata is still propagating; retrying the installed CLI check."
+        );
+        await setTimeout(10_000);
+        continue;
+      }
       console.log(
         `Verified dinvolt@${release.version} and its published archive.`
       );
