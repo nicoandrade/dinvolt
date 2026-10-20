@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 
 import type { ContentSource, SourceEntry } from "blume/sources";
 
+import { withPackageManagerTabs } from "./package-manager-tabs.ts";
+
 const repositoryRoot = fileURLToPath(new URL("../../../", import.meta.url));
 const github = "https://github.com/nicoandrade/dinvolt/blob/main/";
 const githubEdit = "https://github.com/nicoandrade/dinvolt/edit/main/";
@@ -91,10 +93,13 @@ async function loadEntries(): Promise<SourceEntry[]> {
         }
         text = `Paste this prompt into your coding agent. It uses Dinvolt's published CLI and leaves deployment and custom application development for separate requests.\n\n${prompt}\n`;
       }
+      const linked = rewriteLinks(text, document.path);
+      const body = withPackageManagerTabs(linked);
+      const format = body === linked ? "md" : "mdx";
       return {
-        ref: `${document.slug}.md`,
+        ref: `${document.slug}.${format}`,
         data: { title: document.title, description: document.description },
-        body: { format: "md", text: rewriteLinks(text, document.path) },
+        body: { format, text: body },
         sourcePath,
         editUrl: `${githubEdit}${document.path}`,
       };

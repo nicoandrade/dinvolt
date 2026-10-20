@@ -106,6 +106,8 @@ Generated projects can update with `npx skills update` or add skills using `npx 
 
 ### Non-interactive creation
 
+For a copyable English prompt and guidance for keeping it current, see the repository's [example agent prompt](https://github.com/nicoandrade/dinvolt/blob/main/docs/agent-prompt.md).
+
 `dinvolt create` keeps the interactive wizard when stdin/stdout are terminals. `--no-input`, `--json`, missing TTY, or `CI=true` / `CI=1` selects non-interactive execution. When passing creation choices in an interactive terminal, include `--no-input` or `--json`; choices are never silently ignored by the wizard. `setup`, `vercel setup` and `ui add` also support `--no-input` and `--json`; see their command sections below.
 
 ```sh

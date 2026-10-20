@@ -1,13 +1,35 @@
 # Database
 
-Explore the site first without credentials. Create your external database, then run `npx dinvolt setup` inside the project to complete selected environments, inspect/initialize the unchanged initial migration and optionally create the first administrator. Connecting during `npx dinvolt create` remains optional. The manual commands below are also available. Restart dev after changing dotenv files.
+Explore the site first without credentials. Create your external database, then run the setup command inside the project to complete selected environments, inspect/initialize the unchanged initial migration and optionally create the first administrator. Connecting during project creation remains optional. The manual commands below are also available. Restart dev after changing dotenv files.
+
+```sh
+npx dinvolt setup
+```
 
 The following quickstart targets **development**. If you did not select development, use the explicit staging/production commands below instead; local static pages still work, but local database access fails until development is configured.
 
 1. Dinvolt generates one initial migration in `drizzle/` after dependencies are installed, shared by every selected environment. The final formatting and code checks include the generated snapshots. Keep it and `.dinvolt/initial-database.json` in Git.
 2. If you chose **Connect and initialize databases**, the completion summary reports connection and auth-table readiness per environment. Ready environments need no initial `db:generate` or `db:migrate` command.
-3. For pending credentials, complete the generated `.env.local` and run `bun run db:init` (or `db:init:staging` / `db:init:production`). Preserve the generated `BETTER_AUTH_SECRET`. Use your selected package manager instead of Bun when appropriate.
-4. For later application/schema changes, update `src/db/schema.ts`, run `bun run db:generate`, review the new SQL, and apply it with the matching `db:migrate` command. `db:init` deliberately refuses additional or changed migrations.
+3. For pending credentials, complete the generated `.env.local` and run `db:init` (or `db:init:staging` / `db:init:production`). Preserve the generated `BETTER_AUTH_SECRET`. Use your selected package manager instead of Bun when appropriate.
+4. For later application/schema changes, update `src/db/schema.ts`, run `db:generate`, review the new SQL, and apply it with the matching `db:migrate` command. `db:init` deliberately refuses additional or changed migrations.
+
+Initialize the unchanged initial migration against an empty development database:
+
+```sh
+bun run db:init
+```
+
+For later schema changes, generate the SQL first:
+
+```sh
+bun run db:generate
+```
+
+Review the generated SQL before applying it to development:
+
+```sh
+bun run db:migrate
+```
 
 Import `getDb` from `@/db` in server code and call it when you need the database. The database client is initialized on first use and reused across requests and development reloads. Keep database access in the Node.js server runtime. The starter's pages and build do not require credentials until they use the database.
 
@@ -27,9 +49,21 @@ The wizard prepares the environments you selected; it does not provision their d
 
 | Destination | Application selection | Credential suffix | Migration command |
 | --- | --- | --- | --- |
-| development | `bun run dev`, or outside Vercel by default | none | `bun run db:migrate` |
-| staging | Vercel `VERCEL_ENV=preview` | `_STAGING` | `bun run db:migrate:staging` |
-| production | Vercel `VERCEL_ENV=production` | `_PRODUCTION` | `bun run db:migrate:production` |
+| development | the `dev` script, or outside Vercel by default | none | `db:migrate` |
+| staging | Vercel `VERCEL_ENV=preview` | `_STAGING` | `db:migrate:staging` |
+| production | Vercel `VERCEL_ENV=production` | `_PRODUCTION` | `db:migrate:production` |
+
+After reviewing the SQL, use the command for the intended destination. Staging:
+
+```sh
+bun run db:migrate:staging
+```
+
+Production:
+
+```sh
+bun run db:migrate:production
+```
 
 For Turso, the names are `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`; both are required. For PlanetScale they are `DATABASE_URL` (application) and `DATABASE_URL_DIRECT` (migrations/Studio). Append the suffix to the complete name, for example `DATABASE_URL_DIRECT_PRODUCTION` or `TURSO_AUTH_TOKEN_STAGING`. There is no fallback to another environment or to a pooled URL for migrations. A missing selected environment or credential fails on first database use; imports and static builds remain independent of database access.
 

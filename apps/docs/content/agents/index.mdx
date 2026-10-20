@@ -21,10 +21,29 @@ Keep the application’s existing components, authorization boundaries and data 
 
 All four CLI commands support `--json` and `--no-input`. JSON mode disables prompts, writes one result to stdout and sends progress to stderr.
 
-```sh
+<CodeGroup>
+
+```sh npm
 npx dinvolt setup --status --json
 npx dinvolt ui add dialog textarea --target public --json
 ```
+
+```sh bun
+bunx dinvolt setup --status --json
+bunx dinvolt ui add dialog textarea --target public --json
+```
+
+```sh pnpm
+pnpm dlx dinvolt setup --status --json
+pnpm dlx dinvolt ui add dialog textarea --target public --json
+```
+
+```sh yarn
+yarn dlx dinvolt setup --status --json
+yarn dlx dinvolt ui add dialog textarea --target public --json
+```
+
+</CodeGroup>
 
 The first command inspects setup without changing it. The second installs components into the public UI area.
 

@@ -11,9 +11,25 @@ Install **Node.js 24 or later**, **npm** and **Git**. Choose an installed packag
 
 From the directory where you want to create a new project folder, run:
 
-```sh
+<CodeGroup>
+
+```sh npm
 npx dinvolt@latest create
 ```
+
+```sh bun
+bunx dinvolt@latest create
+```
+
+```sh pnpm
+pnpm dlx dinvolt@latest create
+```
+
+```sh yarn
+yarn dlx dinvolt@latest create
+```
+
+</CodeGroup>
 
 1. Enter a project name, such as `my-app`.
 2. Choose **Create a new folder**.
@@ -28,12 +44,31 @@ You can choose **Complete credentials later** and explore the public page immedi
 
 Enter the generated directory and use your selected package manager:
 
-```sh
+<CodeGroup>
+
+```sh npm
 cd my-app
 npm run dev
 ```
 
-For Bun, use `bun run dev`; for pnpm, `pnpm run dev`. The generated README gives the commands for your selected configuration.
+```sh bun
+cd my-app
+bun run dev
+```
+
+```sh pnpm
+cd my-app
+pnpm run dev
+```
+
+```sh yarn
+cd my-app
+yarn run dev
+```
+
+</CodeGroup>
+
+Choose the tab that matches the package manager selected in the wizard. The generated README gives the commands for your selected configuration.
 
 Open the URL reported by the development server, normally `https://my-app.localhost`. Portless manages local HTTPS and may ask you to trust its certificate on first use.
 
@@ -48,9 +83,29 @@ To let the agent handle creation too, use the [project creation prompt](/agents/
 For a project with administration:
 
 1. Create a database with Turso or PlanetScale, matching the provider chosen during creation.
-2. Run `npx dinvolt setup` inside the generated project.
+2. Run the setup command below inside the generated project.
 3. Complete the selected database environments and create the first administrator when offered.
 4. Restart the development server after environment changes.
+
+<CodeGroup>
+
+```sh npm
+npx dinvolt setup
+```
+
+```sh bun
+bunx dinvolt setup
+```
+
+```sh pnpm
+pnpm dlx dinvolt setup
+```
+
+```sh yarn
+yarn dlx dinvolt setup
+```
+
+</CodeGroup>
 
 See [database setup](/guides/database) and [authentication](/guides/authentication). Password recovery needs Resend and a configured sender; it remains unavailable until those are set.
 
@@ -58,11 +113,27 @@ When you are ready to host the application, publish its Git repository and `main
 
 ## Create without the wizard
 
-This example creates a public site using npm and the remaining Dinvolt defaults:
+Choose your package manager to create a public site with the remaining Dinvolt defaults:
 
-```sh
+<CodeGroup>
+
+```sh npm
 npx --yes dinvolt@latest create --name my-app --location new --project-type public --package-manager npm --json
 ```
+
+```sh bun
+bunx dinvolt@latest create --name my-app --location new --project-type public --package-manager bun --json
+```
+
+```sh pnpm
+pnpm dlx dinvolt@latest create --name my-app --location new --project-type public --package-manager pnpm --json
+```
+
+```sh yarn
+yarn dlx dinvolt@latest create --name my-app --location new --project-type public --package-manager yarn --json
+```
+
+</CodeGroup>
 
 Use a destination that does not already exist. To use an existing empty directory, pass its absolute path with `--cwd` and choose `--location current`.
 

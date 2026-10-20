@@ -8,13 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 [Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.2...HEAD)
 
-### Added
-
-- Official Blume documentation site in `apps/docs`, prepared for `docs.dinvolt.com`, with getting-started and agent guides, shared CLI/integration references, local search and Markdown exports for agents.
-
 ## 0.2.2 - 2026-10-20
 
 [Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.1...v0.2.2)
+
+### Added
+
+- Official Blume documentation site for `docs.dinvolt.com`, with getting-started and agent guides, shared CLI/integration references, local search and Markdown exports for agents.
+- Copyable project creation prompt for coding agents, with explicit project choices, non-interactive creation, local verification and pending database/admin setup guidance.
+
+### Changed
+
+- Documentation provides npm, Bun, pnpm and Yarn command tabs, including matching project package-manager flags and script argument forwarding. Generated database, authentication and registry guides expose setup commands as runnable shell examples.
 
 ### Fixed
 

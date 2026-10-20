@@ -13,9 +13,25 @@ Dinvolt copies skills into `.agents/skills/` for Codex, Cursor and compatible ag
 
 Review skill updates before applying them:
 
-```sh
+<CodeGroup>
+
+```sh npm
 npx skills update
 ```
+
+```sh bun
+bunx skills update
+```
+
+```sh pnpm
+pnpm dlx skills update
+```
+
+```sh yarn
+yarn dlx skills update
+```
+
+</CodeGroup>
 
 The current selection is maintained in [catalog/skills/config.json](https://github.com/nicoandrade/dinvolt/blob/main/catalog/skills/config.json). See the [CLI reference](/reference/cli#project-agent-skills) for installation details.
 
@@ -25,9 +41,25 @@ Dinvolt's portable `keep-a-changelog` skill works in any repository or stack. It
 
 Install it independently:
 
-```sh
+<CodeGroup>
+
+```sh npm
 npx skills add nicoandrade/dinvolt --skill keep-a-changelog
 ```
+
+```sh bun
+bunx skills add nicoandrade/dinvolt --skill keep-a-changelog
+```
+
+```sh pnpm
+pnpm dlx skills add nicoandrade/dinvolt --skill keep-a-changelog
+```
+
+```sh yarn
+yarn dlx skills add nicoandrade/dinvolt --skill keep-a-changelog
+```
+
+</CodeGroup>
 
 Then ask your agent:
 

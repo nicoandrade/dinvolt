@@ -1,5 +1,7 @@
 # Dinvolt
 
+![Dinvolt — build your app with your AI coding agent](.github/assets/opengraph-image.jpg)
+
 **Build your app. Skip the repetitive setup.**
 
 Create a public website or a full application with administration, plus instructions and skills for your AI coding agent.

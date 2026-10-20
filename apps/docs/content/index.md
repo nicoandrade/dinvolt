@@ -3,6 +3,8 @@ title: Introduction
 description: Build your app with a Next.js foundation, editable UI and context for your coding agent.
 ---
 
+![Dinvolt — build your app with your AI coding agent](/dinvolt-intro.jpg)
+
 Dinvolt creates a working starting point for your application and gives your coding agent the conventions and skills to extend it.
 
 Choose a public website or an application with administration. Both give you source code you can read, change and own, without a Dinvolt account or subscription.

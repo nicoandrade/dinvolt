@@ -1,6 +1,10 @@
 # Vercel setup through Git
 
-Run `npx dinvolt vercel setup --cwd ./my-app` in an interactive terminal after publishing your repository and its `main` branch. Dinvolt uses the pinned official Vercel CLI **64.5.0** through npm, with your normal Vercel login. Node.js/npm and Git must be available.
+Run the setup command in an interactive terminal after publishing your repository and its `main` branch. Dinvolt uses the pinned official Vercel CLI **64.5.0** through npm, with your normal Vercel login. Node.js/npm and Git must be available.
+
+```sh
+npx dinvolt vercel setup --cwd ./my-app
+```
 
 The workflow is **create → setup when credentials are available → publish the Git repository yourself → vercel setup → push/merge to main**. `create` requires no external account, initializes a local `main` branch when there is no Git marker, and never commits. Existing repositories/worktrees and their branches are preserved. Only you create the remote, commit and push.
 

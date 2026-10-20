@@ -1,6 +1,10 @@
 # Dinvolt code registry
 
-Edit the ordinary TypeScript/TSX sources declared in `registry.json`, then run the Dinvolt build to generate the registry JSON payloads in `dist/registry/`. `npx dinvolt ui add @dinvolt/admin-panel --target admin` installs the packaged block into a compatible Dinvolt starter with Better Auth and tRPC/Query setup.
+Edit the ordinary TypeScript/TSX sources declared in `registry.json`, then run the Dinvolt build to generate the registry JSON payloads in `dist/registry/`. Install the packaged block into a compatible Dinvolt starter with Better Auth and tRPC/Query setup:
+
+```sh
+npx dinvolt ui add @dinvolt/admin-panel --target admin
+```
 
 The block uses the selected admin profile's primitives and theme. Once installed, the application owns its source. Reinstalling unchanged files is a no-op; customized blocks require manual review and are never overwritten by this command. No remote registry server or automatic application update is involved.
 
@@ -99,6 +103,10 @@ Pass the operation's `pending` state to disable repeat activation and show `Dele
 
 ## Public action buttons
 
-Install `npx dinvolt ui add @dinvolt/public-actions --target public` to use `ActionButton`, `ActionButtonContent`, `CopyButton` and `DeleteButton` from their corresponding `@/components/ui/` modules. They expose the same props and behavior documented above, composed with the public Button, Spinner and theme. Confirmation icons are installed in `@/components/icons/outline`. The block includes the same Dinvolt SVG `Spinner` as admin, installed at `@/components/ui/spinner`, including for custom public presets.
+Install the public actions block to use `ActionButton`, `ActionButtonContent`, `CopyButton` and `DeleteButton` from their corresponding `@/components/ui/` modules. They expose the same props and behavior documented above, composed with the public Button, Spinner and theme. Confirmation icons are installed in `@/components/icons/outline`. The block includes the same Dinvolt SVG `Spinner` as admin, installed at `@/components/ui/spinner`, including for custom public presets.
+
+```sh
+npx dinvolt ui add @dinvolt/public-actions --target public
+```
 
 Both blocks deliberately reuse the editable action sources in `shared/actions/`; registry destinations and the selected profile resolve imports to each area's own components. Public actions do not require Better Auth or admin UI. Installation preserves customized block files. Only explicit operations show pending feedback; page loading and background refreshes retain the existing rendering conventions.

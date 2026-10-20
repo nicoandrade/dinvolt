@@ -7,15 +7,15 @@ test("documentation publishes reviewed sources, rewrites repository links and om
   expect(diagnostics).toEqual([]);
   expect(entries.map(({ ref }) => ref)).toEqual([
     "reference/cli.md",
-    "guides/vercel.md",
-    "guides/database.md",
-    "guides/authentication.md",
+    "guides/vercel.mdx",
+    "guides/database.mdx",
+    "guides/authentication.mdx",
     "guides/data.md",
-    "ui/blocks.md",
+    "ui/blocks.mdx",
     "agents/project-prompt.md",
   ]);
   const cli = entries.find(({ ref }) => ref === "reference/cli.md")!;
-  const vercel = entries.find(({ ref }) => ref === "guides/vercel.md")!;
+  const vercel = entries.find(({ ref }) => ref === "guides/vercel.mdx")!;
   const prompt = entries.find(({ ref }) => ref === "agents/project-prompt.md")!;
   expect(cli.body.text).toContain("](/guides/vercel)");
   expect(cli.body.text).toContain(

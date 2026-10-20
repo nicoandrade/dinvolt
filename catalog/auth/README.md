@@ -6,10 +6,22 @@ These quickstart commands target development. For a project without development,
 
 1. Complete database credentials in the `.env.local` created by Dinvolt. It already contains a unique `BETTER_AUTH_SECRET`, generated locally with Node.js cryptographic randomness. Keep this value when editing the file; copying `.env.example` over it would erase the secret.
 2. `BETTER_AUTH_URL` already matches your project's Portless origin (`https://<project-name>.localhost`) in `.env.local` and `.env.example`. Run your package manager's `dev` script to use that origin; see `docs/development.md`. Set the URL to the assigned public origin in Vercel Production. Preview uses its exact `VERCEL_URL` through `getAuthOrigin`; enable Vercel system variables and open the unique deployment URL. `.env.local` is ignored by Git and created with owner-only read/write permissions; the secret is never printed by Dinvolt or stored in `.env.example`.
-3. If the wizard reported auth tables ready, initialization is complete. Otherwise review the already generated initial SQL in `drizzle/` and run `bun run db:init` against an empty database. Later schema changes use `db:generate`, SQL review and `db:migrate`. Use the package manager selected for your project. Auth tables and Admin fields are already included in `src/db/auth-schema.ts` and exported through `src/db/schema.ts`.
-4. If you deferred administrator creation in the wizard, create the first administrator with `bun run auth:create-admin --email admin@example.com --name Admin`. The command checks the authentication tables and columns, asks for any missing name/email, and creates a cryptographically random 12-character initial password. It displays that password once in the interactive terminal after creation; save it before closing the terminal. It never writes the password to files or passes it as a process argument. Run this only from a trusted terminal against the intended database; new sign-ups receive the ordinary `user` role.
+3. If the wizard reported auth tables ready, initialization is complete. Otherwise review the already generated initial SQL in `drizzle/` and run `db:init` against an empty database. Later schema changes use `db:generate`, SQL review and `db:migrate`. Use the package manager selected for your project. Auth tables and Admin fields are already included in `src/db/auth-schema.ts` and exported through `src/db/schema.ts`.
+4. If you deferred administrator creation in the wizard, create the first administrator with the command below. The command checks the authentication tables and columns, asks for any missing name/email, and creates a cryptographically random 12-character initial password. It displays that password once in the interactive terminal after creation; save it before closing the terminal. It never writes the password to files or passes it as a process argument. Run this only from a trusted terminal against the intended database; new sign-ups receive the ordinary `user` role.
 
-`npx dinvolt setup` completes the database and authentication steps after you explore the site and create the external database; connection during creation remains optional. It can add another database environment without adding capabilities. It checks existing administrator state before offering creation. The create wizard optionally creates the first administrator after tables are ready. Choose ready environments and enter one name/email; each receives a different random 12-character password. An environment with an existing administrator is skipped. Existing users are never promoted, overwritten or reset; duplicate emails and partial failures preserve the project and prepared tables. Use `auth:create-admin`, `auth:create-admin:staging` or `auth:create-admin:production` to continue manually.
+After reviewing the initial SQL, initialize an empty development database if needed:
+
+```sh
+bun run db:init
+```
+
+Create the first development administrator when it is still pending:
+
+```sh
+bun run auth:create-admin --email admin@example.com --name Admin
+```
+
+`dinvolt setup` completes the database and authentication steps after you explore the site and create the external database; connection during creation remains optional. It can add another database environment without adding capabilities. It checks existing administrator state before offering creation. The create wizard optionally creates the first administrator after tables are ready. Choose ready environments and enter one name/email; each receives a different random 12-character password. An environment with an existing administrator is skipped. Existing users are never promoted, overwritten or reset; duplicate emails and partial failures preserve the project and prepared tables. Use `auth:create-admin`, `auth:create-admin:staging` or `auth:create-admin:production` to continue manually.
 
 When using the create/setup wizard, only a successfully created development administrator is saved as `DEV_ADMIN_USER` and `DEV_ADMIN_PASSWORD` in the selected ignored private dotenv file (`.env.local` by default, or `.env` when that is the existing destination). The interactive wizard displays staging/production passwords on success without saving them locally. Non-interactive `create` and `setup` require a private `--admin-output` file for generated passwords; see the Dinvolt CLI reference. `/admin` uses these editable initial values only in local `next dev` with the development database. Production builds/servers and Vercel deployments never prefill, even with these variables set. Missing values stay empty; sign in still requires clicking the button and authenticating.
 
@@ -32,7 +44,13 @@ const session = await getAuth().api.getSession({ headers: await headers() });
 
 Validate that session on the server before protected operations. Admin pages and custom admin APIs must also check `session.user.role?.split(",").includes("admin")`; a client check or session cookie alone is insufficient. The Admin plugin protects its own management endpoints. Keep session checks request-scoped, outside shared Next.js caches. Cookie caching is left disabled so role changes and bans are checked against the database.
 
-The schema includes `user`, `session`, `account`, and `verification`, plus Admin's role, ban and impersonation fields. Do not rename or remove these exports. Keep application tables in `src/db/schema.ts` and preserve its auth exports. After changing auth plugins/options, run `bun run auth:generate`, review `src/db/auth-schema.ts`, then generate/review/apply Drizzle migrations. The wrapper runs the official CLI and adapts generated legacy relation imports for Drizzle v1 on Turso. All schema creation and changes use Drizzle migrations; do not use Better Auth's built-in database migrator with this adapter.
+The schema includes `user`, `session`, `account`, and `verification`, plus Admin's role, ban and impersonation fields. Do not rename or remove these exports. Keep application tables in `src/db/schema.ts` and preserve its auth exports. After changing auth plugins/options, run the `auth:generate` script, review `src/db/auth-schema.ts`, then generate/review/apply Drizzle migrations. The wrapper runs the official CLI and adapts generated legacy relation imports for Drizzle v1 on Turso. All schema creation and changes use Drizzle migrations; do not use Better Auth's built-in database migrator with this adapter.
+
+Regenerate the shared authentication schema after changing plugins or options:
+
+```sh
+bun run auth:generate
+```
 
 Change shared authentication options in `src/lib/auth-config.ts`. `src/lib/auth.ts` and `src/db/index.ts` are the application's `server-only` entry points. Their internal factories are shared with the trusted root `auth.config.ts` so the CLI can load the same configuration without removing those guards. Application code should always import `getAuth` from `@/lib/auth` and `getDb` from `@/db`.
 
