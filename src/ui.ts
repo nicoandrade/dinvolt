@@ -32,22 +32,15 @@ export const defaultAdminBlocks = [
   "@dinvolt/admin-panel",
 ] as const;
 
-// Upstream skill examples also retain their own code and formatting standards.
-const generatedUI = [
-  "src/components/ui/**",
-  "src/components/admin/ui/**",
-  "src/hooks/use-mobile.ts",
-  "src/hooks/admin/use-mobile.ts",
-  "src/lib/utils.ts",
-  ...skillTargets.map((target) => `${target.directory}/**`),
-] as const;
+// Installed skills are external instructions, not application source.
+const installedSkills = skillTargets.map((target) => `${target.directory}/**`);
 
 // eslint-disable-next-line complexity -- Preserve existing orchestration branches during the lint migration.
 export async function configureUIStandards(root: string, linter: string) {
   if (!(await readOrdinaryFile(root, ".dinvolt/ui/config.json"))) {
     return;
   }
-  const patterns = generatedUI
+  const patterns = installedSkills
     .map((pattern) => JSON.stringify(pattern))
     .join(", ");
   if (linter === "oxlint") {
@@ -59,26 +52,52 @@ export async function configureUIStandards(root: string, linter: string) {
       );
     }
     if (
-      !lint.includes(generatedUI[0]) &&
+      !installedSkills.some((pattern) => lint.includes(pattern)) &&
       !lint.includes("ignorePatterns: core.ignorePatterns")
     ) {
       throw new Error(
-        "Add the generated UI directories to your custom Oxlint ignorePatterns before continuing."
+        "Add the installed skill directories to your custom Oxlint ignorePatterns before continuing."
       );
     }
-    if (!format.includes(generatedUI[0]) && !format.includes("...ultracite,")) {
+    if (
+      !installedSkills.some((pattern) => format.includes(pattern)) &&
+      !format.includes("...ultracite,")
+    ) {
       throw new Error(
-        "Add the generated UI directories to your custom Oxfmt ignorePatterns before continuing."
+        "Add the installed skill directories to your custom Oxfmt ignorePatterns before continuing."
+      );
+    }
+    // UI primitives define appearance and forward native accessibility props;
+    // keep all files checked while retaining their established implementation.
+    const overrides = await readFile(
+      new URL("../catalog/next/oxlint-ui-overrides.json", import.meta.url),
+      "utf-8"
+    );
+    const marker = "// Dinvolt UI primitive compatibility";
+    if (lint.includes("overrides:") && !lint.includes(marker)) {
+      throw new Error(
+        "Merge the Dinvolt UI primitive overrides into your custom Oxlint overrides before continuing. Existing configuration was preserved."
+      );
+    }
+    const configuredLint = lint.includes(marker)
+      ? lint
+      : lint.replace(
+          "  jsPlugins: shadcn.jsPlugins,",
+          `  jsPlugins: shadcn.jsPlugins,\n  ${marker}\n  overrides: ${overrides.trim()},`
+        );
+    if (!configuredLint.includes(marker)) {
+      throw new Error(
+        "Add the Dinvolt UI primitive overrides to your custom Oxlint configuration before continuing."
       );
     }
     await writeFile(
       join(root, "oxlint.config.mts"),
-      lint.replace(
+      configuredLint.replace(
         "ignorePatterns: core.ignorePatterns",
         `ignorePatterns: [...(core.ignorePatterns ?? []), ${patterns}]`
       )
     );
-    if (!format.includes(generatedUI[0])) {
+    if (!installedSkills.some((pattern) => format.includes(pattern))) {
       await writeFile(
         join(root, "oxfmt.config.mts"),
         format.replace(
@@ -99,7 +118,7 @@ export async function configureUIStandards(root: string, linter: string) {
       config = JSON.parse(source);
     } catch {
       throw new Error(
-        "Add the generated UI directories to files.includes in your custom biome.jsonc before continuing."
+        "Add the installed skill directories to files.includes in your custom biome.jsonc before continuing."
       );
     }
     config.files = {
@@ -107,7 +126,7 @@ export async function configureUIStandards(root: string, linter: string) {
       includes: [
         ...new Set([
           ...(config.files?.includes ?? ["**"]),
-          ...generatedUI.map((pattern) => `!${pattern}`),
+          ...installedSkills.map((pattern) => `!${pattern}`),
         ]),
       ],
     };
@@ -122,10 +141,10 @@ export async function configureUIStandards(root: string, linter: string) {
         "The project's Ultracite ESLint configuration is missing."
       );
     }
-    if (!source.includes(generatedUI[0])) {
+    if (!installedSkills.some((pattern) => source.includes(pattern))) {
       if (!source.includes("export default [")) {
         throw new Error(
-          "Add the generated UI directories to the global ignores in your custom ESLint configuration before continuing."
+          "Add the installed skill directories to the global ignores in your custom ESLint configuration before continuing."
         );
       }
       await writeFile(
@@ -137,7 +156,7 @@ export async function configureUIStandards(root: string, linter: string) {
       );
     }
     const ignore = (await readOrdinaryFile(root, ".prettierignore")) ?? "";
-    const missing = generatedUI.filter(
+    const missing = installedSkills.filter(
       (pattern) => !ignore.split(/\r?\n/u).includes(pattern)
     );
     if (missing.length) {

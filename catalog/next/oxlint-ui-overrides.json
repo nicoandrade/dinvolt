@@ -1,0 +1,93 @@
+[
+  {
+    "files": ["src/components/ui/**", "src/components/admin/ui/**"],
+    "rules": {
+      "func-style": "off",
+      "no-nested-ternary": "off",
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": false,
+          "typedefs": false
+        }
+      ],
+      "react/function-component-definition": "off",
+      "shadcn/no-arbitrary-values": "off",
+      "shadcn/no-restyle": "off",
+      "shadcn/no-unknown-classes": [
+        "error",
+        {
+          "allow": [
+            "t-text-swap",
+            "t-icon-swap",
+            "t-icon",
+            "t-action-content",
+            "t-action-spinner",
+            "animate-in",
+            "animate-out",
+            "fade-in-0",
+            "fade-out-0",
+            "zoom-in-95",
+            "zoom-out-95",
+            "slide-in-from-top-2",
+            "slide-in-from-bottom-2",
+            "slide-in-from-left-2",
+            "slide-in-from-right-2"
+          ]
+        }
+      ],
+      "shadcn/require-static-classes": "off",
+      "sort-keys": "off"
+    }
+  },
+  {
+    "files": ["src/components/**/ui/input-group.tsx"],
+    "rules": {
+      "jsx-a11y/click-events-have-key-events": "off",
+      "jsx-a11y/no-noninteractive-element-interactions": "off",
+      "jsx-a11y/prefer-tag-over-role": "off"
+    }
+  },
+  {
+    "files": ["src/components/**/ui/field.tsx"],
+    "rules": {
+      "jsx-a11y/prefer-tag-over-role": "off"
+    }
+  },
+  {
+    "files": ["src/components/**/ui/label.tsx"],
+    "rules": {
+      "jsx-a11y/label-has-associated-control": "off"
+    }
+  },
+  {
+    "files": ["src/components/**/ui/spinner.tsx"],
+    "rules": {
+      "jsx-a11y/prefer-tag-over-role": "off"
+    }
+  },
+  {
+    "files": ["src/components/**/ui/sidebar.tsx"],
+    "rules": {
+      "no-param-reassign": "off",
+      "no-shadow": "off",
+      "react/button-has-type": "off",
+      "react/hook-use-state": "off",
+      "unicorn/no-document-cookie": "off",
+      "unicorn/no-negated-condition": "off"
+    }
+  },
+  {
+    "files": ["src/hooks/use-mobile.ts", "src/hooks/admin/use-mobile.ts"],
+    "rules": {
+      "func-style": "off",
+      "react/set-state-in-effect": "off"
+    }
+  },
+  {
+    "files": ["src/components/**/ui/breadcrumb.tsx"],
+    "rules": {
+      "jsx-a11y/prefer-tag-over-role": "off"
+    }
+  }
+]

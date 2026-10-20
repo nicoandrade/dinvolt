@@ -2,6 +2,8 @@
 
 The starter uses tRPC 11's `@trpc/tanstack-react-query` integration and TanStack Query 5, with server/client/prefetch helpers, Dinvolt's lazy database client and separate public/admin root layouts. Both layouts already mount `TRPCReactProvider`.
 
+The context resolves the session only when a protected procedure needs it and shares that result within the request. Missing Better Auth session cookies return `null` before initializing auth or the database. A present cookie always goes through Better Auth validation, and private procedures still enforce session, ban and role checks. Keep the cookie helper aligned if the application customizes its session cookie name or prefix.
+
 - `src/trpc/context.ts`: request-local session lookup through Better Auth and lazy `ctx.getDb()` for the selected Drizzle provider. Public procedures that do not need auth/database avoid those lookups.
 - `src/trpc/init.ts`: typed router helpers, SuperJSON serialization, Zod validation errors, and public/authenticated/admin procedures. Unexpected internal errors are sanitized.
 - `src/trpc/routers/app.ts`: the root `AppRouter`. Initial procedures are `health`, authenticated `auth.me` (safe user fields), and admin-only `admin.status`, `admin.users` (validated, paginated user search) and `admin.user` (a single user’s display fields).

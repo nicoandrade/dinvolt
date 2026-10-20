@@ -6,7 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.1...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.2...HEAD)
+
+## 0.2.2 - 2026-10-20
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.1...v0.2.2)
+
+### Fixed
+
+- Generated VS Code workspaces select the chosen formatter, enable whole-file formatting on save and recommend its extension. Application UI components, hooks and utilities are included in linting and formatting, with focused Oxlint compatibility rules for primitive definitions.
+- Prerendered public and admin Open Graph images use one year of immutable caching with URLs versioned by their title, logo, renderer and local font, avoiding repeated revalidation while allowing updated previews after a rebuild.
+- Email headers use the versioned Apple icon URL so application logos remain reachable after icon caching was introduced.
+- Public home backgrounds use static image imports with content-versioned URLs and long-lived immutable caching in both starter project types.
+- Anonymous tRPC session checks skip authentication and database initialization when no session cookie is present, while retaining Better Auth validation for present cookies and request-scoped session deduplication.
 
 ## 0.2.1 - 2026-10-20
 

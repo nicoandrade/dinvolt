@@ -121,7 +121,16 @@ export async function resolveUIComponents(
       if (content === null) {
         throw new Error(`Missing UI catalog source: ${file.path}.`);
       }
-      files.set(file.path, { ...file, content });
+      // Array length is always numeric. Normalize the upstream loose equality
+      // in installed copies while keeping the vendored source and hashes intact.
+      const installedContent =
+        item.name === "field"
+          ? content.replace(
+              "uniqueErrors?.length == 1",
+              "uniqueErrors?.length === 1"
+            )
+          : content;
+      files.set(file.path, { ...file, content: installedContent });
     }
   }
   const license = await readOrdinaryFile(

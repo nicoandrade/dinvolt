@@ -21,6 +21,7 @@ import { prepareAuthStarter } from "../src/auth.ts";
 import { prepareDatabaseStarter } from "../src/database.ts";
 import {
   checkStarter,
+  configureEditorStandards,
   configureProject,
   detectProjectPackageManager,
   developmentCommand,
@@ -178,6 +179,62 @@ test("records editor preferences independently of Ultracite and uses the selecte
   expect(developmentCommand("npm")).toBe("npm run dev");
 });
 
+test("editor configuration preserves workspace preferences and extension recommendations on repeat", async () => {
+  const directory = await fixture();
+  await mkdir(join(directory, ".vscode"));
+  await writeFile(
+    join(directory, ".vscode/settings.json"),
+    JSON.stringify({
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 4,
+      "editor.codeActionsOnSave": { "source.fixAll.oxc": "explicit" },
+    })
+  );
+  await writeFile(
+    join(directory, ".vscode/extensions.json"),
+    JSON.stringify({
+      recommendations: ["bradlc.vscode-tailwindcss"],
+      unwantedRecommendations: ["example.unwanted"],
+    })
+  );
+  const setup = {
+    packageManager: "bun",
+    linter: "oxlint",
+    editors: ["universal"],
+  } as const;
+  await configureEditorStandards(directory, {
+    ...setup,
+    editors: [...setup.editors],
+  });
+  const settings = await readFile(
+    join(directory, ".vscode/settings.json"),
+    "utf-8"
+  );
+  expect(JSON.parse(settings)).toMatchObject({
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.tabSize": 4,
+    "editor.codeActionsOnSave": { "source.fixAll.oxc": "explicit" },
+  });
+  const recommendations = await readFile(
+    join(directory, ".vscode/extensions.json"),
+    "utf-8"
+  );
+  expect(JSON.parse(recommendations)).toEqual({
+    recommendations: ["bradlc.vscode-tailwindcss", "oxc.oxc-vscode"],
+    unwantedRecommendations: ["example.unwanted"],
+  });
+  await configureEditorStandards(directory, {
+    ...setup,
+    editors: [...setup.editors],
+  });
+  expect(
+    await readFile(join(directory, ".vscode/settings.json"), "utf-8")
+  ).toBe(settings);
+  expect(
+    await readFile(join(directory, ".vscode/extensions.json"), "utf-8")
+  ).toBe(recommendations);
+});
+
 test("ESLint keeps the TypeScript 7 compiler alongside the compatible compiler API", async () => {
   const directory = await fixture();
   await writeFile(
@@ -289,6 +346,11 @@ test.each(["oxlint", "biome", "eslint"] as const)(
     await mkdir(join(directory, ".dinvolt/ui"), { recursive: true });
     await writeFile(join(directory, ".dinvolt/ui/config.json"), "{}");
     await configureUIStandards(directory, linter);
+    await configureEditorStandards(directory, {
+      packageManager: "bun",
+      linter,
+      editors: ["universal", "zed"],
+    });
     const manifest = JSON.parse(
       await readFile(join(directory, "package.json"), "utf-8")
     );
@@ -306,6 +368,27 @@ test.each(["oxlint", "biome", "eslint"] as const)(
     const config = await readFile(join(directory, extension), "utf-8");
     expect(config).toContain("react");
     expect(config).toContain("next");
+    const ignores =
+      linter === "oxlint"
+        ? config.match(/ignorePatterns: \[(?<patterns>[\s\S]*?)\]/u)?.groups
+            ?.patterns
+        : config;
+    expect(ignores).toBeDefined();
+    expect(ignores).not.toContain("src/components/");
+    expect(ignores).not.toContain("src/hooks/");
+    expect(ignores).not.toContain("src/lib/utils.ts");
+    if (linter === "oxlint") {
+      const format = await readFile(
+        join(directory, "oxfmt.config.mts"),
+        "utf-8"
+      );
+      expect(format).not.toContain("src/");
+    }
+    if (linter === "eslint") {
+      expect(
+        await readFile(join(directory, ".prettierignore"), "utf-8")
+      ).not.toContain("src/");
+    }
     for (const pattern of [".agents/skills/**", ".claude/skills/**"]) {
       expect(config).toContain(pattern);
       if (linter === "oxlint") {
@@ -323,6 +406,17 @@ test.each(["oxlint", "biome", "eslint"] as const)(
       await readFile(join(directory, ".vscode", "settings.json"), "utf-8")
     );
     expect(settings["editor.formatOnSave"]).toBe(true);
+    expect(settings["editor.formatOnSaveMode"]).toBe("file");
+    const formatter = {
+      oxlint: "oxc.oxc-vscode",
+      biome: "biomejs.biome",
+      eslint: "esbenp.prettier-vscode",
+    }[linter];
+    expect(settings["editor.defaultFormatter"]).toBe(formatter);
+    const extensions = JSON.parse(
+      await readFile(join(directory, ".vscode/extensions.json"), "utf-8")
+    );
+    expect(extensions.recommendations).toContain(formatter);
     expect(await readdir(join(directory, ".zed"))).toContain("settings.json");
     const instructions = await readFile(join(directory, "AGENTS.md"), "utf-8");
     expect(instructions).toContain(existingInstructions.trim());
@@ -429,6 +523,32 @@ test("the assembled default starter passes the consumer's real Oxlint and shadcn
     );
   }
   await checkStarter(directory);
+  const previouslyIgnored = [
+    "src/components/ui/lint-regression.tsx",
+    "src/components/admin/ui/lint-regression.tsx",
+    "src/hooks/use-mobile.ts",
+    "src/hooks/admin/use-mobile.ts",
+    "src/lib/utils.ts",
+  ];
+  for (const name of previouslyIgnored) {
+    await mkdir(join(directory, name, ".."), { recursive: true });
+    await writeFile(
+      join(directory, name),
+      "const unusedRegressionValue={label:'value'}\n"
+    );
+  }
+  const oxfmt = fileURLToPath(
+    new URL("bin/oxfmt", pathToFileURL(require.resolve("oxfmt/package.json")))
+  );
+  const unformatted = spawnSync(
+    "node",
+    [oxfmt, "--check", ...previouslyIgnored],
+    { cwd: directory, encoding: "utf-8", timeout: 15_000 }
+  );
+  expect(unformatted.status).toBe(1);
+  for (const name of previouslyIgnored) {
+    expect(unformatted.stdout + unformatted.stderr).toContain(name);
+  }
   // Ensure lint actually checks our own blocks; repository ignores must not leak.
   await writeFile(
     join(directory, "src/components/admin/lint-regression.tsx"),
@@ -449,6 +569,10 @@ export default Invalid;
     timeout: 15_000,
   });
   expect(invalid.status).not.toBe(0);
+  for (const name of previouslyIgnored) {
+    expect(invalid.stdout + invalid.stderr).toContain(`${name}:1:`);
+  }
+  expect(invalid.stdout + invalid.stderr).toContain("no-unused-vars");
   expect(invalid.stdout + invalid.stderr).toContain("func-style");
   expect(invalid.stdout + invalid.stderr).toContain("shadcn(no-restyle)");
 }, 30_000);

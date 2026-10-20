@@ -1,4 +1,5 @@
 /* eslint-disable shadcn/no-inline-styles -- ImageResponse requires inline styles and does not load CSS classes. */
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -7,6 +8,12 @@ import { ImageResponse } from "next/og";
 import { LogoIso } from "@/components/logo-iso";
 
 const font = readFile(path.join(process.cwd(), "assets/og/Inter-Bold.ttf"));
+
+export const getOpenGraphImageVersion = (title: string) =>
+  createHash("sha256")
+    .update(`${process.env.DINVOLT_OG_VERSION}:${title}`)
+    .digest("hex")
+    .slice(0, 16);
 
 export const createOpenGraphImage = async (title: string) => {
   const fontData = await font;
@@ -43,6 +50,12 @@ export const createOpenGraphImage = async (title: string) => {
     </div>,
     {
       fonts: [{ data: fontData, name: "Inter", style: "normal", weight: 700 }],
+      headers: {
+        "Cache-Control":
+          process.env.NODE_ENV === "development"
+            ? "no-store"
+            : "public, max-age=31536000, immutable",
+      },
       height: 630,
       width: 1200,
     }

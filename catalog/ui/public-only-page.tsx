@@ -4,6 +4,8 @@ import Link from "next/link";
 import { LogoComplete } from "@/components/logo-complete";
 import { Button } from "@/components/ui/button";
 
+import welcomeBackground from "../../../public/welcome-background.webp";
+
 const Home = () => (
   <main className="bg-welcome-background text-welcome-foreground relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-16 pb-32">
     <div
@@ -16,7 +18,7 @@ const Home = () => (
         fill
         loading="eager"
         sizes="100vw"
-        src="/welcome-background.webp"
+        src={welcomeBackground}
       />
     </div>
     <div className="t-stagger is-shown flex w-full max-w-xl flex-col items-center text-center">

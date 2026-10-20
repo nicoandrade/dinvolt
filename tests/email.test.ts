@@ -1,6 +1,29 @@
 import { expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
 
+test("email headers use the shared icon version and keep reset tokens out of logo URLs", () => {
+  const result = spawnSync(
+    process.execPath,
+    [
+      "-e",
+      `
+    import assert from "node:assert/strict";
+    import { mock } from "bun:test";
+    mock.module("@react-email/components", () => ({ Img: "img", Section: "section" }));
+    mock.module("@/lib/icons", () => ({ iconVersion: "0123456789abcdef" }));
+    const jsx = (type, props) => ({ type, props });
+    mock.module("react/jsx-runtime", () => ({ jsx, jsxs: jsx }));
+    mock.module("react/jsx-dev-runtime", () => ({ jsxDEV: jsx }));
+    const { EmailHeader } = await import("./catalog/auth/email-header.tsx");
+    const header = EmailHeader({ baseUrl: "https://example.com/admin/reset-password?token=private" });
+    assert.equal(header.props.children.props.src, "https://example.com/icons/0123456789abcdef-apple-light.png");
+  `,
+    ],
+    { cwd: new URL("..", import.meta.url), encoding: "utf-8" }
+  );
+  expect(result.status, result.stderr).toBe(0);
+});
+
 // Keep provider mocks and environment variables out of the other test processes.
 test("recovery email requires configuration, sends both formats and sanitizes provider failures", () => {
   const result = spawnSync(

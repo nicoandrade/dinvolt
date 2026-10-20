@@ -10,6 +10,7 @@ import { detectPackageManager, runScriptCommand } from "nypm";
 
 import type { DatabaseEnvironment, DatabaseProvider } from "./database.ts";
 import { developmentUrl } from "./development.ts";
+import { readOrdinaryFile } from "./files.ts";
 import { runCommand } from "./process.ts";
 import { defaultProjectType, hasAdministration } from "./project-type.ts";
 import type { ProjectType } from "./project-type.ts";
@@ -120,6 +121,47 @@ async function runUltracite(directory: string, setup: ProjectSetup) {
     process.execPath,
     [ultraciteCli(), ...ultraciteArguments(setup)],
     { cwd: directory }
+  );
+}
+
+// Ultracite's universal settings keep Prettier as the global fallback even
+// when Oxfmt is selected. Align the generated workspace with that selection.
+export async function configureEditorStandards(
+  directory: string,
+  setup: ProjectSetup
+) {
+  if (!setup.editors.includes("universal")) {
+    return;
+  }
+  const source = await readOrdinaryFile(directory, ".vscode/settings.json");
+  if (source === null) {
+    throw new Error("The selected VS Code workspace settings are missing.");
+  }
+  const settings = JSON.parse(source);
+  const formatter = {
+    oxlint: "oxc.oxc-vscode",
+    biome: "biomejs.biome",
+    eslint: "esbenp.prettier-vscode",
+  }[setup.linter];
+  settings["editor.defaultFormatter"] = formatter;
+  settings["editor.formatOnSave"] = true;
+  settings["editor.formatOnSaveMode"] = "file";
+  await writeFile(
+    join(directory, ".vscode/settings.json"),
+    `${JSON.stringify(settings, null, 2)}\n`
+  );
+  const recommendationsSource = await readOrdinaryFile(
+    directory,
+    ".vscode/extensions.json"
+  );
+  const extensions =
+    recommendationsSource === null ? {} : JSON.parse(recommendationsSource);
+  extensions.recommendations = [
+    ...new Set([...(extensions.recommendations ?? []), formatter]),
+  ];
+  await writeFile(
+    join(directory, ".vscode/extensions.json"),
+    `${JSON.stringify(extensions, null, 2)}\n`
   );
 }
 
@@ -244,6 +286,7 @@ export async function configureProject(
   };
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   await configure(directory, setup);
+  await configureEditorStandards(directory, setup);
   if (setup.linter === "eslint") {
     await writeFile(
       join(directory, "eslint.config.mjs"),

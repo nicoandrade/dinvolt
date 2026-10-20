@@ -10,7 +10,7 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 import { parse } from "postcss";
 
@@ -284,6 +284,25 @@ test("prepares the chosen presets with shared scoped CSS and separate component 
   expect(instructions).toContain("dinvolt ui add <component>");
   expect(instructions).toContain("<!-- BEGIN:dinvolt-ui -->");
 });
+
+test.each(["public", "public-admin"] as const)(
+  "%s home imports its generated background asset from a resolvable static path",
+  async (type) => {
+    const root = await starterFixture();
+    await prepareUIStarter(root, {}, undefined, type);
+    const path = join(root, "src/app/(public)/page.tsx");
+    const page = await readFile(path, "utf-8");
+    const background = page.match(
+      /import welcomeBackground from "(?<path>[^"]+)"/u
+    )?.groups?.path;
+    expect(background).toBeDefined();
+    expect(await readFile(resolve(dirname(path), background!))).toEqual(
+      await readFile(
+        new URL("../catalog/ui/welcome-background.webp", import.meta.url)
+      )
+    );
+  }
+);
 
 test("generates separate OG images with the selected project name and bundled local assets", async () => {
   const root = await starterFixture();
