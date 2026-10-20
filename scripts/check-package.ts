@@ -27,6 +27,7 @@ for (const path of paths) {
   assert.ok(
     rootFiles.has(path) ||
       path.startsWith("catalog/") ||
+      path.startsWith("skills/keep-a-changelog/") ||
       path.startsWith("dist/"),
     `Unexpected package entry: ${path}`
   );
@@ -47,6 +48,8 @@ for (const path of paths) {
 for (const required of [
   ...rootFiles,
   "dist/cli.js",
+  "skills/keep-a-changelog/SKILL.md",
+  "skills/keep-a-changelog/agents/openai.yaml",
   "dist/registry/admin-panel.json",
   "dist/registry/public-actions.json",
   "catalog/next/README.md",

@@ -15,6 +15,11 @@
     {
       "source": "Jakubantalik/transitions.dev",
       "skills": ["transitions-dev"]
+    },
+    {
+      "source": "nicoandrade/dinvolt",
+      "skills": ["keep-a-changelog"],
+      "bundled": true
     }
   ],
   "database": {

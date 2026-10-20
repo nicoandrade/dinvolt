@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.0...HEAD)
+
+## 0.2.0 - 2026-10-20
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.1.1...v0.2.0)
+
+### Added
+
+- Portable Keep a Changelog skill to choose semantic versions, synchronize version files and maintain Markdown or text changelogs in any project. New Dinvolt projects include the bundled skill when skill installation is enabled; it can also be installed independently through the Skills CLI.
+
+### Changed
+
+- Generated admin instructions clarify resource list layouts, accessible row navigation, form containers and when to use detail or editing pages.
+
 ### Fixed
 
 - Release verification refreshes npm metadata and retries temporarily unavailable versions while the published package propagates through the registry.

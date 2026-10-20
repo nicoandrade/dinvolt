@@ -9,6 +9,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { createNextProject } from "../src/create.ts";
 import { configureProject } from "../src/setup.ts";
@@ -25,6 +26,7 @@ const common = [
   "agent-browser",
   "shadcn",
   "transitions-dev",
+  "keep-a-changelog",
   "better-auth-best-practices",
   "better-auth-security-best-practices",
 ];
@@ -43,7 +45,7 @@ afterEach(async () => {
   );
 });
 
-test("default creation includes all seven common skills plus Turso", () => {
+test("default creation includes common skills, bundled changelog skill and Turso", () => {
   expect(projectSkills().flatMap((entry) => entry.skills)).toEqual([
     ...common,
     "turso-db",
@@ -82,12 +84,15 @@ test.each(["turso", "planetscale-postgres"] as const)(
         expect(running).toBe(false);
         running = true;
         const entry = expected[calls]!;
+        const installSource = entry.bundled
+          ? fileURLToPath(new URL("../skills", import.meta.url))
+          : entry.source;
         calls += 1;
         expect(command).toBe(process.execPath);
         expect(args[0]).toEndWith("skills/bin/cli.mjs");
         expect(args.slice(1)).toEqual([
           "add",
-          entry.source,
+          installSource,
           "--skill",
           ...entry.skills,
           "--agent",
@@ -110,7 +115,7 @@ test.each(["turso", "planetscale-postgres"] as const)(
             );
           }
           lock.skills[name] = {
-            source: entry.source,
+            source: installSource,
             computedHash: "test-hash",
           };
         }
@@ -128,6 +133,84 @@ test.each(["turso", "planetscale-postgres"] as const)(
     ]);
   }
 );
+
+test("bundled skill installs through the real CLI with a portable lock and preserves external entries", async () => {
+  const directory = await fixture();
+  await installProjectSkills(
+    directory,
+    {},
+    async (command, args, options = {}) => {
+      if (args[2] === fileURLToPath(new URL("../skills", import.meta.url))) {
+        const child = Bun.spawn([command, ...args], {
+          cwd: options.cwd,
+          env: { ...process.env, DISABLE_TELEMETRY: "1" },
+          stdout: "pipe",
+          stderr: "pipe",
+        });
+        const [code, stdout, stderr] = await Promise.all([
+          child.exited,
+          new Response(child.stdout).text(),
+          new Response(child.stderr).text(),
+        ]);
+        if (code !== 0) {
+          throw new Error(`${stdout}\n${stderr}`);
+        }
+        return;
+      }
+      const lockPath = join(directory, "skills-lock.json");
+      const lock = await readFile(lockPath, "utf-8")
+        .then((content) => JSON.parse(content))
+        .catch(() => ({ version: 1, skills: {} }));
+      const source = args[2]!;
+      const names = args.slice(4, args.indexOf("--agent"));
+      for (const name of names) {
+        for (const target of skillTargets) {
+          const path = join(directory, target.directory, name);
+          await mkdir(path, { recursive: true });
+          await writeFile(join(path, "SKILL.md"), "External fixture");
+        }
+        lock.skills[name] = { source, computedHash: "external-hash" };
+      }
+      await writeFile(lockPath, JSON.stringify(lock));
+    }
+  );
+  for (const target of skillTargets) {
+    expect(
+      await readFile(
+        join(directory, target.directory, "keep-a-changelog/SKILL.md"),
+        "utf-8"
+      )
+    ).toBe(
+      await readFile(
+        new URL("../skills/keep-a-changelog/SKILL.md", import.meta.url),
+        "utf-8"
+      )
+    );
+    expect(
+      await readFile(
+        join(
+          directory,
+          target.directory,
+          "keep-a-changelog/agents/openai.yaml"
+        ),
+        "utf-8"
+      )
+    ).toContain('display_name: "Keep a Changelog"');
+  }
+  const lock = JSON.parse(
+    await readFile(join(directory, "skills-lock.json"), "utf-8")
+  );
+  expect(lock.skills["keep-a-changelog"]).toEqual({
+    source: "nicoandrade/dinvolt",
+    sourceType: "github",
+    skillPath: "skills/keep-a-changelog/SKILL.md",
+    computedHash: expect.stringMatching(/^[a-f0-9]{64}$/u),
+  });
+  expect(lock.skills["vercel-react-best-practices"].computedHash).toBe(
+    "external-hash"
+  );
+  expect(lock.skills["turso-db"].computedHash).toBe("external-hash");
+}, 15_000);
 
 test.each([
   "missing-file",

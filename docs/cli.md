@@ -28,7 +28,7 @@ The CLI is built for Node.js. Runtime compatibility checks must execute the comp
 
 CLI implementation lives in `src/`. The `catalog/` directory contains application templates, UI components and registry blocks, generated project documentation and instructions, and the external skill selection in `catalog/skills/config.json`.
 
-`create` assembles the application from those sources. `ui add` installs components into an existing application's selected UI area. These sources ship with the package; external skills are retrieved through the Skills CLI during creation.
+`create` assembles the application from those sources. `ui add` installs components into an existing application's selected UI area. These sources and Dinvolt's portable `skills/keep-a-changelog/` ship with the package; external skills are retrieved through the Skills CLI during creation.
 
 ## Requirements and project creation
 
@@ -94,13 +94,15 @@ Generation takes place in a system temporary folder outside the destination's re
 
 `create` installs project-local skills by default. The advanced wizard asks whether to install them, with Yes preselected; No skips all skill commands and downloads. The summary lists the selected skills or states that installation is manual. `.dinvolt/config.json` records `skills.enabled` and the selected `skills.sources`.
 
-`catalog/skills/config.json` is the source of truth. Its `always` groups list the five common skills: `vercel-react-best-practices`, `web-design-guidelines`, `agent-browser`, `shadcn`, and `transitions-dev` (from `Jakubantalik/transitions.dev`). Only projects with administration include the `admin` group (`better-auth-best-practices` and `better-auth-security-best-practices`) and the `database` groups, which add `turso-db` for `turso`, or `postgres` for `planetscale-postgres`. Add, remove or change repository/name pairs there; database keys are checked against the supported providers by TypeScript.
+`catalog/skills/config.json` is the source of truth. Its `always` groups list six common skills: `vercel-react-best-practices`, `web-design-guidelines`, `agent-browser`, `shadcn`, `transitions-dev` (from `Jakubantalik/transitions.dev`), and Dinvolt's `keep-a-changelog`. Only projects with administration include the `admin` group (`better-auth-best-practices` and `better-auth-security-best-practices`) and the `database` groups, which add `turso-db` for `turso`, or `postgres` for `planetscale-postgres`. Add, remove or change repository/name pairs there; database keys are checked against the supported providers by TypeScript.
 
 `src/skills.ts` resolves the selection and runs the pinned `skills` CLI (`1.5.18`, compatible with Dinvolt's Node.js 22.18 minimum) through Node.js without a shell. Each repository is installed sequentially with explicit `--skill <names...> --agent universal claude-code --yes --copy` options. No global scope or machine-dependent agent detection is used. Codex and Cursor use the `.agents/skills/` copy; Claude Code receives an independent copy in `.claude/skills/`. This is independent of the selected editor groups and package manager.
 
 The generated linter and formatter configurations exclude `.agents/skills/**` and `.claude/skills/**`, preserving upstream instructions, scripts and examples when developers run project checks. Skill installation runs after Ultracite's checks so upstream content is preserved without formatting it. The Skills CLI writes `skills-lock.json` with sources and content hashes. Dinvolt verifies a nonempty `SKILL.md` for each selected skill in both destinations and a matching source/hash entry in the lock, since the upstream CLI can exit successfully after a partial installation. A missing skill, incomplete lock or command failure aborts generation and removes the temporary project. Skills and the lock move with the generated application as ordinary files.
 
 Generated projects can update with `npx skills update` or add skills using `npx skills add <owner/repo> --skill <name> --agent universal claude-code --yes`. Commit the installed directories and lockfile to share them. The CLI version is pinned, while skill content is fetched from upstream at creation time and recorded by hash.
+
+`keep-a-changelog` is bundled in `skills/keep-a-changelog/` and marked `bundled` in the selection. It is installed through the same CLI from the package's local `skills/` directory, without downloading Dinvolt's own repository. Its lock entry retains the computed content hash and records `nicoandrade/dinvolt` as the GitHub source for future updates, without retaining the local package path. The bundled version follows the installed Dinvolt package; external skills still come from upstream. The standalone command `npx skills add nicoandrade/dinvolt --skill keep-a-changelog` works in other projects after the source has been published to GitHub, independently of the Dinvolt CLI.
 
 ### Non-interactive creation
 

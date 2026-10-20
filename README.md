@@ -92,10 +92,29 @@ Run these inside your generated project:
 - **Hosting:** publish your repository and `main` first. See the [Vercel guide](docs/vercel.md).
 - **Password recovery:** configure Resend and a sender address first.
 
+## Keep a Changelog skill
+
+Dinvolt's **Keep a Changelog** skill reviews changes, chooses a semantic version and updates `CHANGELOG.md` or `CHANGELOG.txt`. It works with any project or stack; no Dinvolt application is required. It follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+Install it in any repository from the published GitHub source:
+
+```sh
+npx skills add nicoandrade/dinvolt --skill keep-a-changelog
+```
+
+To test a local checkout, replace `nicoandrade/dinvolt` with its absolute directory. See the [Skills CLI documentation](https://skills.sh/docs/cli) for installation options.
+
+The skill follows the [Skills authoring format](https://github.com/vercel-labs/skills/blob/main/docs/creating-skills.md). According to the [skills.sh FAQ](https://skills.sh/docs/faq), GitHub installs with CLI telemetry enabled automatically register skills for the directory and leaderboard; there is no separate submission step.
+
+Then ask your agent: “Use keep-a-changelog to review the changes, choose the next version and update the changelog.” You can also request a specific version or only update `Unreleased`. Preparing release files does not publish a release.
+
+New Dinvolt projects receive the bundled skill when skill installation is enabled. The source is [skills/keep-a-changelog/SKILL.md](skills/keep-a-changelog/SKILL.md).
+
 ## Repository
 
 - **`src/`** — how the CLI works.
 - **`catalog/`** — what generated applications receive.
+- **`skills/`** — Dinvolt skills installable in any project.
 - **`playground/`** — where we preview and test the UI.
 
 <details>
@@ -104,6 +123,7 @@ Run these inside your generated project:
 ```text
 dinvolt/
 ├── src/                    CLI, wizard and project assembly
+├── skills/                 Portable Dinvolt skills
 ├── catalog/
 │   ├── next/               Next.js templates and starter docs
 │   ├── database/           Drizzle and database initialization

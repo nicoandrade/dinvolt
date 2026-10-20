@@ -1,6 +1,7 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import settings from "../catalog/skills/config.json" with { type: "json" };
 import { defaultDatabase } from "./database.ts";
@@ -14,6 +15,7 @@ const require = createRequire(import.meta.url);
 export interface SkillSource {
   source: string;
   skills: string[];
+  bundled?: boolean;
 }
 
 interface ProjectSkillsOptions {
@@ -66,7 +68,10 @@ export async function installProjectSkills(
   for (const target of skillTargets) {
     await mkdir(join(directory, target.directory), { recursive: true });
   }
-  for (const { source, skills } of selected) {
+  for (const { source, skills, bundled } of selected) {
+    const installSource = bundled
+      ? fileURLToPath(new URL("../skills", import.meta.url))
+      : source;
     try {
       // Copy each target independently: upstream's shared symlink install can
       // report success while leaving the second agent directory incomplete.
@@ -75,7 +80,7 @@ export async function installProjectSkills(
         [
           cli,
           "add",
-          source,
+          installSource,
           "--skill",
           ...skills,
           "--agent",
@@ -104,11 +109,27 @@ export async function installProjectSkills(
           }
         }
         if (
-          lock.skills?.[name]?.source !== source ||
+          lock.skills?.[name]?.source !== installSource ||
           !lock.skills[name].computedHash
         ) {
           throw new Error(`Missing project lock entry for ${name}.`);
         }
+      }
+      if (bundled) {
+        // Keep the CLI's content hash, but replace the machine-local package
+        // path with the public source so `skills update` works after creation.
+        for (const name of skills) {
+          lock.skills[name] = {
+            source,
+            sourceType: "github",
+            skillPath: `skills/${name}/SKILL.md`,
+            computedHash: lock.skills[name].computedHash,
+          };
+        }
+        await writeFile(
+          join(directory, "skills-lock.json"),
+          `${JSON.stringify(lock, null, 2)}\n`
+        );
       }
     } catch (error) {
       throw new Error(
