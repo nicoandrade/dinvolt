@@ -18,7 +18,7 @@ Open the local URL printed by Blume. The server binds to `127.0.0.1` by default.
 - `content/` contains the introduction, quickstart, project types and agent guides.
 - `lib/repository-source.ts` publishes an explicit selection of existing public Markdown: the CLI and Vercel references in root `docs/`, database/auth/API guides in `catalog/`, the registry guide and only the copyable section of `docs/agent-prompt.md`. Edit those originals; no second copy is maintained.
 - The adapter maps links between selected documents to public routes and other repository Markdown links to GitHub. Edit links point to the original source. It watches the selected sources during local development.
-- `blume.config.ts` defines navigation, metadata, the canonical production origin and the theme. The docs logo derives from `assets/iso.svg`; keep the copies in `public/` aligned when branding changes.
+- `blume.config.ts` defines navigation, metadata, the canonical production origin and the theme. `theme.css` sets neutral dark surfaces, text and borders inspired by the Next.js documentation. The docs logo derives from `assets/iso.svg`; keep the copies in `public/` aligned when branding changes.
 - Blume discovers only `content/` and the explicit repository selection. Do not point it at the repository root or add maintainer notes, E2E reports, environment files or private test instructions as sources.
 
 Content follows `main`, which can be ahead of npm. Check the published version and help before describing new CLI behavior as available through `@latest`. The landing's copied creation prompt should stay aligned with `docs/agent-prompt.md`.

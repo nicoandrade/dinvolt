@@ -1,0 +1,8 @@
+/* Neutral dark palette inspired by the Next.js documentation. */
+:root[data-theme="dark"] {
+  --blume-foreground: #ededed;
+  --blume-muted: #1a1a1a;
+  --blume-muted-foreground: #a1a1a1;
+  --blume-border: #2e2e2e;
+  --blume-code-background: #0a0a0a;
+}

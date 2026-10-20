@@ -35,8 +35,8 @@ export default defineConfig({
     ],
   },
   theme: {
-    accent: { light: "#0069a8", dark: "#66c7ff" },
-    background: { light: "#ffffff", dark: "#101828" },
+    accent: { light: "#0069a8", dark: "#ededed" },
+    background: { light: "#ffffff", dark: "#000000" },
   },
   footer: {
     copyright: `© ${new Date().getFullYear()} Dinvolt. MIT licensed.`,
