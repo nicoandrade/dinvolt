@@ -6,3 +6,21 @@
   --blume-border: #2e2e2e;
   --blume-code-background: #0a0a0a;
 }
+
+/* A comfortable reading size for guides, independent of the compact sidebar. */
+.prose {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.prose :where(p, ul, ol) {
+  margin-block: 1.25rem;
+}
+
+.prose :where(li) {
+  margin-block: 0.5rem;
+}
+
+.prose :where(h2, h3) {
+  margin-bottom: 1rem;
+}

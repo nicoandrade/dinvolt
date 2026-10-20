@@ -1,43 +1,41 @@
 ---
 title: Introduction
-description: Build your app with a Next.js foundation, editable UI and context for your coding agent.
+description: Create a Next.js app with editable UI and guidance for your coding agent.
 ---
 
 ![Dinvolt — build your app with your AI coding agent](/dinvolt-intro.jpg)
 
-Dinvolt creates a working starting point for your application and gives your coding agent the conventions and skills to extend it.
+Dinvolt creates a Next.js application with ready-to-edit UI, project conventions and skills for your coding agent.
 
-Choose a public website or an application with administration. Both give you source code you can read, change and own, without a Dinvolt account or subscription.
+You own the generated source. No Dinvolt account or subscription is required.
 
-## Start building
+## Start here
 
-- [Quickstart](/quickstart): create your first project and run it locally.
-- [Build with an agent](/agents): use Codex, Claude Code, Cursor or another coding agent.
-- [Choose your project type](/project-types): decide whether you need administration, authentication and a database.
+- [Quickstart](/quickstart): create a project and run it locally.
+- [Next steps](/next-steps): build your website or finish setting up administration.
+- [Project types](/project-types): choose a public website or add administration.
+- [Build with agents](/agents): let your coding agent create or extend the app.
 
-## What you get
+## What is included?
 
-| Area | Foundation |
-| --- | --- |
-| Application | Next.js, React and TypeScript |
-| Interface | Tailwind CSS, shadcn/ui and Base UI |
-| Development | Portless and Ultracite, with Oxlint + Oxfmt by default |
-| Agent context | Project instructions and recommended skills |
-| Optional administration | Better Auth, user management and CSV exports |
-| Optional database | Drizzle with Turso Database or PlanetScale Postgres |
-| Optional API and data | tRPC, TanStack Query and TanStack Table |
-| Optional recovery email | Resend and React Email |
+Every project starts with **Next.js, React, TypeScript, Tailwind CSS and shadcn/ui**. Dinvolt also configures local development, code formatting and recommended agent skills.
 
-Administration features are included only when you select **Public website + administration**. External databases, hosting and email services require their own setup.
+Choose **Public website + administration** to add authentication, user management, a database and an API. [Compare project types](/project-types).
 
-## Continue with your project
+External databases, email and hosting need their own setup. You can create the project first and connect those services later.
 
-Run `npx dinvolt setup` when you have database credentials, [add components](/ui/blocks) as you build, and [connect Vercel](/guides/vercel) when your Git repository is ready.
+## Continue building
 
-Dinvolt installs editable application code. Changes to Dinvolt's catalog affect future installations; existing projects keep their own source and customizations.
+| I want to…                  | Guide                                    |
+| --------------------------- | ---------------------------------------- |
+| Connect a database          | [Database setup](/guides/database)       |
+| Set up administrator access | [Authentication](/guides/authentication) |
+| Add components or UI blocks | [UI registry](/ui/blocks)                |
+| Deploy the application      | [Vercel setup](/guides/vercel)           |
+| Find a command or flag      | [CLI reference](/reference/cli)          |
 
-## About these docs
+Installed code belongs to your application. Updating Dinvolt does not automatically update your app's components or customizations.
 
-These docs are maintained alongside [Dinvolt's source code](https://github.com/nicoandrade/dinvolt). The command reference and integration guides reuse the repository's Markdown during the site build.
+## Documentation version
 
-The reference follows the source on `main`. For commands run through `@latest`, check `npx dinvolt@latest --version` and the command's `--help`: source changes may be ahead of the published package. See the [changelog](https://github.com/nicoandrade/dinvolt/blob/main/CHANGELOG.md) for released changes.
+These docs follow the [source on `main`](https://github.com/nicoandrade/dinvolt), which may be ahead of the npm release. Check the [changelog](https://github.com/nicoandrade/dinvolt/blob/main/CHANGELOG.md) when a documented option is unavailable.

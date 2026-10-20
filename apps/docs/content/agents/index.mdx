@@ -1,58 +1,86 @@
 ---
 title: Build with agents
-description: Give your coding agent a working project, clear conventions and explicit CLI results.
+description: Create and extend your app with Codex, Claude Code, Cursor or another coding agent.
 ---
 
-Dinvolt works with Codex, Claude Code, Cursor and other coding agents. The generated application provides project instructions, integration guides and recommended skills so the agent can build on the existing foundation.
+Dinvolt gives your coding agent a working app, project instructions and recommended skills.
 
-## Ask your agent to create the project
+## Create a project
 
-Use the [copyable project creation prompt](/agents/project-prompt). It asks your agent to resolve product choices, inspect the published CLI, create without a wizard and verify the generated starter locally.
+Copy the [project creation prompt](/agents/project-prompt) into your agent. It guides the agent through choosing a project type, running the CLI and checking the starter locally.
 
-Deployment and custom feature development remain separate requests. Pending database credentials do not prevent creating the project or checking its static public page.
+You can supply database credentials later. Ask for deployment or custom features as a separate task once the starter is ready.
 
-## Work inside an existing project
+## Extend an existing project
 
-Ask your agent to read `AGENTS.md`, the README and the relevant generated integration guides before changing code. Those files describe the actual installed project, which may differ from the newest Dinvolt catalog.
+Give your agent a concrete task and ask it to read the project's instructions first:
 
-Keep the application’s existing components, authorization boundaries and data conventions. Catalog updates do not automatically migrate installed application source.
+```text
+Read AGENTS.md, the README and the relevant integration guides.
+Add a contact page using the project's existing UI components.
+Run the available checks and verify the page in the browser.
+```
 
-## Use explicit command results
+The installed app is the source of truth. Keep its existing components, authorization checks and data patterns when adding features.
 
-All four CLI commands support `--json` and `--no-input`. JSON mode disables prompts, writes one result to stdout and sends progress to stderr.
+## Inspect setup without changing it
+
+Run this from the generated project:
 
 <CodeGroup>
 
 ```sh npm
 npx dinvolt setup --status --json
-npx dinvolt ui add dialog textarea --target public --json
 ```
 
 ```sh bun
 bunx dinvolt setup --status --json
-bunx dinvolt ui add dialog textarea --target public --json
 ```
 
 ```sh pnpm
 pnpm dlx dinvolt setup --status --json
-pnpm dlx dinvolt ui add dialog textarea --target public --json
 ```
 
 ```sh yarn
 yarn dlx dinvolt setup --status --json
+```
+
+</CodeGroup>
+
+The result tells the agent which setup steps are complete or pending.
+
+## Add components without prompts
+
+For example, install a dialog and a textarea into the public UI area:
+
+<CodeGroup>
+
+```sh npm
+npx dinvolt ui add dialog textarea --target public --json
+```
+
+```sh bun
+bunx dinvolt ui add dialog textarea --target public --json
+```
+
+```sh pnpm
+pnpm dlx dinvolt ui add dialog textarea --target public --json
+```
+
+```sh yarn
 yarn dlx dinvolt ui add dialog textarea --target public --json
 ```
 
 </CodeGroup>
 
-The first command inspects setup without changing it. The second installs components into the public UI area.
+The `create`, `setup`, `ui add` and `vercel setup` commands support `--json` and `--no-input`. JSON mode disables prompts, writes one result to stdout and sends progress to stderr.
 
-Have the agent inspect the exit code, `status`, `project.path`, `completedSteps` and pending steps. A partial failure may leave a valid project or completed remote operations; inspect those results before retrying.
+After a failure, inspect the exit code, result status and completed steps before retrying. A project or remote operation may already exist.
 
-See [non-interactive creation](/reference/cli#non-interactive-creation) and [agent execution for existing projects](/reference/cli#agent-execution-for-existing-projects) for the full contracts.
+See [JSON results](/reference/json) and [non-interactive creation](/reference/create#non-interactive-creation) for details.
 
-## Verify what actually works
+## Verify the result
 
-Lint, TypeScript and a production build verify different things from browser, authentication or database checks. Have the agent report which flows it exercised and which remain pending.
+Ask the agent to report what it actually tested: code checks, browser behavior, authentication and database reads or writes, as applicable. A passing build alone does not verify all of those flows.
 
-Read [agent skills](/agents/skills) to see what Dinvolt installs and how to maintain them.
+Continue with [agent skills](/agents/skills) to maintain the instructions installed with your project.

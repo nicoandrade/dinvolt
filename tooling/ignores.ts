@@ -4,6 +4,7 @@ export const repositoryIgnores = [
   "demos/**",
   "planes/**",
   "apps/docs/.blume/**",
+  "apps/docs/.blume-verify/**",
   "apps/docs/.astro/**",
   "apps/docs/.vercel/**",
   ".agents/skills/**",

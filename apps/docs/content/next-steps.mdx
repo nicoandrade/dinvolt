@@ -1,0 +1,97 @@
+---
+title: Next steps
+description: Your project is running. Build your website or finish setting up administration.
+---
+
+Choose the path that matches the project you created:
+
+| Your project | What to do next |
+| --- | --- |
+| **Public website only** | [Start building your website](#public-website-only). |
+| **Public website + administration** | [Connect the database and sign in](#public-website-with-administration). |
+
+## Public website only
+
+You can start building right away. Describe your website to your coding agent, including its content and visual style:
+
+```text wrap
+Create a portfolio for a freelance designer with a project gallery,
+an about section and a contact page. Use a clean layout, large typography
+and warm colors.
+```
+
+Keep the development server running to see your changes. If you prefer editing directly, your homepage is `src/app/(public)/page.tsx`.
+
+Add [UI components](/ui/blocks) as you need them. Database and administrator setup apply only to projects created with administration.
+
+## Public website with administration
+
+If you already connected your database and created an administrator in the wizard, skip to [signing in](#3-sign-in).
+
+### 1. Create your database
+
+Create an empty database with the provider you selected in Dinvolt. Use a development database for your first local setup.
+
+| Provider | What you need from its dashboard |
+| --- | --- |
+| [Turso](https://turso.tech) | A Turso Database URL and authentication token. |
+| [PlanetScale Postgres](https://planetscale.com/postgres) | An application connection URL (port 6432) and a direct connection URL (port 5432). |
+
+Dinvolt connects to these services; you create the database in the provider's dashboard first. See [database setup](/guides/database) for credential names and manual configuration.
+
+### 2. Complete setup
+
+Run this from your generated project's folder:
+
+<CodeGroup>
+
+```sh npm
+npx dinvolt setup
+```
+
+```sh bun
+bunx dinvolt setup
+```
+
+```sh pnpm
+pnpm dlx dinvolt setup
+```
+
+```sh yarn
+yarn dlx dinvolt setup
+```
+
+</CodeGroup>
+
+1. Select **development**, or add it if it was not selected during creation.
+2. Enter the database credentials when prompted.
+3. Wait for the summary to report **auth tables ready**.
+4. Accept the offer to create the first administrator and enter a name and email.
+
+Save the generated password when the wizard shows it. Restart the development server after setup so it picks up the new configuration.
+
+Already have ready tables but skipped administrator creation? Run setup again to finish that step, or follow [Create the first administrator](/guides/authentication/administrators#create-the-first-administrator).
+
+### 3. Sign in
+
+Open `/admin` on your app's local URL. For a project named `my-app`:
+
+```text
+https://my-app.localhost/admin
+```
+
+Sign in with your administrator's email and generated password. You should reach `/admin/home`; open **Users** to manage accounts.
+
+You are ready to build your application. For example:
+
+```text wrap
+Build a website for a photography studio with a gallery, services and a
+contact page. Adapt the admin panel so the team can manage the gallery.
+Use a minimal design that puts the photographs first.
+```
+
+Use the [admin panel guide](/ui/admin-panel) when extending the included screens.
+
+## When you are ready to publish
+
+Follow [Deploy with Vercel](/guides/vercel). Administration projects also need a production database and administrator; see [database environments](/guides/database/environments).

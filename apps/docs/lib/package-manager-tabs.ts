@@ -14,17 +14,22 @@ const packageRunner = /^(?<indent>\s*)npx(?: (?:--yes|-y))? (?<command>.+)$/u;
 const packageScript =
   /^(?<indent>\s*)(?:npm|bun|pnpm|yarn) run (?<script>\S+)(?<args>.*)$/u;
 const argumentSeparator = /^ -- /u;
+const explicitManager = /--package-manager(?:=|\s+)(?:npm|bun|pnpm|yarn)\b/gu;
 
 function convertLine(line: string, manager: PackageManager): string {
-  const runner = packageRunner.exec(line);
+  const selected = line.replace(
+    explicitManager,
+    `--package-manager ${manager}`
+  );
+  const runner = packageRunner.exec(selected);
   if (runner?.groups) {
     return manager === "npm"
-      ? line
+      ? selected
       : `${runner.groups.indent}${runners[manager]} ${runner.groups.command}`;
   }
-  const script = packageScript.exec(line);
+  const script = packageScript.exec(selected);
   if (!script?.groups) {
-    return line;
+    return selected;
   }
   const args = (script.groups.args ?? "").replace(argumentSeparator, " ");
   const separator = manager === "npm" && args.trim() ? " --" : "";

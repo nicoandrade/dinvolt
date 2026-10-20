@@ -6,7 +6,7 @@
     "dev": "blume dev --host 127.0.0.1",
     "build": "blume build",
     "preview": "blume preview --host 127.0.0.1",
-    "check": "tsc --noEmit && blume validate --strict && blume build"
+    "check": "tsc --noEmit && blume validate --strict && blume build --isolated"
   },
   "dependencies": {
     "blume": "2.2.4"

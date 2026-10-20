@@ -1,15 +1,17 @@
 ---
 title: Quickstart
-description: Create a Dinvolt project, start it locally and complete optional setup when you are ready.
+description: Create your first Dinvolt project and run it locally.
 ---
 
-## Requirements
+## Before you begin
 
-Install **Node.js 24 or later**, **npm** and **Git**. Choose an installed package manager for your generated project. Bun is optional; select npm in advanced configuration if you prefer it.
+Install **Node.js 24 or later**, **npm** and **Git**.
 
-## Create your project
+You can use npm, Bun, pnpm or Yarn for the generated app. Install your preferred package manager before starting.
 
-From the directory where you want to create a new project folder, run:
+## Create a project
+
+Run this command from the folder where you keep your projects:
 
 <CodeGroup>
 
@@ -31,18 +33,20 @@ yarn dlx dinvolt@latest create
 
 </CodeGroup>
 
-1. Enter a project name, such as `my-app`.
+In the wizard:
+
+1. Name your project, for example **my-app**.
 2. Choose **Create a new folder**.
-3. Select **Public website only** or **Public website + administration**.
-4. Use **Dinvolt defaults**, or choose **Advanced configuration** to select your package manager, linter, editor settings, UI presets and, for administration projects, database provider.
+3. Select a [project type](/project-types).
+4. Choose **Use Dinvolt defaults**, or **Advanced configuration** to customize the setup.
 
-Defaults use the package manager detected in the destination, falling back to Bun for an empty project. They also select Oxlint + Oxfmt, Universal editor settings and recommended agent skills. Administration projects default to Turso and the development database environment.
+**Using npm, pnpm or Yarn?** Select it in advanced configuration. Defaults use the package manager detected in the destination, or Bun in an empty project.
 
-You can choose **Complete credentials later** and explore the public page immediately. Database setup is optional during creation.
+For administration projects, you can select **Complete credentials later**. This lets you explore the public page before connecting a database.
 
 ## Run locally
 
-Enter the generated directory and use your selected package manager:
+Enter your new project and use the package manager selected in the wizard:
 
 <CodeGroup>
 
@@ -68,73 +72,14 @@ yarn run dev
 
 </CodeGroup>
 
-Choose the tab that matches the package manager selected in the wizard. The generated README gives the commands for your selected configuration.
+Open the URL printed by the server, normally **https://my-app.localhost**. Portless manages local HTTPS and may ask you to trust its certificate on first use.
 
-Open the URL reported by the development server, normally `https://my-app.localhost`. Portless manages local HTTPS and may ask you to trust its certificate on first use.
+You should now see the public starter page. Keep the server running while you build.
 
-## Build with your agent
+## Next steps
 
-Open the project in your coding agent and describe what you want to build. Have it read the generated `AGENTS.md`, README, integration guides and installed skills before making changes.
+<span id="build-your-application"></span>
 
-To let the agent handle creation too, use the [project creation prompt](/agents/project-prompt).
+Your starter is ready. Continue with [Next steps](/next-steps) to build your website or connect the database and create your first administrator.
 
-## Finish optional setup
-
-For a project with administration:
-
-1. Create a database with Turso or PlanetScale, matching the provider chosen during creation.
-2. Run the setup command below inside the generated project.
-3. Complete the selected database environments and create the first administrator when offered.
-4. Restart the development server after environment changes.
-
-<CodeGroup>
-
-```sh npm
-npx dinvolt setup
-```
-
-```sh bun
-bunx dinvolt setup
-```
-
-```sh pnpm
-pnpm dlx dinvolt setup
-```
-
-```sh yarn
-yarn dlx dinvolt setup
-```
-
-</CodeGroup>
-
-See [database setup](/guides/database) and [authentication](/guides/authentication). Password recovery needs Resend and a configured sender; it remains unavailable until those are set.
-
-When you are ready to host the application, publish its Git repository and `main` branch, then follow [Vercel setup](/guides/vercel).
-
-## Create without the wizard
-
-Choose your package manager to create a public site with the remaining Dinvolt defaults:
-
-<CodeGroup>
-
-```sh npm
-npx --yes dinvolt@latest create --name my-app --location new --project-type public --package-manager npm --json
-```
-
-```sh bun
-bunx dinvolt@latest create --name my-app --location new --project-type public --package-manager bun --json
-```
-
-```sh pnpm
-pnpm dlx dinvolt@latest create --name my-app --location new --project-type public --package-manager pnpm --json
-```
-
-```sh yarn
-yarn dlx dinvolt@latest create --name my-app --location new --project-type public --package-manager yarn --json
-```
-
-</CodeGroup>
-
-Use a destination that does not already exist. To use an existing empty directory, pass its absolute path with `--cwd` and choose `--location current`.
-
-See the [CLI reference](/reference/cli#non-interactive-creation) for all choices, result states and recovery after partial setup.
+To let an agent create the project for you, use the [project creation prompt](/agents/project-prompt). For scripts, see [non-interactive creation](/reference/create#non-interactive-creation).

@@ -11,19 +11,26 @@ bun install --frozen-lockfile
 bun run docs:dev
 ```
 
-Open the local URL printed by Blume. The server binds to `127.0.0.1` by default. Run `bun run docs:build` and `bun run docs:preview` to inspect the static production output. `bun run docs:check` runs TypeScript, strict link validation and the production build; it is also included in the repository's `bun run check`.
+Open the local URL printed by Blume. The server binds to `127.0.0.1` by default. Run `bun run docs:build` and `bun run docs:preview` to inspect the static production output. `bun run docs:check` runs TypeScript, strict link validation and an isolated production build, so it can run while the development server stays open. It is also included in the repository's `bun run check`. The isolated runtime and output live in the ignored `.blume-verify/` directory.
 
 ## Content ownership
 
-- `content/` contains the introduction, quickstart, project types and agent guides.
+- `content/` contains the introduction, quickstart, next steps, project types and agent guides.
 - `lib/repository-source.ts` publishes an explicit selection of existing public Markdown: the CLI and Vercel references in root `docs/`, database/auth/API guides in `catalog/`, the registry guide and only the copyable section of `docs/agent-prompt.md`. Edit those originals; no second copy is maintained.
 - The adapter maps links between selected documents to public routes and other repository Markdown links to GitHub. Edit links point to the original source. It watches the selected sources during local development.
+- Long repository guides are split into focused pages by the explicit `chapters` and `sections` selection in `lib/repository-source.ts`. Update those selections when renaming a selected `##` heading. Links to moved sections follow their new pages; the overview retains legacy anchors beside the new page links. Keep generated-app aliases such as `auth.md` and `database.md` working in both destinations.
 - Use MDX with Blume's native `CodeGroup` for package-manager examples, ordered npm, bun, pnpm and yarn. Keep the selected manager consistent with explicit `--package-manager` flags. Yarn examples target Yarn 2+ (`yarn dlx`). The repository adapter expands shell fences containing `npx` or package-manager `run` commands into these tabs at build time; source Markdown remains usable in GitHub and generated projects. Keep explanatory inline commands and manager-independent examples as ordinary code.
 - `blume.config.ts` defines navigation, metadata, the canonical production origin and the theme. `theme.css` sets neutral dark surfaces, text and borders inspired by the Next.js documentation. The docs logo derives from `assets/iso.svg`; keep the copies in `public/` aligned when branding changes.
 - `public/opengraph-image.jpg` is the shared 1200×630 Open Graph and Twitter image for every documentation page, configured through `seo.og.image`.
 - Blume discovers only `content/` and the explicit repository selection. Do not point it at the repository root or add maintainer notes, E2E reports, environment files or private test instructions as sources.
 
 Content follows `main`, which can be ahead of npm. Check the published version and help before describing new CLI behavior as available through `@latest`. The landing's copied creation prompt should stay aligned with `docs/agent-prompt.md`.
+
+## Writing guides
+
+Give each page a clear task and a short introduction. Lead with prerequisites and the steps needed to get a working result; keep provider internals and advanced options on their own pages. Use short paragraphs, descriptive headings and links to the next task.
+
+Put runnable commands and code examples in fenced blocks with a language (`sh`, `tsx`, `ts`, `json`, `dotenv`). Include imports and a file path when showing a new application file. Use inline code for names and short references; put commands readers should run in their own copyable blocks. Check the rendered page, including package-manager tabs and copy buttons, before finishing.
 
 ## Vercel setup
 

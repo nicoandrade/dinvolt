@@ -51,6 +51,17 @@ test("preserves package versions, multiline CLI flags and comments", () => {
   expect(result).not.toContain("dlx --yes");
 });
 
+test("creates projects with the package manager selected in each tab", () => {
+  const result = withPackageManagerTabs(
+    "```sh\nnpx dinvolt create --name my-app \\\n  --project-type public --package-manager npm --json\n```"
+  );
+  for (const manager of ["npm", "bun", "pnpm", "yarn"]) {
+    expect(result).toContain(
+      `--project-type public --package-manager ${manager} --json`
+    );
+  }
+});
+
 test("does not change manager-independent commands, prompts or application code", () => {
   const markdown = [
     "Use `npm run dev` in an existing project.",

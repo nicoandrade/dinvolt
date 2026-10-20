@@ -1,68 +1,290 @@
-# Vercel setup through Git
+# Deploy with Vercel
 
-Run the setup command in an interactive terminal after publishing your repository and its `main` branch. Dinvolt uses the pinned official Vercel CLI **64.5.0** through npm, with your normal Vercel login. Node.js/npm and Git must be available.
+Connect your generated app to Vercel. Your Git repository supplies the code, and pushes to `main` deploy to Production.
+
+## Before you begin
+
+Prepare these first:
+
+- **Node.js 24+, npm and Git** on your computer.
+- A Git repository with your app published on **`main`**.
+- A Vercel account with access to the repository. Authorize Vercel's Git provider app for your team.
+- For admin projects, a configured **production database**. Prepare staging too if you want Preview deployments.
+
+If database setup is pending, run this inside your project:
+
+```sh
+npx dinvolt setup
+```
+
+Review and apply migrations before hosting setup. Connecting Git can start a build of your published code.
+
+Automatic Git connection supports GitHub.com, GitLab.com (including groups) and Bitbucket.org. Other providers and self-hosted servers need their official Vercel integration.
+
+## Connect your project
+
+### 1. Run the wizard
+
+From your generated app:
+
+```sh
+npx dinvolt vercel setup
+```
+
+Or point to it from another directory:
 
 ```sh
 npx dinvolt vercel setup --cwd ./my-app
 ```
 
-The workflow is **create → setup when credentials are available → publish the Git repository yourself → vercel setup → push/merge to main**. `create` requires no external account, initializes a local `main` branch when there is no Git marker, and never commits. Existing repositories/worktrees and their branches are preserved. Only you create the remote, commit and push.
+### 2. Choose the destination
 
-## What the command changes
+Select your Git remote, Vercel team and an existing or new project. Sign in to Vercel if prompted.
 
-Choose the Git remote, Vercel team and existing/new project. Dinvolt verifies the published `main`, checks existing links, shows the destination and asks before changing its configuration. It configures Next.js, Node.js 24, the app's directory relative to the repository, framework/lockfile build defaults and `main` as the production branch. Review custom build lifecycles (including `vercel-build` and install hooks) or `vercel.json` overrides manually before using the command. Alternative `vercel.ts`, `vercel.toml` and legacy `now.json` configurations require manual setup. Database migrations must be reviewed and applied explicitly, never from a hosting build.
+Dinvolt verifies the published `main` branch and checks that any existing project link matches.
 
-The supported automatic Git connections are GitHub.com, GitLab.com (including groups) and Bitbucket.org. Install/authorize Vercel's Git provider app for the repository and grant the selected team access. Self-hosted servers and other providers need their official Vercel integration; the command does not replace that with a source upload.
+### 3. Review the configuration
 
-Only `.vercel/project.json` and its Git ignore rule are saved locally. Dinvolt writes the documented non-secret link directly because `vercel link` also refreshes OIDC in `.env.local`. It never runs `env pull`, copies dotenv files or records secrets in metadata. Existing links to other teams/repos stop the flow. Repository mappings in `.vercel/repo.json` require the official CLI; Dinvolt preserves them without creating a competing project link. Failed or cancelled runs retain completed operations; rerun to inspect and continue. If project creation has an ambiguous result, select the existing project on retry rather than creating another.
+Choose your Production domain and whether to enable staging-backed Preview deployments. Admin projects can also configure password-recovery email.
+
+Review the destination and environment-variable plan, then confirm. Existing variables are preserved unless you choose to replace them.
+
+### 4. Deploy through Git
+
+Connecting Git may trigger Vercel's initial build. After setup, future pushes or merges to `main` trigger Production deployments.
+
+Check the deployment in Vercel. Saving environment variables does not update a deployment already running.
 
 ## Environments and origins
 
-| Hosting target | Database credentials | Authentication and site origin |
+| Vercel target | Database source | App origin |
 | --- | --- | --- |
-| Production | Only the selected provider's `_PRODUCTION` keys | Verified domain actually assigned to the selected project |
-| Preview (opt in) | Only the selected provider's `_STAGING` keys | Exact deployment hostname from Vercel system variables |
+| Production | Selected provider's `_PRODUCTION` keys | Verified domain assigned to the project. |
+| Preview (opt in) | Selected provider's `_STAGING` keys | Unique deployment hostname supplied by Vercel. |
 
-Public-only projects configure the site without asking for database, auth or recovery email. Admin projects use the existing Next.js dotenv precedence (including inherited values) to read only the applicable database keys. Missing environments/credentials offer `npx dinvolt setup`; entering that separate flow explicitly authorizes its connection checks and prompts. Hosting setup itself never queries or migrates a database.
+Public-only projects need a site origin. Admin projects also need database, authentication and optional recovery-email settings.
 
-A new `BETTER_AUTH_SECRET` is generated independently for each remote target only when its remote key is absent. Repeated runs preserve unreadable remote secrets. Shared secrets across hosting targets require explicit remediation; Dinvolt never rotates them automatically or copies the local secret. Private database/auth/email credentials are sent as Secret through stdin. Replacements use the inspected variable ID and explicit Config/Secret visibility via the official CLI’s v10 API because CLI update cannot uniquely select a base Preview key when branch overrides exist. Public origins and the email sender use Config. If a Config value is encrypted in the inventory, Dinvolt reads that individual Config entry to compare it; retained database, auth and email secrets are never requested. Existing keys require a replacement decision; unrelated variables and branch overrides remain intact. Conflicting database keys, `DINVOLT_DATABASE_ENV`, `DEV_ADMIN_*` or `VERCEL_TOKEN` in managed hosting targets stop setup for explicit review.
+Hosting setup reads the relevant database values using Next.js dotenv precedence, including inherited values. It does not query the database or run migrations.
 
-Production uses `BETTER_AUTH_URL` and `NEXT_PUBLIC_SITE_URL`. Choose an assigned domain or associate a domain you already own. The command verifies ownership status and DNS configuration before proceeding, never buys a domain, takes over an assignment or edits DNS. A custom domain can remain pending until you follow the instructions in Vercel Domains and rerun.
+If credentials or an environment are missing, the interactive wizard offers the separate database setup flow. Complete it before continuing.
 
-Preview enables Vercel system variables. Auth uses `https://${VERCEL_URL}`; site metadata uses `NEXT_PUBLIC_VERCEL_URL` when `NEXT_PUBLIC_VERCEL_ENV` is `preview`. Open the **unique deployment URL** for authenticated previews. Branch aliases/custom Preview domains are not additional trusted auth origins. The resolver ignores production/local URL values in Preview and never trusts forwarded headers or all `*.vercel.app` hosts. If you deliberately add stable Preview domains, review both auth origins and public metadata together. Preview is disabled for a new connection when omitted; an already-active integration's Preview settings are preserved and reported.
+## Production domains
 
-Next.js file-based social images (`opengraph-image.tsx`) have their own Preview fallback: Next.js 16.4 can use `VERCEL_BRANCH_URL` for the image URL even when `metadataBase` uses the unique deployment origin. This does not add that branch alias to authentication trusted origins. Review explicit social-image metadata separately if images must also use immutable deployment URLs.
+Choose a domain already assigned to the selected project, or associate a domain you own. For example:
 
-Password recovery is optional. Supply `RESEND_API_KEY` and `EMAIL_FROM` separately for each hosting environment. Local development values are never copied. Without them, password recovery remains unavailable.
+```text
+https://my-app.vercel.app
+https://app.example.com
+```
 
-Older/customized starters must adopt the deployment origin resolver before enabling Preview. Preserve customizations: add the `getAuthOrigin` helper from `catalog/auth/auth-origin.ts`, call it for `baseURL` and `trustedOrigins` in `src/lib/auth-config.ts`, and apply the Preview URL logic from `catalog/ui/site.ts` to `src/config/site.ts`. Review and publish these changes yourself. No automatic source replacement occurs during hosting setup.
+The wizard verifies domain ownership and DNS configuration. It does not purchase domains or edit DNS.
 
-## When a deployment happens
+If a custom domain is pending, follow the instructions in **Vercel → Domains**, then rerun setup. Existing assignments are never taken over.
 
-Project creation receives no Git repository or source files. Dinvolt checks for environment changes after confirmation, saves the approved variable plan, then verifies required keys (including retained keys), new secret types, production origins and returned project settings before connecting Git. Setup is not a transaction: coordinate other configuration changes and pushes until it finishes. The official CLI connection calls Vercel's project-link endpoint; its server-side initial-build behavior is not guaranteed here. **Connecting can cause a Git integration build of the published repository**, so database preparation and all code needed by that commit must be ready first. An existing integration stays active throughout setup; coordinate pushes while applying settings.
+Production uses the verified origin for `NEXT_PUBLIC_SITE_URL` and, in admin projects, `BETTER_AUTH_URL`.
 
-No `vercel deploy`, `--prod`, redeploy, deploy hook, local source upload, commit or push is invoked. A later push/merge to `main` produces the Git deployment. Saving variables does not update deployments already running.
+## Preview deployments
 
-## Official contracts
+Enable Preview in the wizard to use your staging database for Git previews.
 
-- [Git integration and production branch defaults](https://vercel.com/docs/git)
-- [Vercel Git CLI](https://vercel.com/docs/cli/git) and [connection implementation](https://github.com/vercel/vercel/blob/main/packages/cli/src/util/git/connect-git-provider.ts)
-- [CLI API authentication and stdin](https://vercel.com/docs/cli/api)
-- [Environment variable types and commands](https://vercel.com/docs/cli/env) and [official CLI variable updates](https://github.com/vercel/vercel/blob/main/packages/cli/src/util/env/update-env-record.ts)
-- [Framework-prefixed system variables](https://vercel.com/docs/environment-variables/framework-environment-variables)
-- [Production branch endpoint in Vercel's official Terraform provider](https://github.com/vercel/terraform-provider-vercel/blob/main/client/project.go)
+For authenticated previews, open the **unique deployment URL** from Vercel. For example:
 
-The CLI has no production-branch setter; Dinvolt uses the same scoped `PATCH /v9/projects/{id}/branch` request as Vercel's Terraform provider and verifies the resulting branch. Provider errors are deliberately summarized without echoing values. Check your account/team/provider app access in Vercel when an operation fails, then rerun.
+```text
+https://my-app-unique-deployment.vercel.app
+```
+
+Authentication derives its origin from `VERCEL_URL`. Site metadata uses `NEXT_PUBLIC_VERCEL_URL` when the deployment environment is `preview`.
+
+Branch aliases and custom Preview domains are not automatically trusted authentication origins. To add a stable Preview domain, review both authentication origins and public metadata.
+
+The generated resolver ignores production/local origins in Preview. It does not trust forwarded headers or every `*.vercel.app` hostname.
+
+Preview is off by default for a new non-interactive connection. Omitting Preview on an existing integration preserves its current settings.
+
+### Social images
+
+Next.js 16.4 file-based social images can use the branch alias even when page metadata uses the unique deployment URL. This does not make the alias a trusted authentication origin.
+
+If social images must use immutable deployment URLs, review explicit social-image metadata separately.
+
+## Password recovery
+
+For admin projects, configure these values separately for Production and Preview:
+
+```dotenv
+RESEND_API_KEY=<resend-api-key>
+EMAIL_FROM=My App <noreply@example.com>
+```
+
+Enter them when the wizard asks. Local development email values are not copied to Vercel.
+
+Email is optional. Without these settings, password recovery remains unavailable.
+
+For scripts, use a private JSON file as shown in [Agents and scripts](#agents-and-scripts).
 
 ## Agents and scripts
 
-The same hosting workflow supports explicit non-interactive choices:
+Authenticate with the Vercel CLI or provide `VERCEL_TOKEN` before running without prompts. Complete database setup separately; this mode does not open other wizards.
+
+### Configure an existing project
+
+Replace the sample team, project and origin with your values:
 
 ```sh
 npx dinvolt vercel setup --team my-team --project my-project \
   --origin https://my-project.vercel.app --apply --json
 ```
 
-`--json` disables prompts and returns the resolved plan, verified result and completed steps without variable values. Existing team/project links must match. Authentication and database setup must be completed separately; the command will not open another wizard. Use `--preview` for staging-backed previews, `--new-project` instead of `--project` for explicit creation, and `--add-domain` to associate a domain without buying it or changing DNS. `--apply` is required and Git connection may trigger the provider's initial build. No source upload, push or deploy command is run.
+`--apply` is required. The origin must be verified and assigned to that project. Existing local links must match your choices.
 
-See [agent execution](cli.md#vercel-setup-without-a-wizard) for selective variable replacement, private remote-email inputs, output states and recovery from partial failures. Human invocations without agent options retain the interactive workflow.
+### Create a new project
+
+Use `--new-project` instead of `--project`:
+
+```sh
+npx dinvolt vercel setup --team my-team --new-project my-project \
+  --origin https://my-project.vercel.app --apply --json
+```
+
+Use `--preview` for staging-backed previews. If several Git remotes exist, select one with `--git-remote`.
+
+Use `--add-domain` to associate a domain you already own. Its ownership and DNS must be ready.
+
+### Replace an existing variable
+
+List only the variables you intend to replace using `target:KEY`:
+
+```sh
+npx dinvolt vercel setup --team my-team --project my-project \
+  --origin https://app.example.com --add-domain \
+  --replace production:NEXT_PUBLIC_SITE_URL,production:BETTER_AUTH_URL \
+  --apply --json
+```
+
+The authentication variable in this example applies to admin projects. Other variables and branch overrides are preserved.
+
+### Supply recovery-email settings
+
+Save a private file outside Git, such as `../hosting-email.json`:
+
+```json
+{
+  "production": {
+    "RESEND_API_KEY": "<production-api-key>",
+    "EMAIL_FROM": "My App <noreply@example.com>"
+  },
+  "preview": {
+    "RESEND_API_KEY": "<preview-api-key>",
+    "EMAIL_FROM": "My App Preview <preview@example.com>"
+  }
+}
+```
+
+Then select both targets:
+
+```sh
+npx dinvolt vercel setup --team my-team --project my-project \
+  --origin https://my-project.vercel.app --preview \
+  --email-file ../hosting-email.json --apply --json
+```
+
+For Production only, omit `--preview` and remove the `preview` entry from the file.
+
+JSON output contains the plan, verified result and completed steps without variable values. See [CLI options](cli.md#dinvolt-vercel-setup) and [JSON results](cli.md#automation-and-json) for the full reference.
+
+## What the command changes
+
+Dinvolt configures these Vercel settings:
+
+| Setting                   | Value                                         |
+| ------------------------- | --------------------------------------------- |
+| Framework                 | Next.js                                       |
+| Node.js                   | 24.x                                          |
+| Root Directory            | App directory relative to the Git repository. |
+| Build, install and output | Framework and lockfile defaults.              |
+| Production Branch         | `main`                                        |
+
+Locally, it saves `.vercel/project.json` and its Git ignore rule. It uses the pinned official Vercel CLI **64.5.0** through npm.
+
+The command does not upload local source, commit or push changes. You manage the repository and migrations through your own workflow.
+
+### Existing links and custom builds
+
+Review custom build lifecycles, install hooks, `vercel-build` scripts and `vercel.json` overrides before setup.
+
+These configurations need manual setup:
+
+- `vercel.ts`, `vercel.toml` and legacy `now.json`.
+- Repository mappings in `.vercel/repo.json`, managed with the official Vercel CLI.
+
+Dinvolt preserves existing repository mappings. A local link to another team or repository stops setup.
+
+### Older or customized starters
+
+Before enabling Preview, adopt the deployment origin resolver in your app:
+
+1. Add `getAuthOrigin` from `catalog/auth/auth-origin.ts`.
+2. Use it for `baseURL` and `trustedOrigins` in `src/lib/auth-config.ts`.
+3. Apply the Preview URL logic from `catalog/ui/site.ts` to `src/config/site.ts`.
+4. Review and publish your changes.
+
+Preserve your customizations. Hosting setup does not replace application source.
+
+## When a deployment happens
+
+Dinvolt saves and verifies the approved configuration before connecting a new Git integration. Project creation itself receives no Git repository or source files.
+
+**Connecting Git can trigger an initial build of the published repository.** Have the database and that commit's code ready before confirming setup.
+
+An existing Git integration remains active throughout setup. Coordinate pushes and other configuration changes until setup finishes.
+
+The command does not invoke a deploy, redeploy or deploy hook. After setup, pushes or merges to `main` produce Git deployments.
+
+## Secrets and variable handling
+
+Database, authentication and email credentials are sent as Secret values through stdin. Public origins and the email sender use Config values.
+
+For each remote target, Dinvolt creates a new `BETTER_AUTH_SECRET` only when the key is absent. Reruns preserve existing remote secrets; local auth secrets are never copied.
+
+| Situation | Behavior |
+| --- | --- |
+| An existing variable needs a change | Ask for replacement, or require `--replace` in scripts. |
+| A remote secret already exists | Preserve it without requesting its value. |
+| Auth secrets are shared across targets | Stop for explicit remediation in Vercel. |
+| Database keys conflict with the target | Stop for explicit review. |
+| A target defines local/admin/provider system keys | Stop for explicit review. |
+
+Conflicting keys include `DINVOLT_DATABASE_ENV`, `DEV_ADMIN_*`, `VERCEL_TOKEN` and manually defined Vercel environment/URL variables.
+
+### Advanced implementation details
+
+Dinvolt writes the non-secret project link directly. It does not run `vercel link` or `env pull`, refresh OIDC in `.env.local`, or copy dotenv files into metadata.
+
+Variable replacement uses the inspected ID through the official CLI's v10 API. This selects the base target variable without changing branch overrides. Encrypted Config entries may be read individually for comparison; retained database, auth and email secrets are never requested.
+
+The production branch uses the scoped project-branch endpoint from Vercel's official Terraform provider. Dinvolt verifies the resulting settings before completing setup.
+
+## Troubleshooting
+
+Setup preserves completed operations if it fails or is cancelled. Check the current state, then rerun.
+
+| Problem | Next step |
+| --- | --- |
+| Authentication or provider access fails | Check Vercel login, team permissions and the Git provider app's repository access. |
+| Custom domain is pending | Complete the requested DNS/ownership steps in Vercel Domains, then rerun. |
+| Database credentials are missing | Complete the required environment with `setup`. |
+| Project creation result is unclear | Select the existing project on retry; in scripts, use `--project`. |
+| Hosting variables conflict | Review the named keys in Vercel, resolve the conflict and rerun. |
+
+Provider errors are summarized to avoid exposing submitted values. A failed command may still have completed a remote change.
+
+## Official contracts
+
+For the underlying Vercel behavior, see:
+
+- [Git integration and production branches](https://vercel.com/docs/git)
+- [Git CLI](https://vercel.com/docs/cli/git) and [connection implementation](https://github.com/vercel/vercel/blob/main/packages/cli/src/util/git/connect-git-provider.ts)
+- [CLI API authentication and stdin](https://vercel.com/docs/cli/api)
+- [Environment variables](https://vercel.com/docs/cli/env) and [CLI variable updates](https://github.com/vercel/vercel/blob/main/packages/cli/src/util/env/update-env-record.ts)
+- [Framework-prefixed system variables](https://vercel.com/docs/environment-variables/framework-environment-variables)
+- [Production branch endpoint](https://github.com/vercel/terraform-provider-vercel/blob/main/client/project.go)

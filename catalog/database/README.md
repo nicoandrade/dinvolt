@@ -1,59 +1,110 @@
 # Database
 
-Explore the site first without credentials. Create your external database, then run the setup command inside the project to complete selected environments, inspect/initialize the unchanged initial migration and optionally create the first administrator. Connecting during project creation remains optional. The manual commands below are also available. Restart dev after changing dotenv files.
+Connect your database, make your first query, and manage schema changes with Drizzle.
+
+This guide applies to **Public website + administration** projects.
+
+You can explore the generated site before adding credentials. Database access starts only when server code needs it.
+
+## Connect your database
+
+### 1. Create a database
+
+Create a database with the provider you selected during project creation: **Turso Database** or **PlanetScale Postgres**. Dinvolt configures the connection; it does not create the external database service.
+
+### 2. Run setup
+
+From your generated project's directory:
 
 ```sh
 npx dinvolt setup
 ```
 
-The following quickstart targets **development**. If you did not select development, use the explicit staging/production commands below instead; local static pages still work, but local database access fails until development is configured.
+Choose the environment to complete and enter its credentials. Setup checks the connection, initializes a compatible empty database, and offers to create the first administrator.
 
-1. Dinvolt generates one initial migration in `drizzle/` after dependencies are installed, shared by every selected environment. The final formatting and code checks include the generated snapshots. Keep it and `.dinvolt/initial-database.json` in Git.
-2. If you chose **Connect and initialize databases**, the completion summary reports connection and auth-table readiness per environment. Ready environments need no initial `db:generate` or `db:migrate` command.
-3. For pending credentials, complete the generated `.env.local` and run `db:init` (or `db:init:staging` / `db:init:production`). Preserve the generated `BETTER_AUTH_SECRET`. Use your selected package manager instead of Bun when appropriate.
-4. For later application/schema changes, update `src/db/schema.ts`, run `db:generate`, review the new SQL, and apply it with the matching `db:migrate` command. `db:init` deliberately refuses additional or changed migrations.
+If the summary reports **auth tables ready**, you can start using the database. Restart the development server after changing environment variables.
 
-Initialize the unchanged initial migration against an empty development database:
+### Manual setup
+
+Fill in the provider's keys in the existing `.env.local`. Preserve its generated `BETTER_AUTH_SECRET`.
+
+Turso:
+
+```dotenv
+TURSO_DATABASE_URL=turso://your-database
+TURSO_AUTH_TOKEN=your-token
+```
+
+PlanetScale Postgres:
+
+```dotenv
+DATABASE_URL=postgresql://app-user:password@your-host:6432/your-database?sslmode=verify-full
+DATABASE_URL_DIRECT=postgresql://migration-user:password@your-host:5432/your-database?sslmode=verify-full
+```
+
+Review the initial SQL already generated in `drizzle/`, then initialize an empty development database:
 
 ```sh
 bun run db:init
 ```
 
-For later schema changes, generate the SQL first:
+Use your project's package manager in place of Bun. The examples on this page target **development** unless their command includes another environment.
+
+## Query from server code
+
+Import the lazy database client from `@/db`. It is reused across requests and development reloads.
+
+For example, projects with authentication already have a `user` table. This server helper selects only the fields it needs:
+
+```ts
+// src/lib/find-user.ts
+import "server-only";
+import { eq } from "drizzle-orm";
+import { getDb } from "@/db";
+import { user } from "@/db/schema";
+
+export async function findUser(id: string) {
+  const [result] = await getDb()
+    .select({ id: user.id, name: user.name })
+    .from(user)
+    .where(eq(user.id, id))
+    .limit(1);
+
+  return result ?? null;
+}
+```
+
+Authorize the caller before returning private data from a page, action, or API. Keep database code in the **Node.js server runtime**.
+
+For client requests, use an authorized [tRPC procedure](trpc.md). See the [authentication guide](auth.md) for session and administrator checks.
+
+## Change your schema
+
+Use migrations for changes after the initial database setup.
+
+### 1. Edit the schema
+
+Add or update application tables in `src/db/schema.ts`. Export each table and include it in the existing `schema` object.
+
+Keep the authentication exports from `src/db/auth-schema.ts`. PlanetScale also includes its relation exports; Turso configures relational queries with `defineRelations(schema)`.
+
+### 2. Generate SQL
 
 ```sh
 bun run db:generate
 ```
 
-Review the generated SQL before applying it to development:
+Open the new migration in `drizzle/` and review its SQL before applying it.
+
+### 3. Apply the migration
+
+Development:
 
 ```sh
 bun run db:migrate
 ```
 
-Import `getDb` from `@/db` in server code and call it when you need the database. The database client is initialized on first use and reused across requests and development reloads. Keep database access in the Node.js server runtime. The starter's pages and build do not require credentials until they use the database.
-
-`drizzle.config.ts` loads Next.js `.env*` files for the selected target as described below. `db:generate` and `db:check` work without a database connection; `db:migrate` and `db:studio` need credentials. `db:studio` opens Drizzle Studio. New starters include Better Auth tables and Admin fields through `src/db/auth-schema.ts`; preserve these exports when adding application tables. See `docs/auth.md` for authentication setup. Commit schema changes and the generated `drizzle/` migrations together.
-
-## Database environments and Vercel
-
-Both wizard modes offer **Complete credentials later** or **Connect and initialize databases**. The latter explicitly authorizes creating the initial tables in empty connected databases. Inputs are masked. An initial `SELECT 1` check has an 8-second timeout; PlanetScale checks both application and direct endpoints. Connection failures allow correction, retry or leaving credentials pending. Cancelling these prompts stops before project generation.
-
-After local generation succeeds and the project is saved at its final destination, Dinvolt initializes each connected environment sequentially. It inspects actual schema definitions (including columns, defaults, indexes and constraints) and Drizzle migration history under a transaction lock. An empty database receives only the known initial migration; SQL and its genuine history record commit together. An exact schema/history match is a read-only recheck. Matching table names alone, existing tables without the matching history, schema drift and partially applied foreign migrations remain pending for manual review. No tables/data are deleted or adopted as already migrated. Each database has its own history; accidentally sharing a database between environments does not apply the initial migration twice. Use separate databases for isolation.
-
-The summary distinguishes connection, ready auth tables, missing credentials and pending/failed initialization. Connection success alone does not prove schema readiness. PostgreSQL also checks that the application endpoint exposes the ready schema and readable auth columns; that role does not need migration-history access. Drivers use bounded connection/query/lock waits; failures can leave an uncertain commit result, so retry `db:init` to inspect persisted state before taking other action. Remote failures preserve the project, private `.env.local`, initial SQL and metadata. Credentials travel only to the dedicated initialization worker, never installer subprocesses or diagnostic output.
-
-For an unknown/incompatible schema, stop and compare the saved migration with the intended database and its real history. Choose an empty database or prepare a reviewed migration/recovery procedure for the existing data. Never insert fake history records or drop unrelated objects to make initialization pass. Fix permission/network issues and rerun the environment's `db:init`; a transaction rolls back partial initial DDL when supported by the provider. No automatic schema reconciliation or future migrations run during creation or deployment builds.
-
-The wizard prepares the environments you selected; it does not provision their databases. Defaults configure only development. Run `npx dinvolt setup` and choose **Add another environment** to enable more environments and complete credentials later. Setup updates only the configured runtime list, additive scripts, placeholders and environment documentation; it preserves customized code and one shared migration directory. The executable configuration lives in `src/db/environment.ts`; `.dinvolt/config.json` records the selection for tools. Keep them consistent when adding an environment later, along with `.env.example` and the matching scripts in `package.json`.
-
-| Destination | Application selection | Credential suffix | Migration command |
-| --- | --- | --- | --- |
-| development | the `dev` script, or outside Vercel by default | none | `db:migrate` |
-| staging | Vercel `VERCEL_ENV=preview` | `_STAGING` | `db:migrate:staging` |
-| production | Vercel `VERCEL_ENV=production` | `_PRODUCTION` | `db:migrate:production` |
-
-After reviewing the SQL, use the command for the intended destination. Staging:
+Staging:
 
 ```sh
 bun run db:migrate:staging
@@ -65,32 +116,193 @@ Production:
 bun run db:migrate:production
 ```
 
-For Turso, the names are `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`; both are required. For PlanetScale they are `DATABASE_URL` (application) and `DATABASE_URL_DIRECT` (migrations/Studio). Append the suffix to the complete name, for example `DATABASE_URL_DIRECT_PRODUCTION` or `TURSO_AUTH_TOKEN_STAGING`. There is no fallback to another environment or to a pooled URL for migrations. A missing selected environment or credential fails on first database use; imports and static builds remain independent of database access.
+Confirm the target database and prepare a backup/recovery procedure before production changes. Apply migrations sequentially, outside deployment builds.
 
-`db:init:staging` / `db:init:production`, `db:studio:staging` / `db:studio:production`, `auth:create-admin:staging` / `auth:create-admin:production`, and `auth:generate:staging` / `auth:generate:production` are also generated for selected environments. Unsuffixed commands always target development, even when inherited `VERCEL_ENV` or `DINVOLT_DATABASE_ENV` says otherwise. If development was not selected, unsuffixed database operations deliberately fail. `db:generate` and `db:check` do not connect and remain available for every combination. Use **one schema and reviewed migration history** in Git; each remote database tracks which migrations it has applied independently. Run changes sequentially, inspect the intended database first, and prepare backup/recovery before applying production migrations. Do not apply migrations automatically inside the deployment build.
+Commit the schema, `drizzle/` directory, and `.dinvolt/initial-database.json` together. All environments share this migration directory; each database tracks its own applied migrations.
 
-On Vercel, place only staging-suffixed credentials in **Preview**, and only production-suffixed credentials in **Production**. Leave `DINVOLT_DATABASE_ENV` unset there: Vercel's system `VERCEL_ENV` selects the destination. Enable automatic exposure of Vercel system variables in the project. Every preview uses staging with this mapping; use isolated preview databases if independent branch data is required. Unknown `VERCEL_ENV` values fail instead of selecting development. Custom Vercel environments need an explicit `DINVOLT_DATABASE_ENV=staging` or `production` mapping. Do not put production credentials in preview or development scopes. Redeploy after changing Vercel variables.
+### Inspect the database
 
-The local `dev` wrapper explicitly selects development. `NODE_ENV` is never a database selector: a local production build or `start` still uses development outside Vercel unless `DINVOLT_DATABASE_ENV` is explicitly set. The selector is for trusted server processes, never client input or `NEXT_PUBLIC_*` configuration. Restart processes after changing credentials; clients are reused per selected environment.
+Open Drizzle Studio for development:
 
-For tooling, Next's loader reads `.env.development.local`, `.env.local`, `.env.development`, `.env` for development; it reads `.env.production.local`, `.env.local`, `.env.production`, `.env` for staging/production. Next's `NODE_ENV=test` mode instead uses its test-file rules and skips `.env.local`. Inherited process variables take precedence over files. There is no automatic `.env.staging` file loading. Put the separately named credentials in your ignored `.env.local`, or inject the exact suffixed names into a trusted migration job. Check for stale inherited credentials before a remote operation. Script targets are captured before loading files and remain authoritative afterward.
+```sh
+bun run db:studio
+```
 
-`BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, email credentials and `NEXT_PUBLIC_SITE_URL` are ordinary deployment-scoped variables, without database suffixes. Use `npx dinvolt vercel setup` after publishing your Git repository/main. Production uses the assigned public origin; Preview derives its auth/site origin from the exact deployment URL supplied by Vercel. Keep remote auth/email credentials separate by environment. When running an administrator command locally against staging/production, supply that environment's auth configuration too; the database selector does not replace your development auth secret or origin. Keep secrets private and use separate databases and auth secrets for separate environments.
+Check migration consistency without connecting to a database:
 
-## Provider details
+```sh
+bun run db:check
+```
 
-For Turso Database, use `@tursodatabase/serverless` with `drizzle-orm/tursodatabase-serverless`, following the [Drizzle integration guide](https://orm.drizzle.team/docs/sqlite/connect-turso-serverless). This provider pins Drizzle ORM and Kit to `1.0.0-rc.4`, which supports this driver. `TURSO_DATABASE_URL` is the `turso://...` URL from Turso Cloud; `TURSO_AUTH_TOKEN` is its token. Kit normalizes the URL to HTTPS for compatibility with its bundled serverless SDK. Tables use `drizzle-orm/sqlite-core`; configure relational queries through `defineRelations(schema)` in `src/db/index.ts` (Drizzle v1).
+Schema generation also works without a database connection. Studio and migration commands require credentials.
 
-This is a remote HTTP connection, so `file:` URLs are not supported by this starter. A local HTTP endpoint can be used for protocol testing; an embedded Turso Database setup uses a separate driver. Do not add `@libsql/client` to this provider: that is the legacy libSQL integration, and Kit would prefer it over the serverless driver.
+## Database environments
 
-The Turso serverless driver uses `fetch`, without a persistent Postgres connection pool. Reuse the existing client; do not add `pg.Pool`, `attachDatabasePool`, or Postgres pool size/idle/connection timeout options to this provider. These are driver-specific settings, not general Drizzle optimizations. See the [Turso SDK reference](https://docs.turso.tech/sdk/ts/reference).
+Projects configure development by default. To add staging or production, run setup and choose **Add another environment**:
 
-For PlanetScale Postgres, the starter uses stable Drizzle ORM `^0.45.4` and Kit `^0.31.11`, with `pg` and `drizzle-orm/node-postgres`. `DATABASE_URL` connects the application through PgBouncer on port 6432. `DATABASE_URL_DIRECT` connects Drizzle Kit directly on port 5432 for schema changes and Studio. Tables use `drizzle-orm/pg-core`; include any Drizzle relations in the exported `schema` object. Copy TLS-enabled connection strings from PlanetScale and keep `sslmode=verify-full`. Use a role with the appropriate permissions for each connection.
+```sh
+npx dinvolt setup
+```
 
-The application reuses a process-global `pg.Pool`, registered once with `attachDatabasePool` from `@vercel/functions` for Vercel Fluid Compute. It allows up to 5 concurrent connections per instance, waits at most 5 seconds to acquire/connect a client, and closes idle connections after 5 seconds in production or 10 seconds in development. The connection timeout does not limit query or transaction duration. Keep this module in the Node.js runtime. Do not create pools or call `pool.end()` per request; Drizzle handles query/transaction client acquisition and release. Interactive `db.transaction(async tx => ...)` callbacks are supported. If you use `pool.connect()` directly, always release the checked-out client in `finally`.
+Setup preserves customized code and existing migrations. Use a separate database for each environment.
 
-The constants in `src/db/connection.ts` are starting values, not universal performance targets. Size `POOL_MAX` against database/PgBouncer capacity, concurrent queries and transactions, and the number of live instances (including overlapping deployments). A smaller pool can increase queuing and connection timeouts; avoid setting it to 1 for Fluid Compute. Monitor acquisition latency and pool saturation before reducing it. See the [node-postgres pool sizing guide](https://node-postgres.com/guides/pool-sizing).
+### Credential names
 
-`attachDatabasePool` integrates idle connection cleanup with Vercel's request lifecycle, using `waitUntil` to allow idle timers to run before suspension. A longer production idle timeout also prolongs this cleanup window; 5 seconds follows [Vercel's pooling guide](https://vercel.com/kb/guide/connection-pooling-with-functions). The same pool works for local development. Configure Fluid Compute in your Vercel project; creating a starter does not change hosting settings.
+Append the environment suffix to the **complete** variable name:
 
-Create the remote database with your provider before supplying credentials. Dinvolt creates initial tables only when you choose connection and initialization; it does not provision database services. After tables are ready, an optional wizard step can create the first administrator; see docs/auth.md.
+| Environment | Suffix        | Turso token example           |
+| ----------- | ------------- | ----------------------------- |
+| Development | None          | `TURSO_AUTH_TOKEN`            |
+| Staging     | `_STAGING`    | `TURSO_AUTH_TOKEN_STAGING`    |
+| Production  | `_PRODUCTION` | `TURSO_AUTH_TOKEN_PRODUCTION` |
+
+For PlanetScale, production migrations use `DATABASE_URL_DIRECT_PRODUCTION`. There is no fallback to another environment's credentials or from the direct URL to the pooled URL.
+
+### Choose the matching command
+
+Commands without a suffix always target development, including when inherited environment variables select another destination.
+
+Staging and production receive matching initialization, migration, Studio, and authentication scripts. For example, initialize an empty staging database with:
+
+```sh
+bun run db:init:staging
+```
+
+If development was not selected, its database operations fail. Static pages still work locally. Only the selected environments receive staging/production scripts.
+
+### Runtime selection
+
+| Where the app runs                              | Database environment |
+| ----------------------------------------------- | -------------------- |
+| Local development script                        | Development          |
+| Vercel Preview                                  | Staging              |
+| Vercel Production                               | Production           |
+| Local build/start, without an explicit override | Development          |
+
+Trusted server processes can explicitly set `DINVOLT_DATABASE_ENV`. `NODE_ENV` does not choose a database. Unknown or unconfigured environments fail on database use.
+
+The runtime list lives in `src/db/environment.ts`; tool metadata lives in `.dinvolt/config.json`. Use setup to keep these, environment placeholders, and scripts aligned.
+
+## Deploy on Vercel
+
+After publishing your Git repository and its main branch, run:
+
+```sh
+npx dinvolt vercel setup
+```
+
+Configure database credentials in the matching Vercel scope:
+
+| Vercel scope | Database variables           |
+| ------------ | ---------------------------- |
+| Preview      | Only `_STAGING` variables    |
+| Production   | Only `_PRODUCTION` variables |
+
+Leave `DINVOLT_DATABASE_ENV` unset for standard Preview/Production deployments. Enable Vercel's system environment variables; `VERCEL_ENV` selects the database.
+
+All previews use staging by default. Use isolated preview databases if branches need separate data. Custom Vercel environments require an explicit staging or production mapping through `DINVOLT_DATABASE_ENV`.
+
+Auth and email variables have **no database suffix**. Set them separately in each hosting environment:
+
+```dotenv
+BETTER_AUTH_URL=https://your-app.example.com
+BETTER_AUTH_SECRET=replace-with-a-random-secret-of-at-least-32-characters
+RESEND_API_KEY=your-resend-key
+EMAIL_FROM="My App <accounts@example.com>"
+NEXT_PUBLIC_SITE_URL=https://your-app.example.com
+```
+
+Preview derives its auth/site origin from the exact Vercel deployment URL. Local commands against staging/production also need that environment's auth configuration: changing the database target does not switch auth secrets or email settings.
+
+Redeploy after changing Vercel variables. See the [authentication guide](auth.md) for auth origins and email setup.
+
+## Turso Database
+
+The generated project uses the remote HTTP driver `@tursodatabase/serverless` with `drizzle-orm/tursodatabase-serverless`. Tables use `drizzle-orm/sqlite-core`.
+
+- Use the Turso Cloud `turso://` URL and its auth token. Embedded `file:` databases need a different driver.
+- Keep the pinned Drizzle ORM and Kit versions together; this integration uses Drizzle v1.
+- Reuse `getDb()`. This driver uses `fetch` and has no Postgres connection pool.
+- Keep `@libsql/client` out of this provider; Drizzle Kit can otherwise select the legacy driver.
+
+Drizzle Kit converts the Cloud URL to HTTPS for its bundled SDK. Your application can keep the original Turso URL.
+
+Learn more in the [Drizzle Turso guide](https://orm.drizzle.team/docs/sqlite/connect-turso-serverless) and [Turso SDK reference](https://docs.turso.tech/sdk/ts/reference).
+
+## PlanetScale Postgres
+
+The generated project uses `pg` with `drizzle-orm/node-postgres`. Tables use `drizzle-orm/pg-core`.
+
+| Connection            | Variable              | Endpoint             |
+| --------------------- | --------------------- | -------------------- |
+| Application queries   | `DATABASE_URL`        | PgBouncer, port 6432 |
+| Migrations and Studio | `DATABASE_URL_DIRECT` | Direct, port 5432    |
+
+Copy TLS-enabled connection strings from PlanetScale and keep `sslmode=verify-full`. Give each connection role the permissions it needs.
+
+### Connection pooling
+
+The application reuses one `pg.Pool` per process and database environment. It registers the pool with Vercel's `attachDatabasePool` for idle connection cleanup.
+
+Default limits in `src/db/connection.ts`:
+
+| Setting                          | Default    |
+| -------------------------------- | ---------- |
+| Maximum connections per instance | 5          |
+| Connection/acquisition timeout   | 5 seconds  |
+| Idle timeout in production       | 5 seconds  |
+| Idle timeout in development      | 10 seconds |
+
+The connection timeout does not limit query duration. Size the pool for your database capacity and number of live instances; measure before reducing it. Longer idle timeouts also extend Vercel's cleanup window.
+
+Keep the existing pool across requests. Drizzle acquires/releases clients for queries and transactions. If you use `pool.connect()` directly, release its client in `finally`.
+
+See [node-postgres pool sizing](https://node-postgres.com/guides/pool-sizing) and [Vercel connection pooling](https://vercel.com/kb/guide/connection-pooling-with-functions). Enable Fluid Compute in Vercel's project settings when using it.
+
+## Initialization and troubleshooting
+
+### What initialization changes
+
+Dinvolt generates the initial migration after installing dependencies. Initialization accepts only that unchanged initial migration:
+
+| Database state | Result |
+| --- | --- |
+| Empty | Creates the known initial tables and real migration history together |
+| Exact matching schema and history | Read-only readiness check |
+| Existing tables, missing history, or schema drift | Stops for manual review |
+| Local schema or migrations changed | Stops; use reviewed regular migrations |
+
+Checks compare columns, defaults, indexes, and constraints, under a transaction lock. Matching table names alone are insufficient. PlanetScale also checks that the application endpoint can read the ready auth schema.
+
+Initialization never deletes existing data, adopts unknown tables, or applies future migrations automatically. The setup summary reports connection and schema readiness separately.
+
+### Connection or initialization failed
+
+Your project, credentials, and generated SQL are preserved. Fix the network, permission, or credential issue, then rerun the matching initialization command:
+
+```sh
+bun run db:init
+```
+
+A timeout can leave the commit result uncertain. Retrying inspects the persisted schema/history before taking further action.
+
+### Existing schema is incompatible
+
+Compare the saved SQL with the intended database and its migration history. Use an empty database or prepare a reviewed migration/recovery procedure for its existing data.
+
+Keep unrelated objects and genuine migration history intact. Adding fake history or dropping tables to pass readiness checks can lose data.
+
+## Environment file loading
+
+Database tools use Next.js's environment loader. Existing process variables take precedence over files.
+
+| Target | File order, highest priority first |
+| --- | --- |
+| Development | `.env.development.local`, `.env.local`, `.env.development`, `.env` |
+| Staging/production | `.env.production.local`, `.env.local`, `.env.production`, `.env` |
+
+There is no automatic `.env.staging` loading. Test mode follows Next.js test-file rules and skips `.env.local`.
+
+Keep the separately named credentials in your ignored `.env.local`, or inject the exact suffixed names in a trusted migration job. Check inherited variables before remote operations, and restart processes after credential changes.
+
+Explicit script targets remain authoritative after files load. Keep environment selectors in trusted server configuration and secrets out of `NEXT_PUBLIC_*` variables.

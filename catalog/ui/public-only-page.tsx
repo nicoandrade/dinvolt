@@ -36,9 +36,9 @@ const Home = () => (
       <div className="t-stagger-line t-stagger-line--4 mt-8">
         <Button
           nativeButton={false}
-          render={<Link href="https://nextjs.org/docs" />}
+          render={<Link href="https://docs.dinvolt.com/next-steps" />}
         >
-          Start building <span aria-hidden="true">↗</span>
+          Next steps <span aria-hidden="true">↗</span>
         </Button>
       </div>
     </div>

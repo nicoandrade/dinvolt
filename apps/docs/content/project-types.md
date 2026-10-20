@@ -1,37 +1,49 @@
 ---
 title: Project types
-description: Choose a public website or a website with administration before creating your project.
+description: Choose the foundation that matches your application.
 ---
 
-Dinvolt asks about your product before configuring the stack. Select the project type that matches what you need to build.
+Choose your project type in the creation wizard. Both options include Next.js, React, TypeScript, Tailwind CSS, shadcn/ui and recommended agent skills.
 
-| Capability | Public website only | Public website + administration |
-| --- | --- | --- |
-| Next.js, React and TypeScript | Included | Included |
-| Public UI and branding | Included | Included |
-| Agent instructions and recommended skills | Included | Included |
-| Database with Drizzle | — | Turso or PlanetScale Postgres |
-| Authentication with Better Auth | — | Included |
-| Admin routes and user management | — | Included |
-| tRPC and TanStack Query | — | Included |
-| Password recovery | — | Requires Resend configuration |
+## Which one should I choose?
+
+| Choose | When you need |
+| --- | --- |
+| **Public website only** | A landing page, portfolio or informational website. |
+| **Public website + administration** | An authenticated admin area, user management and persistent data. |
+
+The wizard preselects **Public website + administration**. Change it if your project only needs public pages.
 
 ## Public website only
 
-Choose this for landing pages, portfolios, informational sites and other projects that do not need the generated administration features.
+You get a public application with editable UI and project instructions for your coding agent.
 
-Dinvolt generates no database, authentication, administration routes or tRPC integration. UI commands target the public area by default.
+Database, authentication, admin routes and tRPC are not installed. UI commands target the public area by default.
+
+Start with the [quickstart](/quickstart), then [add components](/ui/blocks).
 
 ## Public website + administration
 
-Choose this when your application needs authenticated administration and persistent data. The wizard preselects this option, but you can change it.
+You get the public application plus:
 
-The generated project includes a public site and an admin area with separate UI profiles. Database credentials and first-administrator creation can be deferred while you explore the static pages and anonymous login screen.
+- **Better Auth:** email/password sign-in and administrator access.
+- **Admin panel:** protected navigation, user management and CSV export.
+- **Database:** Drizzle with Turso or PlanetScale Postgres.
+- **API and data:** tRPC and TanStack Query.
+- **Password recovery:** available after configuring Resend and a sender.
 
-Use the [database](/guides/database), [authentication](/guides/authentication) and [API and data](/guides/data) guides when connecting and extending the application.
+The public site and admin area have separate UI profiles. You can defer database credentials and first-administrator creation while exploring the public page and login screen.
 
-## Completing an existing project
+Continue with [database setup](/guides/database), [authentication](/guides/authentication) or the [admin panel](/ui/admin-panel).
 
-The chosen type is recorded in `.dinvolt/config.json`. `dinvolt setup` completes the capabilities already installed; it does not turn a public-only project into an administration project or change its database provider.
+## Complete setup later
 
-Keep the generated metadata and helpers with your application. Read [setup behavior](/reference/cli#complete-an-existing-project) before reconfiguring an existing project.
+Run setup inside the generated project when you have your service credentials:
+
+```sh
+npx dinvolt setup
+```
+
+Setup completes the capabilities already installed. It does not change a public-only project into an administration project or switch database providers.
+
+The selected type is stored in `.dinvolt/config.json`. Keep that file and the generated helpers with your application. See [setup options](/reference/setup).

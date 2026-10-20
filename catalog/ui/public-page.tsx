@@ -31,12 +31,19 @@ const Home = () => (
       <p className="t-stagger-line t-stagger-line--3 text-welcome-muted mt-5 max-w-xs text-base leading-relaxed text-pretty sm:max-w-sm">
         Bring your ideas to life.
         <br />
-        Open the admin panel to get started.
+        Your application starts here.
       </p>
-      <div className="t-stagger-line t-stagger-line--4 mt-8">
+      <div className="t-stagger-line t-stagger-line--4 mt-8 flex flex-wrap items-center justify-center gap-3">
+        <Button
+          nativeButton={false}
+          render={<Link href="https://docs.dinvolt.com/next-steps" />}
+        >
+          Next steps <span aria-hidden="true">↗</span>
+        </Button>
         <Button
           nativeButton={false}
           render={<Link href="/admin" prefetch={false} />}
+          variant="outline"
         >
           Open admin panel <span aria-hidden="true">↗</span>
         </Button>
