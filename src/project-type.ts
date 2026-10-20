@@ -1,13 +1,13 @@
 export const projectTypes = [
   {
     value: "public-admin",
-    label: "Public website + administration",
+    label: "Public website + admin panel",
     hint: "Public website with an admin panel, sign-in and database",
   },
   {
     value: "public",
     label: "Public website only",
-    hint: "A landing page or informational site, without admin, authentication or database",
+    hint: "A landing page or informational site, without an admin panel, authentication or database",
   },
 ] as const;
 

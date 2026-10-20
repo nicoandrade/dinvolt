@@ -43,7 +43,7 @@ function wizard(type?: ProjectType, advanced = false) {
   return { prompts, questions, notes };
 }
 
-test("accepting wizard defaults preserves the public site and administration starter", async () => {
+test("accepting wizard defaults preserves the public site and admin panel starter", async () => {
   const { prompts, questions } = wizard();
   const result = await projectOptions(undefined, prompts);
   expect(result.setup).toMatchObject({
@@ -80,7 +80,7 @@ test.each([false, true])(
   }
 );
 
-test("advanced administration configuration retains both presets and database questions", async () => {
+test("advanced admin panel configuration retains both presets and database questions", async () => {
   const { prompts, questions } = wizard("public-admin", true);
   const result = await projectOptions(undefined, prompts);
   expect(result.uiPresets).toEqual(defaultUIPresets);

@@ -34,9 +34,9 @@ npx dinvolt create
 ```
 
 1. Enter a project name and destination.
-2. Choose a public website or a website with administration.
+2. Choose **Public website only** or **Public website + admin panel**.
 3. Accept the defaults or customize your tools and UI themes.
-4. For administration, choose a database. Connect it now or later with `setup`.
+4. For projects with an admin panel, choose a database. Connect it now or later with `setup`.
 
 The destination must be new or empty, apart from `.git` and `.DS_Store`. Dinvolt installs dependencies, checks the generated code and initializes Git when needed.
 

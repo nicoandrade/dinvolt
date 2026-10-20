@@ -7,7 +7,7 @@ This is the editable English prompt intended for the landing page's **For agents
 ```text
 Create a new project with Dinvolt and get the generated starter running locally.
 
-1. Inspect this conversation and the target directory first. Reuse requirements and preferences already provided. Ask only about unresolved product choices: the project name/location and whether it needs a public website only or a public website with administration, authentication, and a database. Infer clear answers and group necessary initial questions together.
+1. Inspect this conversation and the target directory first. Reuse requirements and preferences already provided. Ask only about unresolved product choices: the project name/location and whether it needs a public website only or a public website with an admin panel, authentication, and a database. Infer clear answers and group necessary initial questions together.
 
 2. Run `npx --yes dinvolt@latest create --help` and check the required Node.js version and package manager. Honor my chosen manager; otherwise use Dinvolt's detected/default manager when available, falling back to npm if Bun is unavailable. Pass that choice explicitly rather than installing a manager.
 
@@ -28,12 +28,12 @@ Create a new project with Dinvolt and get the generated starter running locally.
 
 Keep the copyable prompt in English and update this file when Dinvolt's commands, defaults or capabilities change. Check the published CLI's help and the [CLI reference](cli.md) before adding instructions: local features may not yet be available through `@latest`. Keep the landing page's copied text aligned with the reviewed prompt when integrating or updating it.
 
-Preserve the approach of asking only unresolved product questions, using technical defaults and inspecting structured results before retrying. When revising the prompt, exercise public-only creation and creation with administration, plus ambiguous requirements, an occupied destination, an unavailable default package manager and an existing project. Record actual application checks separately from reasoning reviews.
+Preserve the approach of asking only unresolved product questions, using technical defaults and inspecting structured results before retrying. When revising the prompt, exercise public-only creation and creation with an admin panel, plus ambiguous requirements, an occupied destination, an unavailable default package manager and an existing project. Record actual application checks separately from reasoning reviews.
 
 ## Verification baseline — 2026-10-20
 
 - Published Dinvolt `0.2.1`: public-only creation with npm, default design and recommended skills passed lint, TypeScript, production build and desktop/mobile browser checks.
-- Local Dinvolt `0.2.2`: creation with administration, Bun and recommended skills passed lint, TypeScript, production build, public page and anonymous admin login checks. Database connections and administrator creation were intentionally deferred; authentication and database reads/writes were not tested.
+- Local Dinvolt `0.2.2`: creation with an admin panel, Bun and recommended skills passed lint, TypeScript, production build, public page and anonymous admin login checks. Database connections and administrator creation were intentionally deferred; authentication and database reads/writes were not tested.
 - A separate agent reviewed four decision scenarios: missing product requirements, an occupied directory, Bun unavailable with npm available, and an existing Dinvolt project. A second reasoning review found the revised prompt covered those ambiguities. These reviews were not additional application runs.
 
 The initial admin attempt used a nonexistent `--cwd` and failed before generation. Creating the empty target directory and retrying succeeded. This is why the prompt explicitly distinguishes the existing `--cwd` directory from the `current`/`new` location choice.

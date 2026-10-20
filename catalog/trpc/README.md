@@ -2,7 +2,7 @@
 
 Use tRPC for typed application APIs and TanStack Query to fetch, cache, and refresh data in the browser.
 
-This guide applies to **Public website + administration** projects.
+This guide applies to **Public website + admin panel** projects.
 
 The generated project already includes both providers, a working health query, and protected account/admin procedures. No extra installation is needed.
 

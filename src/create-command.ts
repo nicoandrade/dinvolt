@@ -354,10 +354,10 @@ async function executeCreate(options: CreateOptions, output: CreateOutput) {
       await output.step(
         "components",
         admin
-          ? "Installing the public and administrator components..."
+          ? "Installing public website and admin panel components..."
           : "Installing public components...",
         admin
-          ? "Public and administrator components installed."
+          ? "Public website and admin panel components installed."
           : "Public components installed.",
         async () => {
           await addUIComponents(path, ["button"], { target: "public" });

@@ -16,10 +16,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Official Blume documentation site for `docs.dinvolt.com`, with getting-started and agent guides, shared CLI/integration references, local search and Markdown exports for agents.
 - Copyable project creation prompt for coding agents, with explicit project choices, non-interactive creation, local verification and pending database/admin setup guidance.
+- Next steps guide for public websites and apps with an admin panel, covering database connection and first-administrator setup. Generated welcome pages link directly to it.
 
 ### Changed
 
 - Documentation provides npm, Bun, pnpm and Yarn command tabs, including matching project package-manager flags and script argument forwarding. Generated database, authentication and registry guides expose setup commands as runnable shell examples.
+- Documentation and the main README use shorter task-based sections, copyable code examples and links to focused guides.
+- Project choices and guides use **Public website + admin panel** across the CLI, documentation and generated projects. Existing project identifiers, command options and documentation links remain compatible.
 
 ### Fixed
 

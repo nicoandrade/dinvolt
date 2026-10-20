@@ -253,7 +253,7 @@ const documents: readonly RepositoryDocument[] = [
       {
         slug: "ui/admin-panel",
         title: "Admin panel",
-        description: "Sign in, manage users and extend the administration UI.",
+        description: "Sign in, manage users and extend the admin panel.",
         sections: ["Admin panel"],
       },
       {

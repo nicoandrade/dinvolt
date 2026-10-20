@@ -133,7 +133,7 @@ const AdminSettingsPreferences = () => {
         </FieldGroup>
       </SettingsSection>
       <SettingsSection
-        description="Example display options for your administration panel."
+        description="Example display options for your admin panel."
         title="Display"
         titleId={`${id}-display`}
       >

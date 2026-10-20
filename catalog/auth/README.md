@@ -2,7 +2,7 @@
 
 Dinvolt includes email/password sign-in, an admin panel, and password recovery with Better Auth. Use the built-in screens first, then customize the application-owned source as needed.
 
-This guide applies to **Public website + administration** projects.
+This guide applies to **Public website + admin panel** projects.
 
 ## Set up authentication
 

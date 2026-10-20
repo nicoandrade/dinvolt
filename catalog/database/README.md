@@ -2,7 +2,7 @@
 
 Connect your database, make your first query, and manage schema changes with Drizzle.
 
-This guide applies to **Public website + administration** projects.
+This guide applies to **Public website + admin panel** projects.
 
 You can explore the generated site before adding credentials. Database access starts only when server code needs it.
 

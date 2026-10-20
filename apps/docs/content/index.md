@@ -12,15 +12,15 @@ You own the generated source. No Dinvolt account or subscription is required.
 ## Start here
 
 - [Quickstart](/quickstart): create a project and run it locally.
-- [Next steps](/next-steps): build your website or finish setting up administration.
-- [Project types](/project-types): choose a public website or add administration.
+- [Next steps](/next-steps): build your website or finish setting up your admin panel.
+- [Project types](/project-types): choose a public website or add an admin panel.
 - [Build with agents](/agents): let your coding agent create or extend the app.
 
 ## What is included?
 
 Every project starts with **Next.js, React, TypeScript, Tailwind CSS and shadcn/ui**. Dinvolt also configures local development, code formatting and recommended agent skills.
 
-Choose **Public website + administration** to add authentication, user management, a database and an API. [Compare project types](/project-types).
+Choose **Public website + admin panel** to add authentication, user management, a database and an API. [Compare project types](/project-types).
 
 External databases, email and hosting need their own setup. You can create the project first and connect those services later.
 

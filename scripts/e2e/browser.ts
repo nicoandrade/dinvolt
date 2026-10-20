@@ -143,7 +143,7 @@ export async function checkBrowser(
       await deniedEndpoints(context, origin, 401, run);
     });
     await step(
-      "Ordinary user authenticates but cannot access administration",
+      "Ordinary user authenticates but cannot access the admin panel",
       async () => {
         await signIn(page, origin, identity.userEmail, userPassword);
         await page

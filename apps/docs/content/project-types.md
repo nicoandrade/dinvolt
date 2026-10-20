@@ -10,9 +10,9 @@ Choose your project type in the creation wizard. Both options include Next.js, R
 | Choose | When you need |
 | --- | --- |
 | **Public website only** | A landing page, portfolio or informational website. |
-| **Public website + administration** | An authenticated admin area, user management and persistent data. |
+| **Public website + admin panel** | An authenticated admin area, user management and persistent data. |
 
-The wizard preselects **Public website + administration**. Change it if your project only needs public pages.
+The wizard preselects **Public website + admin panel**. Change it if your project only needs public pages.
 
 ## Public website only
 
@@ -22,7 +22,9 @@ Database, authentication, admin routes and tRPC are not installed. UI commands t
 
 Start with the [quickstart](/quickstart), then [add components](/ui/blocks).
 
-## Public website + administration
+<span id="public-website--administration"></span>
+
+## Public website + admin panel
 
 You get the public application plus:
 
@@ -44,6 +46,6 @@ Run setup inside the generated project when you have your service credentials:
 npx dinvolt setup
 ```
 
-Setup completes the capabilities already installed. It does not change a public-only project into an administration project or switch database providers.
+Setup completes the capabilities already installed. It does not add an admin panel to a public-only project or switch database providers.
 
 The selected type is stored in `.dinvolt/config.json`. Keep that file and the generated helpers with your application. See [setup options](/reference/setup).
