@@ -22,6 +22,9 @@
   "bin": {
     "dinvolt": "dist/cli.js"
   },
+  "workspaces": [
+    "apps/docs"
+  ],
   "files": [
     "dist",
     "catalog",
@@ -44,7 +47,11 @@
     "typecheck": "tsc --noEmit",
     "test": "bun run build && bun test",
     "test:e2e": "bun run scripts/e2e.ts",
-    "check": "bun run lint && bun run typecheck && bun run test && bun run check:package",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run check:package && bun run docs:check",
+    "docs:dev": "bun run --cwd apps/docs dev",
+    "docs:build": "bun run --cwd apps/docs build",
+    "docs:preview": "bun run --cwd apps/docs preview",
+    "docs:check": "bun run --cwd apps/docs check",
     "check:package": "bun run scripts/check-package.ts",
     "lint": "ultracite check",
     "format:check": "oxfmt --check",
@@ -69,6 +76,7 @@
     "ultracite": "8.0.1"
   },
   "devDependencies": {
+    "@clack/core": "1.5.0",
     "@shadcn/lint": "^0.2.0",
     "@shadcn/registry": "0.2.0",
     "@types/bun": "1.4.2",
@@ -78,7 +86,8 @@
     "oxlint": "^1.86.0",
     "playwright": "^1.64.1",
     "sharp": "0.35.5",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "zod": "4.6.7"
   },
   "engines": {
     "node": ">=22.18.0"

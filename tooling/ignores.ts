@@ -3,6 +3,9 @@
 export const repositoryIgnores = [
   "demos/**",
   "planes/**",
+  "apps/docs/.blume/**",
+  "apps/docs/.astro/**",
+  "apps/docs/.vercel/**",
   ".agents/skills/**",
   ".claude/skills/**",
   "catalog/ui/components/admin/**",

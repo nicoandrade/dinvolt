@@ -1,0 +1,21 @@
+{
+  "name": "@dinvolt/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "blume dev --host 127.0.0.1",
+    "build": "blume build",
+    "preview": "blume preview --host 127.0.0.1",
+    "check": "tsc --noEmit && blume validate --strict && blume build"
+  },
+  "dependencies": {
+    "blume": "2.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "26.5.1",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

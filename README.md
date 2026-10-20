@@ -116,12 +116,14 @@ New Dinvolt projects receive the bundled skill when skill installation is enable
 - **`catalog/`** — what generated applications receive.
 - **`skills/`** — Dinvolt skills installable in any project.
 - **`playground/`** — where we preview and test the UI.
+- **`apps/docs/`** — the official documentation site, built with Blume for `docs.dinvolt.com`.
 
 <details>
 <summary>Full folder map</summary>
 
 ```text
 dinvolt/
+├── apps/docs/              Official Blume documentation site
 ├── src/                    CLI, wizard and project assembly
 ├── skills/                 Portable Dinvolt skills
 ├── catalog/
@@ -163,12 +165,15 @@ From the repository root:
 | --- | --- |
 | `bun run playground` | Preview components and pages at [localhost:3100/playground](http://localhost:3100/playground). |
 | `bun run check` | Check formatting, lint, types, build and tests. |
+| `bun run docs:dev` | Develop the official documentation locally. |
+| `bun run docs:check` | Check documentation types, links and static build. |
 | `bun run test:e2e` | Run the local generated-app flow with a browser and the internal Turso test database. See [internal E2E instructions](scripts/e2e/README.md). |
 | `bun run fix` | Apply formatting and lint fixes. |
 | `bun run playground:test` | Run browser checks. |
 
 ## Guides
 
+- [Documentation site: development and deployment](apps/docs/README.md)
 - [CLI reference](docs/cli.md) · [Vercel hosting](docs/vercel.md)
 - [Changelog](CHANGELOG.md)
 - [Components and blocks](catalog/registry/README.md) · [Playground](playground/README.md)

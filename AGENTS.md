@@ -2,6 +2,13 @@
 
 These instructions apply to work on Dinvolt itself. They are not starter content and must not be copied into generated projects or included in the published CLI package, catalog, or installed skills.
 
+## Official documentation
+
+- The open-source documentation site lives in `apps/docs/`, built with Blume for `https://docs.dinvolt.com`. Read `apps/docs/README.md` for development, content ownership and Vercel deployment settings.
+- Keep public documentation in English. Reuse the reviewed repository sources selected in `apps/docs/lib/repository-source.ts`; update those sources instead of duplicating their guides. Keep the publication list explicit and exclude internal notes, test reports and credentials.
+- The private sibling `dinvolt-landing` repository owns `https://dinvolt.com`, its presentation and branding. Official product guides belong here. Update the landing's command/prompt illustrations when relevant, without importing that repository into the docs build.
+- Run `bun run docs:dev` locally; `bun run docs:check` checks types, links and the static build and is included in `bun run check`. Keep the docs application and its dependencies out of the published CLI package.
+
 ## Real Turso database for end-to-end tests
 
 - When a development task needs end-to-end verification with real database reads or writes, use the disposable internal Turso database configured in the root `.env.demo.local`. Unit tests and checks that do not need a remote database should remain independent of these credentials.

@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 [Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.2...HEAD)
 
+### Added
+
+- Official Blume documentation site in `apps/docs`, prepared for `docs.dinvolt.com`, with getting-started and agent guides, shared CLI/integration references, local search and Markdown exports for agents.
+
 ## 0.2.2 - 2026-10-20
 
 [Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.1...v0.2.2)

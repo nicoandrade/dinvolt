@@ -24,6 +24,7 @@ To exercise a local CLI change, run `bun run dev --help` or rebuild with `bun ru
 - `playground/`: component and page previews. See the [playground guide](playground/README.md).
 - `tests/`: CLI, generation and regression tests.
 - `docs/`: command and hosting references.
+- `apps/docs/`: the official Blume documentation site. See its [maintenance and deployment guide](apps/docs/README.md). Start it with `bun run docs:dev`; edit reused reference guides at their original source.
 
 Keep generated project instructions applicable to the user's application. Repository tooling, internal test setup and maintainer instructions belong outside the catalog. Changes to catalog files affect future installations; existing applications own their installed source.
 
