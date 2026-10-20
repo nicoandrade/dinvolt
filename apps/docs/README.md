@@ -25,7 +25,9 @@ Content follows `main`, which can be ahead of npm. Check the published version a
 
 ## Vercel setup
 
-Create a **separate Vercel project** connected to this repository:
+The documentation uses the existing [tipybit/dinvolt-docs project](https://vercel.com/tipybit/dinvolt-docs), connected to `nicoandrade/dinvolt`. Its production branch is `main`, its Root Directory is `apps/docs`, and `docs.dinvolt.com` is assigned and verified. Pushes to `main` build the documentation through the Git integration; npm releases remain a separate process.
+
+Use these settings when auditing or recreating the project:
 
 | Setting | Value |
 | --- | --- |
