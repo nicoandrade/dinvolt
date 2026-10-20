@@ -400,6 +400,7 @@ export async function syncPlayground(directory = playgroundDirectory) {
     ["catalog/next/icons.ts", "src/lib/icons.ts"],
     ["catalog/next/icon-image.tsx", "src/lib/icon-image.tsx"],
     ["catalog/next/icon-route.tsx", "src/app/icons/[variant]/route.tsx"],
+    ["catalog/next/next.config.ts", "next.config.ts"],
     ["catalog/ui/og/image.tsx", "src/lib/og-image.tsx"],
   ] as const) {
     files.push(target);

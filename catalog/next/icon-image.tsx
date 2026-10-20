@@ -20,5 +20,14 @@ export const createIconImage = (dark: boolean, size: number) =>
         title=""
       />
     </div>,
-    { height: size, width: size }
+    {
+      headers: {
+        "Cache-Control":
+          process.env.NODE_ENV === "development"
+            ? "no-store"
+            : "public, max-age=31536000, immutable",
+      },
+      height: size,
+      width: size,
+    }
   );

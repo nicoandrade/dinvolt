@@ -82,6 +82,7 @@ test.each([
       ["icons.ts", "src/lib/icons.ts"],
       ["icon-image.tsx", "src/lib/icon-image.tsx"],
       ["icon-route.tsx", "src/app/icons/[variant]/route.tsx"],
+      ["next.config.ts", "next.config.ts"],
     ] as const) {
       expect(await readFile(join(project.path, target))).toEqual(
         await readFile(new URL(`../catalog/next/${source}`, import.meta.url))

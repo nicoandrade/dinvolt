@@ -1,8 +1,14 @@
 import { notFound } from "next/navigation";
 
 import { createIconImage } from "@/lib/icon-image";
+import { iconVersion } from "@/lib/icons";
 
-const variants = ["light.png", "dark.png", "apple-light.png", "apple-dark.png"];
+const variants = [
+  "light.png",
+  "dark.png",
+  "apple-light.png",
+  "apple-dark.png",
+].map((variant) => `${iconVersion}-${variant}`);
 
 export const generateStaticParams = () =>
   variants.map((variant) => ({ variant }));
@@ -17,6 +23,6 @@ export const GET = async (
   }
   return createIconImage(
     variant.endsWith("dark.png"),
-    variant.startsWith("apple-") ? 180 : 32
+    variant.includes("-apple-") ? 180 : 32
   );
 };

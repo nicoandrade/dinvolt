@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.0...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.1...HEAD)
+
+## 0.2.1 - 2026-10-20
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.0...v0.2.1)
+
+### Fixed
+
+- New projects give prerendered browser and Apple touch icons one year of immutable caching, avoiding repeated browser revalidation. Icon URLs change automatically when the logo or image renderer source changes, so rebuilt applications display updated branding. Development keeps icon caching disabled.
 
 ## 0.2.0 - 2026-10-20
 

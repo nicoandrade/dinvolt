@@ -1,6 +1,6 @@
 {
   "name": "dinvolt",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create Next.js applications with editable UI, optional administration and context for AI coding agents.",
   "keywords": [
     "better-auth",
