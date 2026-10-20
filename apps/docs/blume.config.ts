@@ -13,6 +13,7 @@ export default defineConfig({
   deployment: { site: "https://docs.dinvolt.com" },
   github: { owner: "nicoandrade", repo: "dinvolt", dir: "apps/docs" },
   logo: { image: "/logo.svg", text: "Dinvolt" },
+  seo: { og: { image: "/opengraph-image.jpg" } },
   navigation: {
     actions: [{ label: "Website", href: "https://dinvolt.com" }],
     sidebar: [
