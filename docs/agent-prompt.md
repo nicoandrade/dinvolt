@@ -7,7 +7,7 @@ This is the editable English prompt intended for the landing page's **For agents
 ```text
 Create a new project with Dinvolt and get the generated starter running locally.
 
-1. Inspect this conversation and the target directory first. Reuse requirements and preferences already provided. Ask only about unresolved product choices: the project name/location and whether it needs a public website only or a public website with an admin panel, authentication, and a database. Infer clear answers and group necessary initial questions together.
+1. Inspect this conversation and the target directory first. Reuse requirements and preferences already provided. Ask only about unresolved product choices: the project name/location and whether it needs a public website only, a public website with an admin panel, or an admin panel only (standalone app with login at / and no marketing pages). Both admin options include authentication and a database. Infer clear answers and group necessary initial questions together.
 
 2. Run `npx --yes dinvolt@latest create --help` and check the required Node.js version and package manager. Honor my chosen manager; otherwise use Dinvolt's detected/default manager when available, falling back to npm if Bun is unavailable. Pass that choice explicitly rather than installing a manager.
 

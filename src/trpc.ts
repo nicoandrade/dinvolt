@@ -2,14 +2,20 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 import settings from "../catalog/trpc/config.json" with { type: "json" };
+import { adminOnlySource } from "./admin-only.ts";
 import { developmentUrl } from "./development.ts";
 import { directoryRoot, readOrdinaryFile } from "./files.ts";
+import { defaultProjectType, projectUITargets } from "./project-type.ts";
+import type { ProjectType } from "./project-type.ts";
 
 export function withTRPCProvider(layout: string) {
   return `import { TRPCReactProvider } from "@/trpc/client";\n${layout.replace(/<body>\s*\{children\}\s*<\/body>/u, "<body><TRPCReactProvider>{children}</TRPCReactProvider></body>")}`;
 }
 
-export async function prepareTRPCStarter(directory: string) {
+export async function prepareTRPCStarter(
+  directory: string,
+  projectType: ProjectType = defaultProjectType
+) {
   const root = await directoryRoot(directory);
   const originalManifest = await readOrdinaryFile(root, "package.json");
   if (
@@ -23,10 +29,10 @@ export async function prepareTRPCStarter(directory: string) {
   }
   const manifest = JSON.parse(originalManifest);
   const layouts = await Promise.all(
-    (["public", "admin"] as const).map(async (area) => {
+    projectUITargets(projectType).map(async (area) => {
       const path = `src/app/(${area})/layout.tsx`;
       const original = await readOrdinaryFile(root, path);
-      const expected = (
+      let expected = (
         await readFile(
           new URL(`../catalog/ui/${area}-layout.tsx`, import.meta.url),
           "utf-8"
@@ -37,6 +43,9 @@ export async function prepareTRPCStarter(directory: string) {
           "__DEVELOPMENT_URL__",
           JSON.stringify(developmentUrl(manifest.name))
         );
+      if (projectType === "admin") {
+        expected = adminOnlySource(expected);
+      }
       if (
         !original ||
         original.replaceAll(/\s/gu, "") !== expected.replaceAll(/\s/gu, "")
@@ -72,6 +81,14 @@ export async function prepareTRPCStarter(directory: string) {
       ),
     }))
   );
+  if (projectType === "admin") {
+    for (const file of files) {
+      file.content = adminOnlySource(file.content).replace(
+        "includes both providers",
+        "includes the app provider"
+      );
+    }
+  }
   for (const { target } of files) {
     if ((await readOrdinaryFile(root, target)) !== null) {
       throw new Error(

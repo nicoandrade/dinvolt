@@ -100,16 +100,29 @@ async function freePort() {
   });
 }
 
+function selectedProjectType() {
+  const projectType =
+    process.argv[2] === "--project-type"
+      ? (process.argv[3] ?? "")
+      : "public-admin";
+  if (
+    !["public-admin", "admin"].includes(projectType ?? "") ||
+    (process.argv.length !== 2 &&
+      !(process.argv.length === 4 && process.argv[2] === "--project-type"))
+  ) {
+    throw new Error(
+      "Usage: bun run test:e2e [--project-type public-admin|admin] [--cleanup <run>] (local, on demand)."
+    );
+  }
+  return projectType;
+}
+
 async function main() {
   if (process.argv.length === 4 && process.argv[2] === "--cleanup") {
     await cleanupRun(process.argv[3] ?? "");
     return;
   }
-  if (process.argv.length > 2) {
-    throw new Error(
-      "Usage: bun run test:e2e [--cleanup <run>] (local, on demand)."
-    );
-  }
+  const projectType = selectedProjectType();
   const credentials = await testCredentials(
     join(repository, ".env.demo.local")
   );
@@ -212,7 +225,7 @@ async function main() {
             "--location",
             "new",
             "--project-type",
-            "public-admin",
+            projectType,
             "--package-manager",
             "bun",
             "--linter",
@@ -251,6 +264,76 @@ async function main() {
         for (const file of ["AGENTS.md", "docs/database.md", "docs/auth.md"]) {
           await readFile(join(directory, file), "utf-8");
         }
+      }
+    );
+    await step(
+      "Install additional UI without replacing existing components",
+      async () => {
+        const area =
+          projectType === "admin"
+            ? "src/components/ui"
+            : "src/components/admin/ui";
+        const button = await readFile(
+          join(directory, area, "button.tsx"),
+          "utf-8"
+        );
+        const profile = await readFile(
+          join(directory, "components.json"),
+          "utf-8"
+        );
+        for (const component of ["dialog", "@dinvolt/admin-panel"]) {
+          const result = JSON.parse(
+            await execute(
+              "node",
+              [
+                join(repository, "dist/cli.js"),
+                "ui",
+                "add",
+                component,
+                "--cwd",
+                directory,
+                "--json",
+              ],
+              {
+                cwd: repository,
+                env: baseEnvironment,
+                label: "Additional UI installation",
+                signal: abort.signal,
+              }
+            )
+          );
+          if (result.status !== "completed") {
+            throw new Error("Additional UI installation failed.");
+          }
+        }
+        if (
+          !(
+            await readFile(join(directory, area, "dialog.tsx"), "utf-8")
+          ).includes("Dialog")
+        ) {
+          throw new Error("The requested component was not installed.");
+        }
+        if (
+          (await readFile(join(directory, area, "button.tsx"), "utf-8")) !==
+            button ||
+          (await readFile(join(directory, "components.json"), "utf-8")) !==
+            profile
+        ) {
+          throw new Error(
+            "An existing component or root profile was replaced."
+          );
+        }
+      }
+    );
+    await step(
+      "Build the generated app for production without database credentials",
+      async () => {
+        await execute("bun", ["run", "build"], {
+          cwd: directory,
+          env: baseEnvironment,
+          label: "Generated production build",
+          signal: abort.signal,
+        });
       }
     );
     await step(
@@ -331,9 +414,12 @@ async function main() {
           throw new Error("Generated server exited.");
         }
         try {
-          const response = await fetch(`${origin}/admin`, {
-            signal: AbortSignal.timeout(5000),
-          });
+          const response = await fetch(
+            `${origin}${projectType === "admin" ? "/" : "/admin"}`,
+            {
+              signal: AbortSignal.timeout(5000),
+            }
+          );
           if (
             response.ok &&
             (await response.text()).includes("Admin sign in")
@@ -359,7 +445,8 @@ async function main() {
       async () => {
         await worker("persisted");
       },
-      step
+      step,
+      projectType === "admin"
     );
     await step("Denied user creation did not persist an account", async () => {
       await worker("denied");
@@ -414,7 +501,7 @@ async function main() {
       process.removeListener("SIGTERM", stop);
       await writeFile(
         join(output, "report.json"),
-        `${JSON.stringify({ run, status: failed || abort.signal.aborted ? "failed" : "passed", database, cleanup, accounts: testIdentity(run), results }, null, 2)}\n`,
+        `${JSON.stringify({ run, projectType, status: failed || abort.signal.aborted ? "failed" : "passed", database, cleanup, accounts: testIdentity(run), results }, null, 2)}\n`,
         { mode: 0o600 }
       ).catch(() => {
         failed = true;

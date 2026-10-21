@@ -20,7 +20,7 @@ You own the generated source. No Dinvolt account or subscription is required.
 
 Every project starts with **Next.js, React, TypeScript, Tailwind CSS and shadcn/ui**. Dinvolt also configures local development, code formatting and recommended agent skills.
 
-Choose **Public website + admin panel** to add authentication, user management, a database and an API. [Compare project types](/project-types).
+Choose **Public website + admin panel** to add authentication, user management, a database and an API. Choose **Admin panel only** for a standalone authenticated app without a marketing site. [Compare project types](/project-types).
 
 External databases, email and hosting need their own setup. You can create the project first and connect those services later.
 

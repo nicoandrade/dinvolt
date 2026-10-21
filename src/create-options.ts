@@ -9,6 +9,7 @@ import {
   defaultProjectType,
   hasAdministration,
   projectTypes,
+  projectUITargets,
 } from "./project-type.ts";
 import type { ProjectType } from "./project-type.ts";
 import { editors, linters, packageManagers } from "./setup.ts";
@@ -70,7 +71,7 @@ export function projectDefaults(
     skills: true,
   };
   const uiPresets: Partial<UIPresets> = {
-    public: defaultUIPresets.public,
+    ...(projectType === "admin" ? {} : { public: defaultUIPresets.public }),
     ...(admin ? { admin: defaultUIPresets.admin } : {}),
   };
   return { setup, uiPresets, projectType };
@@ -153,6 +154,12 @@ export function resolveCreateOptions(
     const value =
       target === "public" ? options.publicPreset : options.adminPreset;
     if (value !== undefined) {
+      if (!projectUITargets(projectType).some((area) => area === target)) {
+        throw new CreateInputError(
+          `This project has no ${target} UI profile.`,
+          `${target}-preset`
+        );
+      }
       try {
         uiPresets[target] = normalizeUIPreset(value, defaultUIPresets[target]);
       } catch {
@@ -193,9 +200,9 @@ export function resolveCreateOptions(
     ] as const;
     if (adminOptions.some((key) => options[key] !== undefined)) {
       throw new CreateInputError(
-        "Database and administrator options require --project-type public-admin.",
+        "Database and administrator options require --project-type public-admin or admin.",
         "project-type",
-        ["public-admin"]
+        ["public-admin", "admin"]
       );
     }
   }

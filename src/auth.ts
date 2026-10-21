@@ -3,16 +3,19 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 import settings from "../catalog/auth/config.json" with { type: "json" };
+import { adminOnlySource } from "./admin-only.ts";
 import { normalizeDatabaseEnvironments } from "./database.ts";
 import type { DatabaseEnvironment, DatabaseProvider } from "./database.ts";
 import { developmentUrl } from "./development.ts";
 import { directoryRoot, readOrdinaryFile } from "./files.ts";
+import type { ProjectType } from "./project-type.ts";
 
 // eslint-disable-next-line complexity -- Preserve existing orchestration branches during the lint migration.
 export async function prepareAuthStarter(
   directory: string,
   provider: DatabaseProvider,
-  selectedEnvironments: readonly DatabaseEnvironment[] = ["development"]
+  selectedEnvironments: readonly DatabaseEnvironment[] = ["development"],
+  projectType?: ProjectType
 ) {
   if (provider !== "turso" && provider !== "planetscale-postgres") {
     throw new Error(`Unknown auth database provider: ${provider}.`);
@@ -92,6 +95,11 @@ export async function prepareAuthStarter(
         ),
     }))
   );
+  if (projectType === "admin") {
+    for (const file of files) {
+      file.content = adminOnlySource(file.content);
+    }
+  }
   files.push({
     target: "src/db/connection.ts",
     content: originalConnection.replace(

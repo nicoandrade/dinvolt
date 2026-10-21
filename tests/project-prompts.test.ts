@@ -20,6 +20,7 @@ function wizard(type?: ProjectType, advanced = false) {
         expect(options.options.map((option) => String(option.value))).toEqual([
           "public-admin",
           "public",
+          "admin",
         ]);
         return (type ?? options.initialValue) as typeof options.initialValue;
       }
@@ -99,4 +100,18 @@ test("cancelling the project type stops the wizard", async () => {
   await expect(projectOptions(undefined, prompts)).rejects.toBeInstanceOf(
     CancelledError
   );
+});
+
+test("standalone admin advanced setup asks for one preset and retains backend choices", async () => {
+  const { prompts, questions, notes } = wizard("admin", true);
+  const result = await projectOptions("bun", prompts);
+  expect(result.setup).toMatchObject({
+    projectType: "admin",
+    database: "turso",
+  });
+  expect(result.uiPresets).toEqual({ admin: defaultUIPresets.admin });
+  expect(
+    questions.filter((question) => question.includes("Which shadcn/ui preset"))
+  ).toHaveLength(1);
+  expect(notes.join("\n")).not.toContain("Public website:");
 });

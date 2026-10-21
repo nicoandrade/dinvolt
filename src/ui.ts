@@ -1,13 +1,17 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 
-import { registryItemSchema } from "shadcn/schema";
-
+import { adminOnlyRegistryItem, adminOnlySource } from "./admin-only.ts";
 import { developmentUrl } from "./development.ts";
 import { directoryRoot, readOrdinaryFile } from "./files.ts";
 import { runCommand } from "./process.ts";
-import { defaultProjectType, hasAdministration } from "./project-type.ts";
+import {
+  defaultProjectType,
+  hasAdministration,
+  projectUITargets,
+} from "./project-type.ts";
 import type { ProjectType } from "./project-type.ts";
 import {
   loadRegistryBlock,
@@ -185,9 +189,19 @@ export async function prepareUIStarter(
   projectType: ProjectType = defaultProjectType
 ) {
   const admin = hasAdministration(projectType);
-  const targets = uiTargets.filter((target) => admin || target === "public");
+  const standalone = projectType === "admin";
+  const targets = uiTargets.filter((target) =>
+    projectUITargets(projectType).some((area) => area === target)
+  );
   const presets: Partial<UIPresets> = {
-    public: normalizeUIPreset(selected.public ?? "", defaultUIPresets.public),
+    ...(standalone
+      ? {}
+      : {
+          public: normalizeUIPreset(
+            selected.public ?? "",
+            defaultUIPresets.public
+          ),
+        }),
     ...(admin
       ? {
           admin: normalizeUIPreset(
@@ -259,8 +273,19 @@ export async function prepareUIStarter(
       : []),
     ["og/image.tsx", "src/lib/og-image.tsx"],
   ];
+  const selectedCopies = standalone
+    ? copies
+        .filter(
+          ([, target]) =>
+            !target.includes("(public)") && target !== uiProfilePath("public")
+        )
+        .map(
+          ([source, target]) =>
+            [source, adminOnlySource(target)] as [string, string]
+        )
+    : copies;
   const files = await Promise.all(
-    copies.map(async ([source, target]) => ({
+    selectedCopies.map(async ([source, target]) => ({
       target,
       content: (
         await readFile(
@@ -283,12 +308,19 @@ export async function prepareUIStarter(
       ),
     }))
   );
-  assets.push({
-    target: "public/welcome-background.webp",
-    content: await readFile(
-      new URL("../catalog/ui/welcome-background.webp", import.meta.url)
-    ),
-  });
+  if (!standalone) {
+    assets.push({
+      target: "public/welcome-background.webp",
+      content: await readFile(
+        new URL("../catalog/ui/welcome-background.webp", import.meta.url)
+      ),
+    });
+  }
+  if (standalone) {
+    for (const file of files) {
+      file.content = adminOnlySource(file.content);
+    }
+  }
   for (const { target } of [...files, ...assets]) {
     if ((await readOrdinaryFile(root, target)) !== null) {
       throw new Error(
@@ -331,6 +363,10 @@ export async function prepareUIStarter(
       file.content = `${JSON.stringify({ ...config, ...preset.config, aliases: config.aliases, tailwind: { ...config.tailwind, ...preset.config.tailwind } }, null, 2)}\n`;
     }
   }
+  if (standalone) {
+    css = extractUITheme(css, "admin");
+  }
+  settings.projectType = projectType;
   settings.presets = presets;
   settings.defaultTarget = admin ? "admin" : "public";
   // eslint-disable-next-line typescript/no-non-null-assertion -- The fixed copies list always includes UI settings.
@@ -346,6 +382,19 @@ export async function prepareUIStarter(
       /### Admin area[\s\S]*?(?=### Public area)/u,
       ""
     );
+  }
+  if (standalone) {
+    instructions = adminOnlySource(
+      instructions.replace(
+        /### Public area[\s\S]*?(?=### Rendering and loading)/u,
+        ""
+      )
+    )
+      .replace("`src/components/admin`", "`src/components`")
+      .replace(
+        "- Preserve the admin theme scope in `src/app/globals.css` and `admin-panel` on the admin layout's `<html>` so portals inherit it.",
+        "- Keep the single app theme in `src/app/globals.css` (:root and .dark). All components and portals share it."
+      );
   }
   manifest.dependencies = {
     ...settings.dependencies,
@@ -389,9 +438,47 @@ export async function prepareUIStarter(
 }
 
 export async function runShadcn(directory: string, args: string[]) {
-  await runCommand(process.execPath, [require.resolve("shadcn"), ...args], {
-    cwd: directory,
-  });
+  // Use the installer shipped with our pinned shadcn CLI. Its CLI --yes flag
+  // does not disable overwrite prompts and can exit successfully on closed stdin.
+  const shadcnRequire = createRequire(require.resolve("shadcn"));
+  const modules = [
+    "get-config",
+    "add-components",
+    "registry/resolver",
+    "registry/config",
+  ].map(
+    (name) =>
+      pathToFileURL(shadcnRequire.resolve(`@shadcn/registry/internal/${name}`))
+        .href
+  );
+  await runCommand(
+    process.execPath,
+    [
+      "--input-type=module",
+      "--eval",
+      `
+      const [modules, args] = JSON.parse(process.argv.at(-1));
+      const [{ getConfig }, { addComponents }, { resolveRegistryTree }, { configWithDefaults }] = await Promise.all(modules.map((path) => import(path)));
+      const config = await getConfig(process.cwd());
+      if (!config) throw new Error("Missing shadcn/ui configuration.");
+      const components = args.slice(1).filter((argument) => !["--yes", "--overwrite"].includes(argument));
+      const resolvedTree = await resolveRegistryTree(components, configWithDefaults(config));
+      if (!resolvedTree) throw new Error("Unable to resolve shadcn/ui components.");
+      // Match the bundled catalog's numeric array-length fix for remote presets.
+      for (const file of resolvedTree.files ?? []) {
+        if (file.content) file.content = file.content.replaceAll("uniqueErrors?.length == 1", "uniqueErrors?.length === 1");
+      }
+      await addComponents(components, config, {
+        resolvedTree,
+        overwrite: args.includes("--overwrite"),
+        interactive: false,
+        silent: true,
+      });
+    `,
+      JSON.stringify([modules, args]),
+    ],
+    { cwd: directory }
+  );
 }
 
 // eslint-disable-next-line complexity -- Preserve existing orchestration branches during the lint migration.
@@ -408,6 +495,17 @@ export async function addUIComponents(
   );
   const settings = settingsSource ? JSON.parse(settingsSource) : undefined;
   const target = options.target ?? settings?.defaultTarget ?? "admin";
+  const standalone = settings?.projectType === "admin";
+  const themeTarget = standalone ? "public" : target;
+  const componentPath =
+    target === "admin" && !standalone
+      ? "src/components/admin/ui"
+      : "src/components/ui";
+  if (standalone && target === "public") {
+    throw new Error(
+      "This project only has an admin UI profile. Use --target admin."
+    );
+  }
   if (
     target === "admin" &&
     settings?.defaultTarget === "public" &&
@@ -437,7 +535,7 @@ export async function addUIComponents(
     );
   }
   const block = own.length
-    ? await loadRegistryBlock(own[0] ?? "", target)
+    ? await loadRegistryBlock(own[0] ?? "", target, settings?.projectType)
     : undefined;
   if (!(await readOrdinaryFile(root, "package.json"))) {
     throw new Error(
@@ -478,8 +576,7 @@ export async function addUIComponents(
     if (registryPlan?.unchanged) {
       return {
         target,
-        path:
-          target === "admin" ? "src/components/admin/ui" : "src/components/ui",
+        path: componentPath,
       };
     }
     if (!profile) {
@@ -494,7 +591,7 @@ export async function addUIComponents(
     }
     const config = JSON.parse(profile);
     const componentsAlias =
-      target === "admin" ? "@/components/admin" : "@/components";
+      target === "admin" && !standalone ? "@/components/admin" : "@/components";
     if (
       config.aliases?.components !== componentsAlias ||
       config.aliases?.ui !== `${componentsAlias}/ui`
@@ -524,7 +621,7 @@ export async function addUIComponents(
       }
       await writeFile(
         join(lock, "theme.css"),
-        extractUITheme(sharedCss, target),
+        extractUITheme(sharedCss, themeTarget),
         { flag: "wx" }
       );
       await writeFile(join(lock, "globals.css"), sharedCss, { flag: "wx" });
@@ -533,28 +630,32 @@ export async function addUIComponents(
     activated = true;
     await writeFile(join(root, "components.json"), activeProfile);
     let installation = block ? [block.path] : components;
-    const blockItem = block
-      ? registryItemSchema.parse(
-          JSON.parse(await readFile(block.path, "utf-8"))
-        )
-      : null;
+    const blockItem = block?.item ?? null;
     const local = await resolveUIComponents(
       target,
       config.style,
       blockItem?.registryDependencies ?? (block ? [] : components)
     );
-    if (local) {
+    if (local || (standalone && blockItem)) {
       const payloadPath = join(lock, "catalog.json");
-      const payload = blockItem
-        ? combineUIRegistryItems(
-            { ...blockItem, registryDependencies: local.unresolved },
-            local.payload
-          )
-        : { ...local.payload, registryDependencies: [] };
-      await writeFile(payloadPath, `${JSON.stringify(payload, null, 2)}\n`, {
-        flag: "wx",
-      });
-      installation = [payloadPath, ...(block ? [] : local.unresolved)];
+      const payload = local
+        ? blockItem
+          ? combineUIRegistryItems(
+              { ...blockItem, registryDependencies: local.unresolved },
+              local.payload
+            )
+          : { ...local.payload, registryDependencies: [] }
+        : blockItem;
+      const installedPayload =
+        standalone && payload ? adminOnlyRegistryItem(payload) : payload;
+      await writeFile(
+        payloadPath,
+        `${JSON.stringify(installedPayload, null, 2)}\n`,
+        {
+          flag: "wx",
+        }
+      );
+      installation = [payloadPath, ...(block ? [] : (local?.unresolved ?? []))];
     }
     await execute(root, [
       "add",
@@ -581,7 +682,7 @@ export async function addUIComponents(
           "globals.css changed during installation. Existing edits were preserved; retry the command."
         );
       }
-      const merged = mergeUITheme(sharedCss, updatedCss, target);
+      const merged = mergeUITheme(sharedCss, updatedCss, themeTarget);
       if (merged !== sharedCss) {
         await writeFile(join(root, "src/app/globals.css"), merged);
       }
@@ -623,6 +724,6 @@ export async function addUIComponents(
   }
   return {
     target,
-    path: target === "admin" ? "src/components/admin/ui" : "src/components/ui",
+    path: componentPath,
   };
 }

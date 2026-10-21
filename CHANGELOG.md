@@ -6,7 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.3...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.3.0...HEAD)
+
+## 0.3.0 - 2026-10-21
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.3...v0.3.0)
+
+### Added
+
+- **Admin panel only** project type in the creation wizard and `--project-type admin`: a standalone authenticated app with login at `/`, protected home at `/dashboard`, user management and database setup. It uses one shadcn/ui preset and theme, with components in `src/components/ui`, and leaves marketing pages to a separate project.
+
+### Changed
+
+- Project guides, generated instructions and the agent creation prompt cover all three project types and their routes, UI profiles and deferred setup.
+
+### Fixed
+
+- UI additions install missing components while preserving existing dependencies instead of silently cancelling on an overwrite prompt. Explicit `--overwrite` continues to replace official components.
+- Admin back navigation and compact user search work with custom shadcn/ui presets without requiring Dinvolt-specific primitive props. Remote preset components receive the same numeric field-validation correction as the bundled catalog.
 
 ## 0.2.3 - 2026-10-20
 

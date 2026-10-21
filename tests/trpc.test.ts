@@ -153,3 +153,20 @@ test("preserves customized layouts and refuses symlinked router paths", async ()
   await expect(prepareTRPCStarter(other)).rejects.toThrow("symbolic link");
   expect(await readdir(join(root, "src"))).not.toContain("context.ts");
 });
+
+test("standalone admin installs its provider without requiring or creating a public layout", async () => {
+  const root = await fixture();
+  await rm(join(root, "src/app/(public)"), { recursive: true });
+  const layout = join(root, "src/app/(admin)/layout.tsx");
+  await writeFile(
+    layout,
+    (await readFile(layout, "utf-8")).replace(' className="admin-panel"', "")
+  );
+  await prepareTRPCStarter(root, "admin");
+  expect(
+    await readFile(join(root, "src/app/(admin)/layout.tsx"), "utf-8")
+  ).toContain("<TRPCReactProvider>");
+  expect(await readFile(join(root, "docs/trpc.md"), "utf-8")).toContain(
+    "`/users`"
+  );
+});

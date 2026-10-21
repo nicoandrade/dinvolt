@@ -20,6 +20,7 @@ Choose your starting point in the wizard:
 | --- | --- |
 | **Public website only** | Landing pages, portfolios and informational websites. |
 | **Public website + admin panel** | Applications with an admin panel, accounts and persistent data. |
+| **Admin panel only** | Standalone internal apps, with marketing hosted separately. Login at `/`, protected home at `/dashboard`, and one shadcn/ui profile. |
 
 See [what each project type includes](https://docs.dinvolt.com/project-types).
 
@@ -39,7 +40,7 @@ In the wizard:
 2. Select a project type.
 3. Choose **Advanced configuration** and select **npm** to follow the commands below.
 
-Prefer Bun? Choose **Use Dinvolt defaults** for a new folder. For projects with an admin panel, you can select **Complete credentials later** and explore the public page first.
+Prefer Bun? Choose **Use Dinvolt defaults** for a new folder. For projects with an admin panel, you can select **Complete credentials later** and explore the public page or standalone login first.
 
 ### 2. Run locally
 
@@ -92,7 +93,7 @@ If you deferred setup, create a database with the provider you selected: **Turso
 npx dinvolt setup
 ```
 
-The wizard connects your database, initializes the authentication tables and offers to create your first administrator. Restart the development server, then sign in at `/admin`.
+The wizard connects your database, initializes the authentication tables and offers to create your first administrator. Restart the development server, then sign in at `/admin` (or `/` for **Admin panel only**).
 
 See the [admin panel walkthrough](https://docs.dinvolt.com/next-steps#public-website-with-administration) for credentials and sign-in steps.
 

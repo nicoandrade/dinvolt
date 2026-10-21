@@ -3,14 +3,15 @@ title: Project types
 description: Choose the foundation that matches your application.
 ---
 
-Choose your project type in the creation wizard. Both options include Next.js, React, TypeScript, Tailwind CSS, shadcn/ui and recommended agent skills.
+Choose your project type in the creation wizard. All three options include Next.js, React, TypeScript, Tailwind CSS, shadcn/ui and recommended agent skills.
 
 ## Which one should I choose?
 
 | Choose | When you need |
 | --- | --- |
 | **Public website only** | A landing page, portfolio or informational website. |
-| **Public website + admin panel** | An authenticated admin area, user management and persistent data. |
+| **Public website + admin panel** | An authenticated admin area alongside a public site. |
+| **Admin panel only** | A standalone authenticated app with marketing in a separate project. |
 
 The wizard preselects **Public website + admin panel**. Change it if your project only needs public pages.
 
@@ -37,6 +38,18 @@ You get the public application plus:
 The public site and admin area have separate UI profiles. You can defer database credentials and first-administrator creation while exploring the public page and login screen.
 
 Continue with [database setup](/guides/database), [authentication](/guides/authentication) or the [admin panel](/ui/admin-panel).
+
+## Admin panel only
+
+Use `--project-type admin`, or select **Admin panel only** in the wizard. This includes the same authentication, database, user management and API as the combined project, without generating a public website.
+
+- Login at `/`; authenticated administrators go to `/dashboard`.
+- Protected pages at `/users`, `/users/[userId]`, `/settings` and `/settings/preferences`.
+- Password recovery at `/forgot-password` and `/reset-password`.
+- One shadcn/ui preset and theme, with components in `src/components/ui` and hooks in `src/hooks`.
+- `dinvolt ui add` defaults to the admin profile; `--target admin` also works. There is no public profile.
+
+For example, deploy your app at `app.example.com` and manage `example.com` in a separate marketing project. Configure the app's own origin for authentication; the projects do not automatically share sessions or data.
 
 ## Complete setup later
 

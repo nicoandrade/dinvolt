@@ -6,19 +6,25 @@ import { fileURLToPath } from "node:url";
 import { registryItemSchema, registrySchema } from "shadcn/schema";
 
 import packageJson from "../package.json" with { type: "json" };
+import { adminOnlyRegistryItem, adminOnlySource } from "./admin-only.ts";
 import {
   directoryRoot,
   readOrdinaryFile,
   readOrdinaryFileBytes,
   resolveFile,
 } from "./files.ts";
+import type { ProjectType } from "./project-type.ts";
 import { loadRegistryAssets } from "./registry-assets.ts";
 
 const settingsPath = ".dinvolt/ui/config.json";
 const hash = (content: string | Buffer) =>
   createHash("sha256").update(content).digest("hex");
 
-export async function loadRegistryBlock(address: string, target: string) {
+export async function loadRegistryBlock(
+  address: string,
+  target: string,
+  projectType?: ProjectType
+) {
   const requestedName = /^@dinvolt\/(?<name>[a-z0-9]+(?:-[a-z0-9]+)*)$/u.exec(
     address
   )?.groups?.name;
@@ -44,7 +50,11 @@ export async function loadRegistryBlock(address: string, target: string) {
       "The packaged Dinvolt registry is missing. Rebuild or reinstall Dinvolt."
     );
   }
-  const item = registryItemSchema.parse(JSON.parse(source));
+  const originalItem = registryItemSchema.parse(JSON.parse(source));
+  const item =
+    projectType === "admin"
+      ? adminOnlyRegistryItem(originalItem)
+      : originalItem;
   const metadata = item.meta?.dinvolt;
   if (
     item.name !== name ||
@@ -71,12 +81,18 @@ export async function loadRegistryBlock(address: string, target: string) {
     }
     return destination;
   });
-  const assets = await loadRegistryAssets(metadata.assets);
+  const assets = (await loadRegistryAssets(metadata.assets)).map((asset) => ({
+    ...asset,
+    target:
+      projectType === "admin" ? adminOnlySource(asset.target) : asset.target,
+  }));
   files.push(...assets.map((asset) => asset.target));
   if (!files.length || new Set(files).size !== files.length) {
     throw new Error("Invalid registry file list.");
   }
   return {
+    item,
+    projectType,
     address: `@dinvolt/${name}`,
     name: item.name,
     version: metadata.version as string,
@@ -91,7 +107,8 @@ export type RegistryBlock = Awaited<ReturnType<typeof loadRegistryBlock>>;
 async function assertAdminRoutes(
   root: string,
   owned: Set<string>,
-  directory = "src/app"
+  directory = "src/app",
+  standalone = false
 ) {
   for (const entry of await readdir(join(root, directory), {
     withFileTypes: true,
@@ -101,13 +118,13 @@ async function assertAdminRoutes(
       throw new Error(`The app route contains a symbolic link: ${path}.`);
     }
     if (entry.isDirectory()) {
-      await assertAdminRoutes(root, owned, path);
+      await assertAdminRoutes(root, owned, path, standalone);
     } else if (/^page\.(?:[cm]?[jt]sx?|mdx)$/u.test(entry.name)) {
       const segment = directory
         .slice("src/app".length)
         .split("/")
         .find((part) => part && !part.startsWith("(") && !part.startsWith("@"));
-      if (segment === "admin" && !owned.has(path)) {
+      if ((standalone || segment === "admin") && !owned.has(path)) {
         throw new Error(
           `The existing admin route requires an explicit migration: ${path}. Existing files were preserved.`
         );
@@ -147,7 +164,10 @@ export async function planRegistryBlock(root: string, block: RegistryBlock) {
       ["src/trpc/routers/users-data.ts", "usersSelection"],
       ["src/trpc/routers/app.ts", "users: adminUsers"],
       ["src/trpc/routers/app.ts", "user: adminUser"],
-      ["src/app/(admin)/layout.tsx", "admin-panel"],
+      [
+        "src/app/(admin)/layout.tsx",
+        block.projectType === "admin" ? 'data-ui="admin"' : "admin-panel",
+      ],
     ] as const) {
       if (!(await readOrdinaryFile(root, path))?.includes(symbol)) {
         throw new Error(
@@ -155,7 +175,12 @@ export async function planRegistryBlock(root: string, block: RegistryBlock) {
         );
       }
     }
-    await assertAdminRoutes(root, new Set(block.files));
+    await assertAdminRoutes(
+      root,
+      new Set(block.files),
+      "src/app",
+      block.projectType === "admin"
+    );
   }
   const settingsSource = await readOrdinaryFile(root, settingsPath);
   if (!settingsSource) {

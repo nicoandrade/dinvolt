@@ -15,7 +15,7 @@ import { dirname, join, resolve } from "node:path";
 import { parse } from "postcss";
 
 import { defaultUIPresets } from "../src/ui-presets.ts";
-import { addUIComponents, prepareUIStarter } from "../src/ui.ts";
+import { addUIComponents, prepareUIStarter, runShadcn } from "../src/ui.ts";
 
 const directories: string[] = [];
 async function fixture() {
@@ -706,3 +706,120 @@ test.each([undefined, "b0"])(
     expect(await readdir(join(root, ".dinvolt/ui"))).not.toContain(".lock");
   }
 );
+
+test("standalone admin uses one global theme and installs subsequent primitives in the app directory", async () => {
+  const root = await starterFixture();
+  await prepareUIStarter(
+    root,
+    { admin: "b0" },
+    async () => ({
+      config: { style: "base-vega" },
+      light: { primary: "red" },
+      dark: { primary: "blue" },
+      fonts: [],
+      dependencies: {},
+    }),
+    "admin"
+  );
+  expect((await readdir(join(root, ".dinvolt/ui"))).toSorted()).toEqual([
+    "admin.json",
+    "config.json",
+  ]);
+  expect(await readdir(join(root, "src/app"))).not.toContain("(public)");
+  const profile = JSON.parse(
+    await readFile(join(root, "components.json"), "utf-8")
+  );
+  expect(profile.aliases).toMatchObject({
+    ui: "@/components/ui",
+    components: "@/components",
+    hooks: "@/hooks",
+  });
+  const css = await readFile(join(root, "src/app/globals.css"), "utf-8");
+  expect(css).toContain("--primary: red");
+  expect(css).not.toContain(".admin-panel {");
+  const instructions = await readFile(join(root, "AGENTS.md"), "utf-8");
+  expect(instructions).toContain("sign-in form at `/`");
+  expect(instructions).toContain("`/dashboard`");
+  expect(instructions).not.toContain("### Public area");
+  const result = await addUIComponents(
+    root,
+    ["button"],
+    {},
+    async (cwd, args) => {
+      const payload = JSON.parse(await readFile(args[1]!, "utf-8"));
+      expect(JSON.stringify(payload)).not.toContain("components/admin/");
+      const active = JSON.parse(
+        await readFile(join(cwd, "components.json"), "utf-8")
+      );
+      expect(active.aliases.ui).toBe("@/components/ui");
+      const theme = join(cwd, active.tailwind.css);
+      await writeFile(
+        theme,
+        (await readFile(theme, "utf-8")).replace(
+          "--primary: red",
+          "--primary: green"
+        )
+      );
+    }
+  );
+  expect(result).toEqual({ target: "admin", path: "src/components/ui" });
+  expect(await readFile(join(root, "src/app/globals.css"), "utf-8")).toContain(
+    "--primary: green"
+  );
+  await expect(
+    addUIComponents(root, ["button"], { target: "public" }, async () => {
+      throw new Error("must not execute");
+    })
+  ).rejects.toThrow("only has an admin UI profile");
+});
+
+test("the real shadcn installer skips existing files without cancelling new files and honors overwrite", async () => {
+  const root = await starterFixture();
+  await prepareUIStarter(root, {}, undefined, "public");
+  await writeFile(
+    join(root, "tsconfig.json"),
+    JSON.stringify({ compilerOptions: { paths: { "@/*": ["./src/*"] } } })
+  );
+  await mkdir(join(root, "src/components/ui"), { recursive: true });
+  const button = join(root, "src/components/ui/button.tsx");
+  await writeFile(button, "export const Button = () => null; // customized\n");
+  const payload = join(root, "regression.json");
+  await writeFile(
+    payload,
+    JSON.stringify({
+      name: "conflict-regression",
+      type: "registry:block",
+      files: [
+        {
+          path: "button.tsx",
+          target: "~/src/components/ui/button.tsx",
+          type: "registry:file",
+          content: "export const Button = () => null;\n",
+        },
+        {
+          path: "dialog.tsx",
+          target: "~/src/components/ui/dialog.tsx",
+          type: "registry:file",
+          content: "export const Dialog = () => null;\n",
+        },
+        {
+          path: "field.tsx",
+          target: "~/src/components/ui/field.tsx",
+          type: "registry:file",
+          content:
+            "export const singleError = (uniqueErrors: string[]) => uniqueErrors?.length == 1;\n",
+        },
+      ],
+    })
+  );
+  await runShadcn(root, ["add", payload, "--yes"]);
+  expect(await readFile(button, "utf-8")).toContain("// customized");
+  expect(
+    await readFile(join(root, "src/components/ui/dialog.tsx"), "utf-8")
+  ).toContain("export const Dialog");
+  expect(
+    await readFile(join(root, "src/components/ui/field.tsx"), "utf-8")
+  ).toContain("uniqueErrors?.length === 1");
+  await runShadcn(root, ["add", payload, "--yes", "--overwrite"]);
+  expect(await readFile(button, "utf-8")).not.toContain("// customized");
+});

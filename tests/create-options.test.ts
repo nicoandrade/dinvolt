@@ -10,7 +10,7 @@ import { defaultUIPresets } from "../src/ui-presets.ts";
 
 const base = { cwd: ".", name: "agent-app", projectType: "public-admin" };
 
-test.each(["public", "public-admin"] as const)(
+test.each(["public", "public-admin", "admin"] as const)(
   "noninteractive defaults match wizard defaults for %s",
   async (projectType) => {
     const wizard = await projectOptions("npm", {
@@ -61,6 +61,7 @@ test.each([
   { name: undefined },
   { name: "../unsafe" },
   { projectType: undefined },
+  { projectType: "admin", publicPreset: "b0" },
   { location: "elsewhere" },
   { projectType: "public", database: "turso" },
   { projectType: "public", adminPreset: "b0" },

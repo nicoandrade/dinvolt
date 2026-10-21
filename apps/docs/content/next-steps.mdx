@@ -9,6 +9,7 @@ Choose the path that matches the project you created:
 | --- | --- |
 | **Public website only** | [Start building your website](#public-website-only). |
 | **Public website + admin panel** | [Connect the database and sign in](#public-website-with-an-admin-panel). |
+| **Admin panel only** | Follow the same database setup below, then sign in at `/`. |
 
 ## Public website only
 
@@ -82,7 +83,9 @@ Open `/admin` on your app's local URL. For a project named `my-app`:
 https://my-app.localhost/admin
 ```
 
-Sign in with your administrator's email and generated password. You should reach `/admin/home`; open **Users** to manage accounts.
+For **Admin panel only**, open `/` instead; successful sign-in takes you to `/dashboard`, and user management is at `/users`.
+
+Sign in with your administrator's email and generated password. In the combined project you should reach `/admin/home`; open **Users** to manage accounts.
 
 You are ready to build your application. For example:
 

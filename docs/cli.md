@@ -34,7 +34,7 @@ npx dinvolt create
 ```
 
 1. Enter a project name and destination.
-2. Choose **Public website only** or **Public website + admin panel**.
+2. Choose **Public website only**, **Public website + admin panel**, or **Admin panel only**.
 3. Accept the defaults or customize your tools and UI themes.
 4. For projects with an admin panel, choose a database. Connect it now or later with `setup`.
 
@@ -67,7 +67,7 @@ npx dinvolt create --name my-app --location new \
 | --- | --- |
 | `--name <name>` | Lowercase package name. Required without prompts. |
 | `--location <location>` | `current` (default) or `new`. |
-| `--project-type <type>` | `public` or `public-admin`. Required without prompts. |
+| `--project-type <type>` | `public`, `public-admin`, or `admin`. Required without prompts. |
 | `--package-manager <manager>` | `bun`, `npm`, `pnpm`, `yarn`, `deno`, `nub`, `aube`. Detected in the destination; otherwise Bun. |
 | `--linter <linter>` | `oxlint` (default), `biome`, `eslint`. |
 | `--editors <editors>` | Comma-separated `universal`, `zed`, or `none`. Default: `universal`. |
@@ -77,7 +77,9 @@ npx dinvolt create --name my-app --location new \
 
 ### Database options
 
-These options require the `public-admin` project type. Create the database service with your provider first.
+For a standalone app, use `--project-type admin`. It generates login at `/`, protected home at `/dashboard`, and one admin shadcn/ui profile in `src/components/ui`. Use `--admin-preset` to customize it; `--public-preset` is not applicable.
+
+These options require the `public-admin` or `admin` project type. Create the database service with your provider first.
 
 | Option | Values / default |
 | --- | --- |
@@ -203,7 +205,7 @@ npx dinvolt ui add input --target admin --overwrite
 | `--target <area>` | `public` or `admin`. Defaults to public in public-only projects; otherwise admin. |
 | `-o, --overwrite` | Replace existing official components in the selected area. |
 
-Provide at least one component. Public-only projects support only the public target. Arbitrary registry URLs and third-party namespaces are unsupported.
+Provide at least one component. Public-only projects support only the public target. Admin-only projects support only the admin target, with components in `src/components/ui`. Arbitrary registry URLs and third-party namespaces are unsupported.
 
 Customized Dinvolt blocks need manual review, including with `--overwrite`. See the [UI registry](../catalog/registry/README.md) for blocks and usage examples.
 

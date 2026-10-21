@@ -97,7 +97,11 @@ const DataTableSearch = ({
           }
         }}
       >
-        <InputGroup size="sm">
+        {/* eslint-disable shadcn/no-restyle -- Keep the compact search compatible with presets whose InputGroup has no size prop. */}
+        <InputGroup
+          className="h-8 [--input-group-height:2rem] [--input-group-icon-size:0.875rem] [&>[data-slot=input-group-addon]]:md:text-xs"
+          data-size="sm"
+        >
           <InputGroupInput
             aria-label={label}
             className="[&::-webkit-search-cancel-button]:appearance-none"
@@ -135,6 +139,7 @@ const DataTableSearch = ({
             </InputGroupAddon>
           ) : null}
         </InputGroup>
+        {/* eslint-enable shadcn/no-restyle */}
       </form>
     </search>
   );

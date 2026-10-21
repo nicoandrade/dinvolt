@@ -25,7 +25,7 @@ export interface ExistingProject {
   root: string;
   metadata: Record<string, unknown> & {
     schemaVersion: number;
-    projectType?: "public" | "public-admin";
+    projectType?: "public" | "public-admin" | "admin";
     packageManager: PackageManager;
     database?: {
       provider: DatabaseProvider;
@@ -63,6 +63,7 @@ export async function findProject(directory: string): Promise<ExistingProject> {
       if (
         metadata.projectType !== "public" &&
         metadata.projectType !== "public-admin" &&
+        metadata.projectType !== "admin" &&
         (metadata.projectType !== undefined ||
           !metadata.database ||
           metadata.auth?.provider !== "better-auth" ||

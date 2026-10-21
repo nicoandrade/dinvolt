@@ -115,7 +115,7 @@ function showCreateSummary(
   const { packageManager, linter, editors: selectedEditors } = setup;
   const admin = hasAdministration(projectType);
   prompts.note(
-    `Name: ${name}\nProject type: ${projectTypes.find((entry) => entry.value === projectType)?.label}\nLocation: ${destination}\n\nTypeScript · Tailwind CSS · Cache Components · App Router · src/\nPackage manager: ${packageManager}\nLinter: ${linters.find((entry) => entry.value === linter)?.label}\nEditors: ${selectedEditors.join(", ") || "None"}\nPublic UI preset: ${uiPresets.public}${admin ? `\nAdmin UI preset: ${uiPresets.admin}\nDatabase: ${databases.find((entry) => entry.value === setup.database)?.label} · Drizzle\nDatabase environments: ${setup.databaseEnvironments?.join(", ")}\nAuthentication: Better Auth · Email/password · Admin plugin\nAPI: tRPC · TanStack Query` : ""}\nSkills: ${
+    `Name: ${name}\nProject type: ${projectTypes.find((entry) => entry.value === projectType)?.label}\nLocation: ${destination}\n\nTypeScript · Tailwind CSS · Cache Components · App Router · src/\nPackage manager: ${packageManager}\nLinter: ${linters.find((entry) => entry.value === linter)?.label}\nEditors: ${selectedEditors.join(", ") || "None"}${projectType === "admin" ? "" : `\nPublic UI preset: ${uiPresets.public}`}${admin ? `\nAdmin UI preset: ${uiPresets.admin}\nDatabase: ${databases.find((entry) => entry.value === setup.database)?.label} · Drizzle\nDatabase environments: ${setup.databaseEnvironments?.join(", ")}\nAuthentication: Better Auth · Email/password · Admin plugin\nAPI: tRPC · TanStack Query` : ""}\nSkills: ${
       setup.skills
         ? projectSkills(setup)
             .flatMap((entry) => entry.skills)
@@ -337,9 +337,10 @@ async function executeCreate(options: CreateOptions, output: CreateOutput) {
             await prepareAuthStarter(
               path,
               setup.database ?? defaultDatabase,
-              setup.databaseEnvironments
+              setup.databaseEnvironments,
+              projectType
             );
-            await prepareTRPCStarter(path);
+            await prepareTRPCStarter(path, projectType);
           }
         }
       );
@@ -353,14 +354,20 @@ async function executeCreate(options: CreateOptions, output: CreateOutput) {
       );
       await output.step(
         "components",
-        admin
-          ? "Installing public website and admin panel components..."
-          : "Installing public components...",
-        admin
-          ? "Public website and admin panel components installed."
-          : "Public components installed.",
+        projectType === "admin"
+          ? "Installing admin panel components..."
+          : admin
+            ? "Installing public website and admin panel components..."
+            : "Installing public components...",
+        projectType === "admin"
+          ? "Admin panel components installed."
+          : admin
+            ? "Public website and admin panel components installed."
+            : "Public components installed.",
         async () => {
-          await addUIComponents(path, ["button"], { target: "public" });
+          if (projectType !== "admin") {
+            await addUIComponents(path, ["button"], { target: "public" });
+          }
           for (const block of admin ? defaultAdminBlocks : []) {
             await addUIComponents(path, [block], { target: "admin" });
           }
@@ -388,7 +395,7 @@ async function executeCreate(options: CreateOptions, output: CreateOutput) {
           for (const block of admin ? defaultAdminBlocks : []) {
             await recordRegistryBlock(
               path,
-              await loadRegistryBlock(block, "admin")
+              await loadRegistryBlock(block, "admin", projectType)
             );
           }
         }

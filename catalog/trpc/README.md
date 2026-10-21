@@ -1,8 +1,10 @@
 # tRPC and TanStack Query
 
+For **Admin panel only** projects, the login is `/`, the home page is `/dashboard`, and other panel pages omit the `/admin` prefix. Components use `@/components` and `@/components/ui`. API endpoints such as `/api/admin/users/export` keep their paths. Examples below use the combined public website + admin panel layout; generated standalone guides use the app's actual paths.
+
 Use tRPC for typed application APIs and TanStack Query to fetch, cache, and refresh data in the browser.
 
-This guide applies to **Public website + admin panel** projects.
+This guide applies to **Public website + admin panel** and **Admin panel only** projects.
 
 The generated project already includes both providers, a working health query, and protected account/admin procedures. No extra installation is needed.
 

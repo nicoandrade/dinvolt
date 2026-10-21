@@ -1,5 +1,7 @@
 # UI registry
 
+For **Admin panel only** projects, the login is `/`, the home page is `/dashboard`, and other panel pages omit the `/admin` prefix. Components use `@/components` and `@/components/ui`. API endpoints such as `/api/admin/users/export` keep their paths. Examples below use the combined public website + admin panel layout; generated standalone guides use the app's actual paths.
+
 Install editable components and complete UI blocks into your Dinvolt project. Your application owns the installed source, so you can customize it directly.
 
 ## Choose a block
@@ -10,7 +12,7 @@ Install editable components and complete UI blocks into your Dinvolt project. Yo
 | `@dinvolt/public-actions` | `public` | Save, copy and delete buttons for public pages. |
 | `@dinvolt/admin-spinner` | `admin` | A standalone SVG Spinner. |
 
-Projects created with **Public website + admin panel** already include the panel and spinner. The panel requires the generated Better Auth and tRPC/Query integrations; the other blocks do not require authentication.
+Projects created with **Public website + admin panel** or **Admin panel only** already include the panel and spinner. The panel requires the generated Better Auth and tRPC/Query integrations; the other blocks do not require authentication.
 
 See [Admin panel](#admin-panel) for its pages and [Action components](#action-components) for usage examples.
 
@@ -54,7 +56,7 @@ Catalog changes affect future installations. Review and apply changes to existin
 
 ## Admin panel
 
-The admin panel provides a starting point for managing your application. Select **Public website + admin panel** in the creation wizard to include it.
+The admin panel provides a starting point for managing your application. Select **Public website + admin panel** or **Admin panel only** in the creation wizard to include it.
 
 Connect the database and create your first administrator before testing protected pages. Follow the [authentication guide](../auth/README.md).
 

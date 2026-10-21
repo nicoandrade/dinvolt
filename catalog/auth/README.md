@@ -1,8 +1,10 @@
 # Authentication
 
+For **Admin panel only** projects, the login is `/`, the home page is `/dashboard`, and other panel pages omit the `/admin` prefix. Components use `@/components` and `@/components/ui`. API endpoints such as `/api/admin/users/export` keep their paths. Examples below use the combined public website + admin panel layout; generated standalone guides use the app's actual paths.
+
 Dinvolt includes email/password sign-in, an admin panel, and password recovery with Better Auth. Use the built-in screens first, then customize the application-owned source as needed.
 
-This guide applies to **Public website + admin panel** projects.
+This guide applies to **Public website + admin panel** and **Admin panel only** projects.
 
 ## Set up authentication
 

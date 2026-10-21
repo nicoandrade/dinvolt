@@ -223,7 +223,7 @@ export async function prepareStarter(
   );
   const readme = await readFile(
     new URL(
-      `../catalog/next/${hasAdministration(projectType) ? "README.md" : "README-public.md"}`,
+      `../catalog/next/${projectType === "admin" ? "README-admin.md" : hasAdministration(projectType) ? "README.md" : "README-public.md"}`,
       import.meta.url
     ),
     "utf-8"

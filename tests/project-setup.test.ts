@@ -684,3 +684,15 @@ test("agent refuses credential precedence conflicts and never initializes anothe
     process.exitCode = exitCode ?? 0;
   }
 });
+
+test("setup recognizes standalone admin metadata and preserves its backend capabilities", async () => {
+  const root = await fixture();
+  const path = join(root, ".dinvolt/config.json");
+  const metadata = JSON.parse(await readFile(path, "utf-8"));
+  metadata.projectType = "admin";
+  await writeFile(path, JSON.stringify(metadata));
+  const project = await findProject(root);
+  expect(project.admin).toBe(true);
+  expect(project.metadata.projectType).toBe("admin");
+  expect(project.metadata.database?.provider).toBe("turso");
+});

@@ -716,3 +716,69 @@ test.each([false, true])(
     );
   }
 );
+
+test("standalone registry installation remaps imports, preserves logos and remains safe to repeat", async () => {
+  const root = await fixture();
+  await put(
+    root,
+    "tsconfig.json",
+    JSON.stringify({ compilerOptions: { paths: { "@/*": ["./src/*"] } } })
+  );
+  const profile = JSON.parse(
+    await readFile(join(root, ".dinvolt/ui/admin.json"), "utf-8")
+  );
+  profile.aliases.components = "@/components";
+  profile.aliases.ui = "@/components/ui";
+  profile.aliases.hooks = "@/hooks";
+  await put(root, ".dinvolt/ui/admin.json", JSON.stringify(profile));
+  await put(
+    root,
+    ".dinvolt/ui/config.json",
+    JSON.stringify({ projectType: "admin", defaultTarget: "admin" })
+  );
+  await put(root, "src/app/(admin)/layout.tsx", '<html data-ui="admin" />');
+  await put(
+    root,
+    "src/app/globals.css",
+    ":root { --primary: black; } .dark { --primary: white; }"
+  );
+  await put(
+    root,
+    "src/components/logo-complete.tsx",
+    "export const LogoComplete = () => null;"
+  );
+  const logo = await readFile(
+    join(root, "src/components/logo-iso.tsx"),
+    "utf-8"
+  );
+  let installs = 0;
+  const install = async (directory: string, args: string[]) => {
+    installs += 1;
+    const active = JSON.parse(
+      await readFile(join(directory, "components.json"), "utf-8")
+    );
+    const payload = JSON.parse(await readFile(args[1]!, "utf-8"));
+    await updateFiles(
+      payload.files,
+      await resolveConfigPaths(directory, active),
+      { plannedFiles: payload.files, silent: true, interactive: false }
+    );
+  };
+  await addUIComponents(root, [block.address], {}, install);
+  await addUIComponents(root, [block.address], {}, install);
+  expect(installs).toBe(1);
+  expect(
+    await readFile(join(root, "src/components/logo-iso.tsx"), "utf-8")
+  ).toBe(logo);
+  expect(
+    await readFile(join(root, "src/app/(admin)/(auth)/page.tsx"), "utf-8")
+  ).toContain('"@/components/login-screen"');
+  expect(
+    await readFile(join(root, "src/components/login-form.tsx"), "utf-8")
+  ).toContain('"@/components/ui/button"');
+  await put(root, "src/components/login-form.tsx", "// customized login\n");
+  await expect(
+    addUIComponents(root, [block.address], { overwrite: true }, install)
+  ).rejects.toThrow("--overwrite does not replace");
+  expect(installs).toBe(1);
+});
