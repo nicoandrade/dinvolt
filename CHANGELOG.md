@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.2...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.3...HEAD)
+
+## 0.2.3 - 2026-10-20
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.2.2...v0.2.3)
+
+### Fixed
+
+- Generated public welcome and admin authentication pages use lighter 1440 px background images, high fetch priority and inline blur previews, reducing initial downloads and displaying a preview while the full image loads.
 
 ## 0.2.2 - 2026-10-20
 

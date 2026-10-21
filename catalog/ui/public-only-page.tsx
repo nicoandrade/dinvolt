@@ -15,8 +15,10 @@ const Home = () => (
       <Image
         alt=""
         className="object-cover object-bottom"
+        fetchPriority="high"
         fill
         loading="eager"
+        placeholder="blur"
         sizes="100vw"
         src={welcomeBackground}
       />
