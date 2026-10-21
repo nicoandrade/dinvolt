@@ -53,13 +53,23 @@ npx dinvolt create --name my-site --location new \
   --project-type public --package-manager npm --json
 ```
 
-Create a Turso-backed admin project and connect the database later:
+Create a public website with a Turso-backed admin panel and connect the database later:
 
 ```sh
 npx dinvolt create --name my-app --location new \
   --project-type public-admin --package-manager npm \
   --database turso --no-input
 ```
+
+Create a standalone admin app with login at `/` and connect the database later:
+
+```sh
+npx dinvolt create --name my-internal-app --location new \
+  --project-type admin --package-manager npm \
+  --database turso --no-input
+```
+
+For a standalone app, use `--admin-preset` to customize its single shadcn/ui profile in `src/components/ui`; `--public-preset` is not applicable.
 
 ### Project options
 
@@ -76,8 +86,6 @@ npx dinvolt create --name my-app --location new \
 | `--skills` / `--no-skills` | Install recommended agent skills (default), or skip them. |
 
 ### Database options
-
-For a standalone app, use `--project-type admin`. It generates login at `/`, protected home at `/dashboard`, and one admin shadcn/ui profile in `src/components/ui`. Use `--admin-preset` to customize it; `--public-preset` is not applicable.
 
 These options require the `public-admin` or `admin` project type. Create the database service with your provider first.
 

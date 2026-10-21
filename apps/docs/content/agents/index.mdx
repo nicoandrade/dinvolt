@@ -73,6 +73,8 @@ yarn dlx dinvolt ui add dialog textarea --target public --json
 
 </CodeGroup>
 
+For **Admin panel only**, use `--target admin` instead. Its components live in `src/components/ui`, and there is no public target.
+
 The `create`, `setup`, `ui add` and `vercel setup` commands support `--json` and `--no-input`. JSON mode disables prompts, writes one result to stdout and sends progress to stderr.
 
 After a failure, inspect the exit code, result status and completed steps before retrying. A project or remote operation may already exist.

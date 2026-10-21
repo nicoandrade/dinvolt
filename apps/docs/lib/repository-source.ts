@@ -278,6 +278,8 @@ const markdownLink = /\]\((?<target>[^\s)]+)\)/gu;
 const firstHeading = /^# [^\n]+\n+/u;
 const copyablePrompt =
   /## Copyable prompt\n+(?<prompt>```text\n[\s\S]*?\n```)\n/u;
+const projectLayoutNotice =
+  /^For \*\*Admin panel only\*\* projects,[^\n]+\n\n/mu;
 
 // These guides also become docs/*.md in generated applications.
 const generatedGuides: Record<string, string> = {
@@ -349,6 +351,10 @@ function preparePages(
   }
 
   const sections = documentSections(text);
+  // Focused guides need the source's route/import caveat even when readers
+  // arrive directly from search instead of opening the overview first.
+  const chapterContext =
+    sections[0]?.text.match(projectLayoutNotice)?.[0] ?? "";
   const chapters = document.chapters ?? [];
   const selected = chapters.flatMap((chapter) => chapter.sections);
   for (const title of selected) {
@@ -390,7 +396,7 @@ function preparePages(
         document,
         sections: content,
         anchorTargets: sectionAnchorTargets(content),
-        text: content.map((section) => section.text).join(""),
+        text: chapterContext + content.map((section) => section.text).join(""),
       };
     }),
   ];

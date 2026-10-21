@@ -98,6 +98,31 @@ test("publishes each source section once across focused pages", async () => {
   }
 });
 
+test("focused guides retain the source's standalone routes and import context", async () => {
+  const { entries } = await repositorySource.load();
+  const affected = entries.filter(({ sourcePath }) =>
+    [
+      "catalog/auth/README.md",
+      "catalog/trpc/README.md",
+      "catalog/registry/README.md",
+    ].some((path) => sourcePath?.endsWith(path))
+  );
+  expect(affected.length).toBeGreaterThan(3);
+  for (const entry of affected) {
+    expect(
+      entry.body.text.match(/For \*\*Admin panel only\*\* projects/gu)
+    ).toHaveLength(1);
+    expect(entry.body.text).toContain("the login is `/`");
+    expect(entry.body.text).toContain("the home page is `/dashboard`");
+    expect(entry.body.text).toContain("`@/components/ui`");
+    expect(entry.body.text).toContain(
+      "`/api/admin/users/export` keep their paths"
+    );
+  }
+  const database = entries.find(({ ref }) => ref === "guides/database.mdx")!;
+  expect(database.body.text).not.toContain("For **Admin panel only** projects");
+});
+
 test("keeps database setup focused and sends moved anchors to their owning page", async () => {
   const { entries } = await repositorySource.load();
   const database = entries.find(({ ref }) => ref === "guides/database.mdx")!;

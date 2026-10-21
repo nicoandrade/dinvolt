@@ -1,6 +1,6 @@
 ---
 title: Next steps
-description: Your project is running. Build your website or finish setting up your admin panel.
+description: Start building a public website, a website with an admin panel, or a standalone admin app.
 ---
 
 Choose the path that matches the project you created:
@@ -8,8 +8,8 @@ Choose the path that matches the project you created:
 | Your project | What to do next |
 | --- | --- |
 | **Public website only** | [Start building your website](#public-website-only). |
-| **Public website + admin panel** | [Connect the database and sign in](#public-website-with-an-admin-panel). |
-| **Admin panel only** | Follow the same database setup below, then sign in at `/`. |
+| **Public website + admin panel** | [Build your website and configure its panel](#public-website-with-an-admin-panel). |
+| **Admin panel only** | [Set up your standalone app](#admin-panel-only). |
 
 ## Public website only
 
@@ -28,6 +28,43 @@ Add [UI components](/ui/blocks) as you need them. Database and administrator set
 <span id="public-website-with-administration"></span>
 
 ## Public website with an admin panel
+
+Your public homepage is at `/`, and your panel's login is at `/admin`. The public site and panel have separate shadcn/ui profiles, so you can customize their styles independently.
+
+Complete the [database and administrator setup](#set-up-your-admin-panel), then sign in at `/admin`. You should reach `/admin/home`; open **Users** to manage accounts at `/admin/users`.
+
+For example, ask your coding agent:
+
+```text wrap
+Build a website for a photography studio with a gallery, services and a
+contact page. Adapt the admin panel so the team can manage the gallery.
+Use a minimal design that puts the photographs first.
+```
+
+Add public components with `--target public` and panel components with `--target admin`. See the [UI registry](/ui/blocks).
+
+## Admin panel only
+
+Your app starts at the login screen at `/`. After sign-in, administrators reach `/dashboard`; user management is at `/users`. There is no public homepage to configure.
+
+Complete the [database and administrator setup](#set-up-your-admin-panel), then open your app's root URL, for example `https://my-app.localhost/`.
+
+This project has one shadcn/ui profile and theme. Components live in `src/components/ui`; `dinvolt ui add` selects the admin profile automatically. You can also pass `--target admin` explicitly.
+
+For example, ask your coding agent:
+
+```text wrap
+Read the project instructions. Build an internal inventory app with
+products, stock movements and low-stock alerts. Extend the existing
+dashboard and table controls, persist changes in the database, and
+require administrator access for every query and mutation.
+```
+
+You can later deploy this app at `app.example.com` while keeping your marketing website in a separate project at `example.com`. Use the app's own origin for authentication; see [domains and environments](/guides/vercel/environments).
+
+## Set up your admin panel
+
+These steps apply to both **Public website + admin panel** and **Admin panel only**.
 
 If you already connected your database and created an administrator in the wizard, skip to [signing in](#3-sign-in).
 
@@ -77,23 +114,14 @@ Already have ready tables but skipped administrator creation? Run setup again to
 
 ### 3. Sign in
 
-Open `/admin` on your app's local URL. For a project named `my-app`:
+Open the login URL for your project and sign in with your administrator's email and generated password:
 
-```text
-https://my-app.localhost/admin
-```
+| Project type | Local login example | Home after sign-in | Users |
+| --- | --- | --- | --- |
+| **Public website + admin panel** | `https://my-app.localhost/admin` | `/admin/home` | `/admin/users` |
+| **Admin panel only** | `https://my-app.localhost/` | `/dashboard` | `/users` |
 
-For **Admin panel only**, open `/` instead; successful sign-in takes you to `/dashboard`, and user management is at `/users`.
-
-Sign in with your administrator's email and generated password. In the combined project you should reach `/admin/home`; open **Users** to manage accounts.
-
-You are ready to build your application. For example:
-
-```text wrap
-Build a website for a photography studio with a gallery, services and a
-contact page. Adapt the admin panel so the team can manage the gallery.
-Use a minimal design that puts the photographs first.
-```
+Password recovery needs [Resend and a sender](/guides/authentication/password-recovery). The included settings forms preview changes locally; connect your own authorized server operations to persist settings or uploads.
 
 Use the [admin panel guide](/ui/admin-panel) when extending the included screens.
 

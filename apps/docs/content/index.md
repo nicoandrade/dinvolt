@@ -13,7 +13,7 @@ You own the generated source. No Dinvolt account or subscription is required.
 
 - [Quickstart](/quickstart): create a project and run it locally.
 - [Next steps](/next-steps): build your website or finish setting up your admin panel.
-- [Project types](/project-types): choose a public website or add an admin panel.
+- [Project types](/project-types): compare a public website, a website with a panel and a standalone admin app.
 - [Build with agents](/agents): let your coding agent create or extend the app.
 
 ## What is included?

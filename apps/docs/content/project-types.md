@@ -13,7 +13,7 @@ Choose your project type in the creation wizard. All three options include Next.
 | **Public website + admin panel** | An authenticated admin area alongside a public site. |
 | **Admin panel only** | A standalone authenticated app with marketing in a separate project. |
 
-The wizard preselects **Public website + admin panel**. Change it if your project only needs public pages.
+The wizard preselects **Public website + admin panel**. Choose **Public website only** for a marketing site, or **Admin panel only** for a standalone internal app.
 
 ## Public website only
 
@@ -21,7 +21,7 @@ You get a public application with editable UI and project instructions for your 
 
 Database, authentication, admin routes and tRPC are not installed. UI commands target the public area by default.
 
-Start with the [quickstart](/quickstart), then [add components](/ui/blocks).
+Continue with [next steps for public websites](/next-steps#public-website-only), then [add components](/ui/blocks).
 
 <span id="public-website--administration"></span>
 
@@ -37,7 +37,7 @@ You get the public application plus:
 
 The public site and admin area have separate UI profiles. You can defer database credentials and first-administrator creation while exploring the public page and login screen.
 
-Continue with [database setup](/guides/database), [authentication](/guides/authentication) or the [admin panel](/ui/admin-panel).
+Continue with [next steps for websites with a panel](/next-steps#public-website-with-an-admin-panel).
 
 ## Admin panel only
 
@@ -50,6 +50,8 @@ Use `--project-type admin`, or select **Admin panel only** in the wizard. This i
 - `dinvolt ui add` defaults to the admin profile; `--target admin` also works. There is no public profile.
 
 For example, deploy your app at `app.example.com` and manage `example.com` in a separate marketing project. Configure the app's own origin for authentication; the projects do not automatically share sessions or data.
+
+Continue with [next steps for standalone apps](/next-steps#admin-panel-only).
 
 ## Complete setup later
 

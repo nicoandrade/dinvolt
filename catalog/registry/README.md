@@ -40,13 +40,16 @@ Use the same command for official shadcn/ui components:
 npx dinvolt ui add button dialog --target public
 ```
 
-Each target uses its own UI profile and theme:
+The combined public website + admin panel project has separate profiles and themes. Public-only and admin-only projects each have one profile:
 
-| Source                        | Installed import path   |
-| ----------------------------- | ----------------------- |
-| Public primitives and actions | `@/components/ui`       |
-| Admin primitives and actions  | `@/components/admin/ui` |
-| Shared icons                  | `@/components/icons`    |
+| Project type                 | Target   | Primitives and actions  |
+| ---------------------------- | -------- | ----------------------- |
+| Public website only          | `public` | `@/components/ui`       |
+| Public website + admin panel | `public` | `@/components/ui`       |
+| Public website + admin panel | `admin`  | `@/components/admin/ui` |
+| Admin panel only             | `admin`  | `@/components/ui`       |
+
+Icons live in `@/components/icons` in all three project types. Only installed targets are available: an admin-only app cannot install a public block. Without `--target`, Dinvolt selects public for public-only projects and admin for either project type with a panel.
 
 ## Update installed code
 
@@ -127,7 +130,7 @@ Install the public block first:
 npx dinvolt ui add @dinvolt/public-actions --target public
 ```
 
-Projects with an admin panel already include these components. The examples below use public imports; for admin pages, replace `@/components/ui/` with `@/components/admin/ui/`.
+Projects with an admin panel already include these components. The imports below work in public-only and admin-only projects. For the admin area of a combined project, replace `@/components/ui/` with `@/components/admin/ui/`.
 
 ### Show a pending form action
 

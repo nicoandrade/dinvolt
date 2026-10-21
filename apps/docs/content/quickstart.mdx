@@ -42,7 +42,7 @@ In the wizard:
 
 **Using npm, pnpm or Yarn?** Select it in advanced configuration. Defaults use the package manager detected in the destination, or Bun in an empty project.
 
-For projects with an admin panel, you can select **Complete credentials later**. This lets you explore the public page before connecting a database.
+For projects with an admin panel, you can select **Complete credentials later**. You can preview the login screen, and the public page when included, before connecting a database. Signing in and using protected pages require database and administrator setup.
 
 ## Run locally
 
@@ -74,7 +74,9 @@ yarn run dev
 
 Open the URL printed by the server, normally **https://my-app.localhost**. Portless manages local HTTPS and may ask you to trust its certificate on first use.
 
-You should now see the public starter page. Keep the server running while you build.
+For **Public website only** and **Public website + admin panel**, you should see the public starter page. For **Admin panel only**, you should see the login screen at `/`.
+
+Keep the server running while you build.
 
 ## Next steps
 

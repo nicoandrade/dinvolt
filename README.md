@@ -95,7 +95,7 @@ npx dinvolt setup
 
 The wizard connects your database, initializes the authentication tables and offers to create your first administrator. Restart the development server, then sign in at `/admin` (or `/` for **Admin panel only**).
 
-See the [admin panel walkthrough](https://docs.dinvolt.com/next-steps#public-website-with-administration) for credentials and sign-in steps.
+See the [admin panel setup walkthrough](https://docs.dinvolt.com/next-steps#set-up-your-admin-panel) for credentials and sign-in steps.
 
 ### Add UI components
 
