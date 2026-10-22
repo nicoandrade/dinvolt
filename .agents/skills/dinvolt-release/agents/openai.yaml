@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dinvolt Release"
+  short_description: "Versiona y publica Dinvolt en GitHub y npm"
+  default_prompt: "Usá $dinvolt-release para preparar la versión y el changelog, hacer commit y push, publicar la release en GitHub y verificar su publicación en npm."
