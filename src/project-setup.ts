@@ -401,6 +401,30 @@ export async function setupExistingProject(
         for (const entry of initialized) {
           results.set(entry.environment, entry);
         }
+        if (
+          !initialized.some(
+            (entry) =>
+              entry.environment === connection.environment &&
+              entry.connected &&
+              ["initialized", "ready"].includes(entry.status)
+          )
+        ) {
+          const manifest = JSON.parse(
+            await requiredProjectFile(project.root, "package.json")
+          );
+          ui.report(
+            databaseConnectionSummary(
+              [result.connection],
+              project.metadata.packageManager,
+              initialized,
+              manifest.scripts ?? {}
+            )
+          );
+          ui.report(
+            `${connection.environment}: administrator creation is blocked until database initialization is ready.`
+          );
+          continue;
+        }
         const authentication = await ensureAuthentication(
           project,
           connection.environment,

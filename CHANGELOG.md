@@ -6,7 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.3.0...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.3.1...HEAD)
+
+## 0.3.1 - 2026-10-22
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.3.0...v0.3.1)
+
+### Changed
+
+- Documentation separates the next steps, sign-in routes and UI profiles for all three project types, including standalone admin applications.
+
+### Fixed
+
+- Generated PlanetScale PostgreSQL initialization recognizes provider-owned extension views instead of treating an otherwise empty database as incompatible and blocking administrator setup.
+- Generated PostgreSQL initialization connects through PgBouncer without unsupported timeout startup parameters, while retaining query timeouts and transaction-scoped migration limits.
+- Interactive `setup` explains database initialization blockers before returning to the menu, instead of silently skipping administrator creation.
 
 ## 0.3.0 - 2026-10-21
 

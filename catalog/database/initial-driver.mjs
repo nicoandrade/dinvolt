@@ -36,8 +36,6 @@ export const initialAdapter = async (provider, credentials) => {
     ssl: { rejectUnauthorized: true },
     connectionTimeoutMillis: 8000,
     query_timeout: 15_000,
-    statement_timeout: 15_000,
-    lock_timeout: 8000,
   });
   client.on("error", () => {
     /* Keep provider diagnostics private, including cleanup failures. */
@@ -59,6 +57,10 @@ export const initialAdapter = async (provider, credentials) => {
     transaction: async (action) => {
       await query("BEGIN");
       try {
+        // PgBouncer rejects timeout startup parameters. Scope server limits to
+        // the migration transaction; query_timeout also bounds read-only checks.
+        await query("SET LOCAL statement_timeout = '15s'");
+        await query("SET LOCAL lock_timeout = '8s'");
         await query("SELECT pg_advisory_xact_lock(1684631158, 1)");
         await query("SET LOCAL search_path TO public");
         const result = await action(query);

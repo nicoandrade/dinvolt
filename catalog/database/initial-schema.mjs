@@ -154,6 +154,11 @@ export const inspectSchema = async (query, provider) => {
       c.relkind::text || ':' || c.relrowsecurity::text || ':' || c.relforcerowsecurity::text AS definition
     FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
     WHERE n.nspname NOT IN ('pg_catalog','information_schema','drizzle') AND n.nspname NOT LIKE 'pg_toast%' AND n.nspname NOT LIKE 'pg_temp%' AND c.relkind != 'i'
+      AND NOT (n.nspname='pscale_extensions' AND c.relkind='v' AND EXISTS (
+        SELECT 1 FROM pg_depend dep JOIN pg_extension ext ON ext.oid=dep.refobjid
+        WHERE dep.classid='pg_class'::regclass AND dep.objid=c.oid AND dep.objsubid=0
+          AND dep.refclassid='pg_extension'::regclass AND dep.deptype='e'
+      ))
     UNION ALL
     SELECT 'history-object', c.relname, c.relkind::text FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='drizzle' AND c.relname NOT IN ('__drizzle_migrations','__drizzle_migrations_id_seq','__drizzle_migrations_pkey')
     UNION ALL

@@ -395,6 +395,40 @@ test("tracked dotenv is preserved and setup offers an ignored destination withou
   ).rejects.toThrow("tracked");
 });
 
+test("setup explains blocked initialization before returning to the menu and does not offer administrator creation", async () => {
+  const root = await fixture();
+  const reports: string[] = [];
+  let actions = 0;
+  const form = ui({
+    action: async () => {
+      actions += 1;
+      if (actions === 1) {
+        return { complete: ["development"] };
+      }
+      expect(reports.join("\n")).toContain(
+        "unknown or incompatible schema/history"
+      );
+      expect(reports.join("\n")).toContain("administrator creation is blocked");
+    },
+    report: (message) => reports.push(message),
+  });
+  form.connection.credential = async (_, field) =>
+    credentials("turso")[
+      field.name as "TURSO_DATABASE_URL" | "TURSO_AUTH_TOKEN"
+    ]!;
+  await setupExistingProject(root, form, {
+    verify: async () => {},
+    initialize: async () => [
+      { environment: "development", connected: true, status: "incompatible" },
+    ],
+    administrator: async (_, connections) => {
+      expect(connections).toEqual([]);
+    },
+  });
+  expect(actions).toBe(2);
+  expect(reports.join("\n")).not.toContain("private-token");
+});
+
 test("cancel after environment enablement preserves edits, and selection initializes sequentially with safe summary", async () => {
   const root = await fixture();
   let actions = 0;
