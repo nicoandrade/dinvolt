@@ -92,16 +92,18 @@ const setupPrompts: SetupPrompts = {
     if (action === "done") {
       return;
     }
+    const environments =
+      action === "add"
+        ? available
+        : states.map(({ environment }) => environment);
     const selected = answer(
       await prompts.multiselect({
         message:
           action === "add"
             ? "Enable which environments?"
             : "Complete which environments?",
-        options: (action === "add"
-          ? available
-          : states.map(({ environment }) => environment)
-        ).map((env) => ({ value: env, label: env })),
+        options: environments.map((env) => ({ value: env, label: env })),
+        initialValues: environments.length === 1 ? environments : [],
         required: true,
       })
     );

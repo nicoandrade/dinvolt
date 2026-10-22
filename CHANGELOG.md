@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Generated PlanetScale PostgreSQL initialization recognizes provider-owned extension views instead of treating an otherwise empty database as incompatible and blocking administrator setup.
 - Generated PostgreSQL initialization connects through PgBouncer without unsupported timeout startup parameters, while retaining query timeouts and transaction-scoped migration limits.
 - Interactive `setup` explains database initialization blockers before returning to the menu, instead of silently skipping administrator creation.
+- Interactive `setup` preselects the environment when only one is available, so Enter can confirm it without first pressing Space. Multiple environments still require an explicit selection.
 
 ## 0.3.0 - 2026-10-21
 
