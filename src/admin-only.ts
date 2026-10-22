@@ -5,6 +5,14 @@ import { registryItemSchema } from "shadcn/schema";
 export function adminOnlySource(source: string): string {
   return (
     source
+      .replaceAll(
+        'matcher: ["/admin/:path*"]',
+        'matcher: ["/dashboard/:path*", "/users/:path*", "/settings/:path*"]'
+      )
+      .replaceAll(
+        "`/admin/:path*`",
+        "`/dashboard/:path*`, `/users/:path*` and `/settings/:path*`"
+      )
       .replaceAll(/^For \*\*Admin panel only\*\* projects,.*\n\n/gmu, "")
       .replaceAll('<html className="admin-panel"', "<html")
       .replaceAll(

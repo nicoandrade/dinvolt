@@ -9,7 +9,7 @@ Skills give your coding agent instructions for specific tasks. Dinvolt installs 
 
 | Project | Skills cover |
 | --- | --- |
-| Every project | React, interface design, browser checks, shadcn/ui, transitions and changelogs. |
+| Every project | React, interface design, browser checks, shadcn/ui, transitions, changelogs and product documentation. |
 | With an admin panel | Better Auth and the selected database provider. |
 
 Skills are copied into `.agents/skills/` for Codex, Cursor and compatible agents, and `.claude/skills/` for Claude Code.
@@ -28,6 +28,19 @@ and update the changelog.
 ```
 
 Your agent reads the installed skill and follows its workflow. Preparing release files does not commit, publish or deploy them.
+
+## Start product documentation
+
+```text
+Use project-documentation to help me explain this product and create
+concise Markdown context for future development.
+```
+
+The skill asks only for missing context: who the product serves, the problem it solves, its first workflow and future direction. It asks questions in your language and follows your documentation language preference.
+
+It connects the root README, a task-based docs index, a product guide and `AGENTS.md`. Guides include `summary` and `read_when` metadata so agents can choose relevant context. Existing technical guides and project instructions are preserved.
+
+With skills enabled, generated `AGENTS.md` asks the coding agent to offer this onboarding once when product context is missing. Starter setup guides do not count. Once docs exist, the agent replaces the suggestion with links. Declining also retires the suggestion; you can request the skill later.
 
 ## Update installed skills
 

@@ -23,7 +23,7 @@ These instructions apply to work on Dinvolt itself. They are not starter content
 
 ## Static UI and loading
 
-- In our catalog pages and playground previews, prerender static UI immediately. Keep logos, navigation, headings, descriptions, form fields, filters, table headers and known pagination controls outside session/data waits and their fallbacks.
+- In our catalog pages and playground previews, prerender static UI immediately. Public/auth pages keep logos, navigation, headings, descriptions, form fields, filters, table headers and known pagination controls outside session/data waits and their fallbacks. The protected admin panel first waits for server authorization inside `AdminGate` with a neutral fallback; after authorization, keep static controls outside subsequent data waits.
 - Scope Suspense and skeletons to the smallest unresolved dynamic fragments, such as account identity, table rows and unknown totals. Initial loading does not justify replacing an entire page or layout. Preserve existing data during background updates and keep authorization at every sensitive server boundary.
 - Verify delayed initial loads as well as background refreshes: static controls must remain mounted and usable, private data must wait for authorization, and the change must not add duplicate session/data requests. Keep the generated instructions in `catalog/ui/agent-instructions.md` and `catalog/trpc/agent-instructions.md` consistent with this policy.
 

@@ -27,6 +27,7 @@ const common = [
   "shadcn",
   "transitions-dev",
   "keep-a-changelog",
+  "project-documentation",
   "better-auth-best-practices",
   "better-auth-security-best-practices",
 ];
@@ -45,12 +46,21 @@ afterEach(async () => {
   );
 });
 
-test("default creation includes common skills, bundled changelog skill and Turso", () => {
+test("default creation includes common skills, bundled skills and Turso", () => {
   expect(projectSkills().flatMap((entry) => entry.skills)).toEqual([
     ...common,
     "turso-db",
   ]);
 });
+
+test.each(["public", "admin", "public-admin"] as const)(
+  "includes product documentation for %s projects",
+  (projectType) => {
+    expect(
+      projectSkills({ projectType }).flatMap((entry) => entry.skills)
+    ).toContain("project-documentation");
+  }
+);
 
 test("disabling skills skips every source and does not invoke the installer or write files", async () => {
   const directory = await fixture();
@@ -175,17 +185,18 @@ test("bundled skill installs through the real CLI with a portable lock and prese
     }
   );
   for (const target of skillTargets) {
-    expect(
-      await readFile(
-        join(directory, target.directory, "keep-a-changelog/SKILL.md"),
-        "utf-8"
-      )
-    ).toBe(
-      await readFile(
-        new URL("../skills/keep-a-changelog/SKILL.md", import.meta.url),
-        "utf-8"
-      )
-    );
+    for (const name of ["keep-a-changelog", "project-documentation"]) {
+      for (const file of ["SKILL.md", "agents/openai.yaml"]) {
+        expect(
+          await readFile(join(directory, target.directory, name, file), "utf-8")
+        ).toBe(
+          await readFile(
+            new URL(`../skills/${name}/${file}`, import.meta.url),
+            "utf-8"
+          )
+        );
+      }
+    }
     expect(
       await readFile(
         join(
@@ -204,6 +215,12 @@ test("bundled skill installs through the real CLI with a portable lock and prese
     source: "nicoandrade/dinvolt",
     sourceType: "github",
     skillPath: "skills/keep-a-changelog/SKILL.md",
+    computedHash: expect.stringMatching(/^[a-f0-9]{64}$/u),
+  });
+  expect(lock.skills["project-documentation"]).toEqual({
+    source: "nicoandrade/dinvolt",
+    sourceType: "github",
+    skillPath: "skills/project-documentation/SKILL.md",
     computedHash: expect.stringMatching(/^[a-f0-9]{64}$/u),
   });
   expect(lock.skills["vercel-react-best-practices"].computedHash).toBe(
@@ -281,6 +298,9 @@ test.each([undefined, true, false])(
   async (skills) => {
     const directory = await fixture();
     await writeFile(join(directory, "package.json"), "{}");
+    const existingInstructions =
+      "# Project instructions\n\nKeep local conventions.\n";
+    await writeFile(join(directory, "AGENTS.md"), existingInstructions);
     await configureProject(
       directory,
       {
@@ -302,5 +322,41 @@ test.each([undefined, true, false])(
     });
     expect(config.database.provider).toBe("planetscale-postgres");
     expect(config.editors).toEqual([]);
+    const agents = await readFile(join(directory, "AGENTS.md"), "utf-8");
+    expect(agents).toStartWith(existingInstructions);
+    if (skills === false) {
+      expect(agents).toBe(existingInstructions);
+    } else {
+      expect(agents).toContain(
+        await readFile(
+          new URL("../catalog/skills/agent-instructions.md", import.meta.url),
+          "utf-8"
+        )
+      );
+    }
+  }
+);
+
+test.each([
+  "Read [Product](docs/product.md) and [Documentation](docs/README.md).",
+  "Documentation onboarding was declined; resume only when requested.",
+])(
+  "preserves a resolved documentation onboarding block: %s",
+  async (content) => {
+    const directory = await fixture();
+    const agents = `# Instructions\n\n<!-- BEGIN:dinvolt-project-documentation -->\n${content}\n<!-- END:dinvolt-project-documentation -->\n`;
+    await writeFile(join(directory, "package.json"), "{}");
+    await writeFile(join(directory, "AGENTS.md"), agents);
+    await configureProject(
+      directory,
+      {
+        packageManager: "bun",
+        linter: "biome",
+        editors: [],
+      },
+      "1.4.0",
+      async () => {}
+    );
+    expect(await readFile(join(directory, "AGENTS.md"), "utf-8")).toBe(agents);
   }
 );

@@ -1,6 +1,6 @@
 # Authentication
 
-For **Admin panel only** projects, the login is `/`, the home page is `/dashboard`, and other panel pages omit the `/admin` prefix. Components use `@/components` and `@/components/ui`. API endpoints such as `/api/admin/users/export` keep their paths. Examples below use the combined public website + admin panel layout; generated standalone guides use the app's actual paths.
+For **Admin panel only** projects, the login is `/`, the home page is `/dashboard`, and other panel pages omit the `/admin` prefix. The proxy matches `/dashboard/:path*`, `/users/:path*` and `/settings/:path*`. Components use `@/components` and `@/components/ui`. API endpoints such as `/api/admin/users/export` keep their paths. Examples below use the combined public website + admin panel layout; generated standalone guides use the app's actual paths.
 
 Dinvolt includes email/password sign-in, an admin panel, and password recovery with Better Auth. Use the built-in screens first, then customize the application-owned source as needed.
 
@@ -181,7 +181,11 @@ The generated `@/lib/admin-auth` module provides:
 | `isAdmin(session)` | Exact membership of the `admin` role |
 | `requireAdmin()` | Admin pages/actions that redirect unauthorized visitors to `/admin` |
 
-Call `requireAdmin()` at every protected page, data, or action boundary, even inside the protected layout. Keep static headings and controls outside that wait.
+The generated `src/proxy.ts` redirects requests without a session cookie to `/admin`. Its matcher covers `/admin/:path*`, with sign-in, forgot-password, reset-password and the generated Open Graph image explicitly allowed through. Public website pages, `/_next` assets and API routes are outside the matcher. Extend the matcher when adding protected sections outside its existing paths.
+
+`AdminGate` validates the session and admin role before rendering `AdminShell` or its children. Its Suspense fallback is `null`, so missing, invalid or unauthorized sessions never show the panel or its skeletons. React `cache()` deduplicates `getAdminSession()` within the current server render; verified identity is hydrated for client components without another browser session request.
+
+Call `requireAdmin()` at every protected page, data, or action boundary, even inside the protected layout. After the gate authorizes access, keep static headings and controls outside subsequent data waits.
 
 Custom admin APIs must validate both the session and admin role. tRPC endpoints can use `adminProcedure`; see the [tRPC guide](trpc.md).
 

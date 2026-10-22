@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 
-import type { Browser, BrowserContext, Page } from "playwright";
+import type { Browser, BrowserContext, Page, Request } from "playwright";
 
+import { checkAuthRedirects, observePanel } from "./auth-redirects.ts";
 import { testIdentity } from "./config.ts";
 
 async function signIn(
@@ -63,6 +64,7 @@ export async function checkBrowser(
   const users = standalone ? "/users" : "/admin/users";
   const identity = testIdentity(run);
   const context = await browser.newContext();
+  const panel = await observePanel(context);
   context.setDefaultTimeout(60_000);
   context.setDefaultNavigationTimeout(120_000);
   let runtimeErrors = 0;
@@ -73,6 +75,10 @@ export async function checkBrowser(
   );
   const page = await context.newPage();
   try {
+    await step(
+      "Missing and invalid cookies redirect without rendering panel UI; auth routes stay public",
+      () => checkAuthRedirects(browser, origin, standalone)
+    );
     await step(
       "Login controls remain usable during a delayed session check",
       async () => {
@@ -163,6 +169,13 @@ export async function checkBrowser(
     await step(
       "User list keeps controls and rows usable during delayed reads",
       async () => {
+        let sessionReads = 0;
+        const countSessionReads = (request: Request) => {
+          if (new URL(request.url()).pathname === "/api/auth/get-session") {
+            sessionReads += 1;
+          }
+        };
+        page.on("request", countSessionReads);
         let release: (() => void) | undefined;
         // eslint-disable-next-line promise/avoid-new -- Release intercepted data only after checking the visible UI.
         let held = new Promise<void>((resolve) => {
@@ -239,9 +252,15 @@ export async function checkBrowser(
             2,
             "Initial and changed-query reads must each occur once."
           );
+          assert.equal(
+            sessionReads,
+            0,
+            "The panel must reuse server-verified identity."
+          );
         } finally {
           release?.();
           await page.unrouteAll({ behavior: "wait" });
+          page.off("request", countSessionReads);
         }
       }
     );
@@ -352,6 +371,28 @@ export async function checkBrowser(
       await deniedEndpoints(context, origin, 401, run);
     });
     await step(
+      "Back and forward after sign-out do not render the panel",
+      async () => {
+        panel.start();
+        await page.goBack();
+        await page
+          .getByRole("heading", { name: "Admin sign in", exact: true })
+          .waitFor();
+        await page.waitForLoadState("networkidle");
+        await page.goBack();
+        await page
+          .getByRole("heading", { name: "Admin sign in", exact: true })
+          .waitFor();
+        await page.waitForLoadState("networkidle");
+        await page.goForward();
+        await page
+          .getByRole("heading", { name: "Admin sign in", exact: true })
+          .waitFor();
+        await page.waitForLoadState("networkidle");
+        panel.assertHidden();
+      }
+    );
+    await step(
       "Ordinary user authenticates but cannot access the admin panel",
       async () => {
         await signIn(page, origin, identity.userEmail, userPassword, login);
@@ -363,11 +404,14 @@ export async function checkBrowser(
         ).json();
         assert.equal(session.user.email, identity.userEmail);
         assert.equal(session.user.role, "user");
+        panel.start();
         await page.goto(`${origin}${users}`);
         await page
           .getByRole("heading", { name: "Access denied", exact: true })
           .waitFor();
         await deniedEndpoints(context, origin, 403, run);
+        await page.waitForLoadState("networkidle");
+        panel.assertHidden();
         assert.equal(
           await page
             .getByRole("cell", { name: identity.adminEmail, exact: true })

@@ -6,7 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.3.1...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.4.0...HEAD)
+
+## 0.4.0 - 2026-10-22
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.3.1...v0.4.0)
+
+### Added
+
+- Bundled `project-documentation` skill for a short product interview in the user's language and concise Markdown context linked from README and AGENTS.md. Generated agent instructions offer onboarding when product context is missing and retire the suggestion once documented or declined.
+
+### Fixed
+
+- Generated authenticated apps redirect visitors without a session cookie before rendering and validate administrator access before showing the panel or its skeletons. Public website + admin projects protect `/admin/*` and redirect to `/admin`; standalone admin projects protect `/dashboard`, `/users` and `/settings`, including subroutes, and redirect to `/`. Sign-in, password recovery and social images remain public, and public-only projects receive no authentication proxy.
+- Protected admin pages skip instant-navigation validation when a session redirect prevents rendering, avoiding development warnings while retaining Cache Components and streaming.
 
 ## 0.3.1 - 2026-10-22
 

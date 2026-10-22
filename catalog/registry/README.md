@@ -116,7 +116,7 @@ See [API and data](../trpc/README.md) for server and client patterns.
 
 ### Keep static controls visible
 
-Render headings, form fields, filters, table headers and pagination immediately. Initial skeletons belong only around unresolved identity, rows and totals.
+Public and authentication pages render static controls immediately. The protected panel first waits for server authorization inside `AdminGate`, with a `null` fallback. Once authorized, render headings, form fields, filters, table headers and pagination immediately; scope skeletons to unresolved data. The cookie-only proxy redirects anonymous visitors before rendering and never replaces server authorization. See [Authentication](../auth/README.md#require-an-administrator) for route coverage.
 
 Keep existing rows visible during background updates. The server must continue to authorize protected pages, APIs and actions.
 

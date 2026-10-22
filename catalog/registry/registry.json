@@ -127,6 +127,11 @@
           "target": "~/src/lib/admin-auth.ts"
         },
         {
+          "path": "admin-panel/auth/proxy.ts",
+          "type": "registry:file",
+          "target": "~/src/proxy.ts"
+        },
+        {
           "path": "admin-panel/shell/admin-shell.tsx",
           "type": "registry:component",
           "target": "~/src/components/admin/admin-shell.tsx"

@@ -18,6 +18,8 @@ Applies to `src/app/(admin)` and `src/components/admin`, including `@/components
 
 - Keep the sign-in form at `/admin`; the starter Home lives at `/admin/home`. Send successful sign-ins and authenticated admin visits to Home, and logout/expired sessions to `/admin`. Keep the entry outside the protected layout.
 - Integrate pages with the current protected layout and navigation. Reuse `PageHeader` when available for the title, optional description and primary action in `actions`.
+- Keep the entire protected panel behind `AdminGate` with a neutral fallback until server authorization completes. Preserve the lightweight cookie-only redirect in `src/proxy.ts`, keep sign-in/recovery public, and extend its matcher for new protected sections. Cookie presence never grants access; retain authorization at every data/action boundary and request-scoped session deduplication.
+- Protected pages use `export const instant = false` because a session redirect can prevent their instant-navigation validation from rendering. Keep this on new protected pages; Cache Components and streaming remain enabled.
 - For dynamic breadcrumb labels, use `useAdminBreadcrumb` with the page's existing authorized data, current path, parent link and verified identity. Avoid a separate read just for the label.
 - Reuse `BackButton` when available for back navigation, passing an explicit `href` and contextual label. Its default `back` variant has no horizontal padding or hover background and a subtle back icon; `ghost` is available for auth-screen navigation.
 - For navigation between related pages, reuse `AdminTabs` in their shared layout when available. Its items are links to separate routes, with a selector on mobile. The starter Settings forms are temporary examples; connect real configuration to authorized server reads and writes before presenting it as saved.
@@ -42,7 +44,7 @@ Applies to `src/app/(public)` and its components, with primitives in `@/componen
 
 ### Rendering and loading
 
-- Prerender static UI immediately: navigation, headings, forms, filters, table headers and known pagination controls stay outside session/data waits. Scope Suspense and layout-matched skeletons to initially missing dynamic fragments; an empty result is data.
+- Prerender static UI immediately within the area's access boundary: navigation, headings, forms, filters, table headers and known pagination controls stay outside subsequent data waits. Scope Suspense and layout-matched skeletons to initially missing dynamic fragments; an empty result is data.
 - During background updates, retain usable data and controls without spinners, loading text or overlays. Reserve action feedback for explicit operations.
 - Check slow initial loads and background refreshes: static controls stay mounted and usable, layout and input are preserved, private data waits for server authorization, and session/data requests are not duplicated.
 

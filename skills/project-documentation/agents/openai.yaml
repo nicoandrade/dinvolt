@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Documentation"
+  short_description: "Capture product context with a short interview"
+  default_prompt: "Use $project-documentation to understand this project and create concise Markdown context for future development."

@@ -18,7 +18,7 @@
     },
     {
       "source": "nicoandrade/dinvolt",
-      "skills": ["keep-a-changelog"],
+      "skills": ["keep-a-changelog", "project-documentation"],
       "bundled": true
     }
   ],

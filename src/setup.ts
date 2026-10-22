@@ -296,6 +296,19 @@ export async function configureProject(
     );
   }
   await configureUIStandards(directory, setup.linter);
+  if (setup.skills !== false) {
+    const agents = await readOrdinaryFile(directory, "AGENTS.md");
+    if (!agents?.includes("<!-- BEGIN:dinvolt-project-documentation -->")) {
+      const instructions = await readFile(
+        new URL("../catalog/skills/agent-instructions.md", import.meta.url),
+        "utf-8"
+      );
+      await writeFile(
+        join(directory, "AGENTS.md"),
+        `${agents?.trimEnd() ?? ""}\n\n${instructions}`.trimStart()
+      );
+    }
+  }
   await mkdir(join(directory, ".dinvolt"), { recursive: true });
   await writeFile(
     join(directory, ".dinvolt", "config.json"),
