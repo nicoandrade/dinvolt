@@ -4,10 +4,33 @@ import { join } from "node:path";
 
 import {
   loadUIComponentCatalog,
+  defaultSelectionComponents,
   resolveUIComponents,
 } from "../src/ui-catalog.ts";
 
 for (const area of ["admin", "public"] as const) {
+  test(`${area} selectors remain local with custom presets without replacing upstream primitives`, async () => {
+    const catalog = await loadUIComponentCatalog(area);
+    for (const style of [catalog.style, "base-nova"]) {
+      const result = await resolveUIComponents(area, style, [
+        ...defaultSelectionComponents,
+        "button",
+      ]);
+      expect(result?.unresolved).toEqual(
+        style === catalog.style ? [] : ["button"]
+      );
+      for (const name of defaultSelectionComponents) {
+        expect(
+          result?.payload.files?.find((file) => file.path === `ui/${name}.tsx`)
+            ?.content
+        ).toBe(await readFile(join(catalog.root, `ui/${name}.tsx`), "utf-8"));
+      }
+      expect(result?.payload.dependencies).toContain("@base-ui/react@1.9.0");
+      expect(result?.payload.cssVars).toBeUndefined();
+      expect(result?.payload.css).toBeUndefined();
+    }
+  });
+
   test(`the ${area} catalog resolves every component and its local dependencies`, async () => {
     const catalog = await loadUIComponentCatalog(area);
     const names = catalog.items

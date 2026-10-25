@@ -6,7 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.4.0...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.5.0...HEAD)
+
+## 0.5.0 - 2026-10-25
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.4.0...v0.5.0)
+
+### Added
+
+- New projects include `RadioGroupInline` for short choices and `RadioGroupCard` for choices with titles, descriptions and optional icons. Public and admin areas receive separate editable components that follow their selected theme, including custom Base UI presets. Existing projects can install them with `dinvolt ui add radio-group-inline radio-group-cards --target public` or `--target admin`.
+- Playground examples for both selectors in the public and admin profiles, with controlled selection, disabled and read-only states.
+
+### Changed
+
+- Generated agent guidance suggests visible selectors for a few choices to reduce selection friction, while retaining Select or Combobox for larger lists or limited space. These are optional UX recommendations, not mandatory component choices.
 
 ## 0.4.0 - 2026-10-22
 

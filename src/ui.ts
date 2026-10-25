@@ -19,7 +19,11 @@ import {
   recordRegistryBlock,
 } from "./registry.ts";
 import { skillTargets } from "./skills.ts";
-import { combineUIRegistryItems, resolveUIComponents } from "./ui-catalog.ts";
+import {
+  combineUIRegistryItems,
+  defaultSelectionComponents,
+  resolveUIComponents,
+} from "./ui-catalog.ts";
 import {
   defaultUIPresets,
   normalizeUIPreset,
@@ -35,6 +39,24 @@ export const defaultAdminBlocks = [
   "@dinvolt/admin-spinner",
   "@dinvolt/admin-panel",
 ] as const;
+
+export async function installDefaultUIPrimitives(
+  directory: string,
+  projectType: ProjectType = defaultProjectType,
+  execute = runShadcn
+) {
+  for (const target of projectUITargets(projectType)) {
+    await addUIComponents(
+      directory,
+      [
+        ...(target === "public" ? ["button"] : []),
+        ...defaultSelectionComponents,
+      ],
+      { target },
+      execute
+    );
+  }
+}
 
 // Installed skills are external instructions, not application source.
 const installedSkills = skillTargets.map((target) => `${target.directory}/**`);

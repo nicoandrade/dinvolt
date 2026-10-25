@@ -53,6 +53,10 @@ Icons live in `@/components/icons` in all three project types. Only installed ta
 
 ## Update installed code
 
+New projects include `RadioGroupInline` / `RadioGroupInlineItem` from `radio-group-inline` and `RadioGroupCard` / `RadioGroupCardItem` from `radio-group-cards` in each area's UI directory, including with custom presets. Each area owns its editable copies and uses its selected theme.
+
+Consider Inline for a few short options and Cards when options need titles and descriptions. Showing all choices removes the extra click to open a dropdown. With many options or limited space, a Select or searchable Combobox may fit better; this is a UX suggestion, not a fixed rule. Existing projects can add them with `npx dinvolt ui add radio-group-inline radio-group-cards --target public` (or `--target admin`).
+
 Reinstalling an unchanged block does nothing. Customized, incomplete or conflicting blocks require manual review; `--overwrite` does not replace them.
 
 Catalog changes affect future installations. Review and apply changes to existing application code yourself. See the [CLI reference](../../docs/cli.md#dinvolt-ui-add) for installation options.

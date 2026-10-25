@@ -1346,6 +1346,34 @@
         }
       ],
       "type": "registry:hook"
+    },
+    {
+      "name": "radio-group-inline",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react@1.9.0",
+        "cn@0.5.0"
+      ],
+      "files": [
+        {
+          "path": "ui/radio-group-inline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radio-group-cards",
+      "type": "registry:ui",
+      "dependencies": [
+        "@base-ui/react@1.9.0",
+        "cn@0.5.0"
+      ],
+      "files": [
+        {
+          "path": "ui/radio-group-cards.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

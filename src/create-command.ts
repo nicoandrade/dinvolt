@@ -51,7 +51,12 @@ import {
 } from "./setup.ts";
 import { installProjectSkills, projectSkills } from "./skills.ts";
 import { prepareTRPCStarter } from "./trpc.ts";
-import { addUIComponents, defaultAdminBlocks, prepareUIStarter } from "./ui.ts";
+import {
+  addUIComponents,
+  defaultAdminBlocks,
+  installDefaultUIPrimitives,
+  prepareUIStarter,
+} from "./ui.ts";
 import { answer } from "./wizard-prompts.ts";
 
 async function completeCreatedDatabase(
@@ -365,9 +370,7 @@ async function executeCreate(options: CreateOptions, output: CreateOutput) {
             ? "Public website and admin panel components installed."
             : "Public components installed.",
         async () => {
-          if (projectType !== "admin") {
-            await addUIComponents(path, ["button"], { target: "public" });
-          }
+          await installDefaultUIPrimitives(path, projectType);
           for (const block of admin ? defaultAdminBlocks : []) {
             await addUIComponents(path, [block], { target: "admin" });
           }

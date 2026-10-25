@@ -6,6 +6,10 @@ import { directoryRoot, readOrdinaryFile } from "./files.ts";
 
 export type UIArea = "admin" | "public";
 const styles = { admin: "base-vega", public: "base-luma" } as const;
+export const defaultSelectionComponents = [
+  "radio-group-inline",
+  "radio-group-cards",
+] as const;
 
 export async function loadUIComponentCatalog(target: UIArea) {
   const root = await directoryRoot(
@@ -57,13 +61,20 @@ export async function resolveUIComponents(
   style: string,
   names: string[]
 ) {
-  if (style !== styles[target]) {
+  if (style !== styles[target] && !style.startsWith("base-")) {
     return null;
   }
   const catalog = await loadUIComponentCatalog(target);
+  // Dinvolt's own selectors work with every generated Base UI preset. Other
+  // primitives still come from the selected style's official registry.
+  const available = catalog.items.filter(
+    (item) =>
+      style === catalog.style ||
+      defaultSelectionComponents.some((name) => name === item.name)
+  );
   const chosen = new Map<string, (typeof catalog.items)[number]>();
   const unresolved = names.filter(
-    (name) => !catalog.items.some((item) => item.name === name)
+    (name) => !available.some((item) => item.name === name)
   );
   const visiting = new Set<string>();
   const visit = (name: string) => {
@@ -73,7 +84,7 @@ export async function resolveUIComponents(
     if (visiting.has(name)) {
       throw new Error(`Circular UI dependency: ${name}.`);
     }
-    const item = catalog.items.find((entry) => entry.name === name);
+    const item = available.find((entry) => entry.name === name);
     if (!item) {
       throw new Error(`Missing local UI dependency: ${name}.`);
     }

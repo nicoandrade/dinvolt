@@ -19,6 +19,7 @@ import {
   prepareUIStarter,
   addUIComponents,
   defaultAdminBlocks,
+  installDefaultUIPrimitives,
 } from "../src/ui.ts";
 import {
   markPlayground,
@@ -67,7 +68,7 @@ if (!exists) {
         },
         managerVersion
       );
-      await addUIComponents(directory, ["button"], { target: "public" });
+      await installDefaultUIPrimitives(directory);
       for (const block of defaultAdminBlocks) {
         await addUIComponents(directory, [block], { target: "admin" });
       }

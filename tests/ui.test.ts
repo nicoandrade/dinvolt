@@ -15,7 +15,12 @@ import { dirname, join, resolve } from "node:path";
 import { parse } from "postcss";
 
 import { defaultUIPresets } from "../src/ui-presets.ts";
-import { addUIComponents, prepareUIStarter, runShadcn } from "../src/ui.ts";
+import {
+  addUIComponents,
+  installDefaultUIPrimitives,
+  prepareUIStarter,
+  runShadcn,
+} from "../src/ui.ts";
 
 const directories: string[] = [];
 async function fixture() {
@@ -704,6 +709,80 @@ test.each([undefined, "b0"])(
       })
     ).rejects.toThrow("only has a public UI profile");
     expect(await readdir(join(root, ".dinvolt/ui"))).not.toContain(".lock");
+  }
+);
+
+test.each(["public", "admin", "public-admin"] as const)(
+  "%s starters install both selectors in each area's own profile and preserve custom themes",
+  async (projectType) => {
+    const root = await starterFixture();
+    await prepareUIStarter(
+      root,
+      { admin: "b0", public: "b0" },
+      async () => ({
+        config: { style: "base-nova" },
+        light: { primary: "red", radius: "1rem" },
+        dark: { primary: "blue" },
+        fonts: [],
+        dependencies: {},
+      }),
+      projectType
+    );
+    const originalConfig = await readFile(
+      join(root, "components.json"),
+      "utf-8"
+    );
+    const originalTheme = await readFile(
+      join(root, "src/app/globals.css"),
+      "utf-8"
+    );
+    const aliases: string[] = [];
+    await installDefaultUIPrimitives(root, projectType, async (cwd, args) => {
+      const config = JSON.parse(
+        await readFile(join(cwd, "components.json"), "utf-8")
+      );
+      aliases.push(config.aliases.ui);
+      expect(config.style).toBe("base-nova");
+      const payload = JSON.parse(await readFile(args[1]!, "utf-8"));
+      expect(payload.files.map((file: { path: string }) => file.path)).toEqual([
+        "ui/radio-group-inline.tsx",
+        "ui/radio-group-cards.tsx",
+        "LICENSE.shadcn",
+      ]);
+      expect(args.includes("button")).toBe(
+        projectType !== "admin" && config.aliases.ui === "@/components/ui"
+      );
+      const area =
+        config.aliases.ui.includes("/admin/") || projectType === "admin"
+          ? "admin"
+          : "public";
+      for (const name of ["radio-group-inline", "radio-group-cards"]) {
+        expect(
+          payload.files.find(
+            (file: { path: string }) => file.path === `ui/${name}.tsx`
+          ).content
+        ).toBe(
+          await readFile(
+            new URL(
+              `../catalog/ui/components/${area}/ui/${name}.tsx`,
+              import.meta.url
+            ),
+            "utf-8"
+          )
+        );
+      }
+    });
+    expect(aliases).toEqual(
+      projectType === "public-admin"
+        ? ["@/components/ui", "@/components/admin/ui"]
+        : ["@/components/ui"]
+    );
+    expect(await readFile(join(root, "components.json"), "utf-8")).toBe(
+      originalConfig
+    );
+    expect(await readFile(join(root, "src/app/globals.css"), "utf-8")).toBe(
+      originalTheme
+    );
   }
 );
 

@@ -13,4 +13,10 @@ export const repositoryIgnores = [
   "catalog/ui/components/public/**",
   "playground/showcase/**",
   "playground/component-examples/**",
+  "!catalog/ui/components/admin/ui/radio-group-inline.tsx",
+  "!catalog/ui/components/admin/ui/radio-group-cards.tsx",
+  "!catalog/ui/components/public/ui/radio-group-inline.tsx",
+  "!catalog/ui/components/public/ui/radio-group-cards.tsx",
+  "!playground/component-examples/radio-group-inline-example.tsx",
+  "!playground/component-examples/radio-group-cards-example.tsx",
 ];

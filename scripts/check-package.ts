@@ -59,6 +59,10 @@ for (const required of [
   "catalog/next/README.md",
   "catalog/registry/LICENSE.shadcn",
   "catalog/ui/components/LICENSE.shadcn",
+  "catalog/ui/components/admin/ui/radio-group-inline.tsx",
+  "catalog/ui/components/admin/ui/radio-group-cards.tsx",
+  "catalog/ui/components/public/ui/radio-group-inline.tsx",
+  "catalog/ui/components/public/ui/radio-group-cards.tsx",
   "catalog/ui/components/icons/LICENSE.nucleo",
   "catalog/ui/og/Inter-OFL.txt",
 ]) {
