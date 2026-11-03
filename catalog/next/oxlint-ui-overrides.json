@@ -51,6 +51,7 @@
   {
     "files": ["src/components/**/ui/field.tsx"],
     "rules": {
+      "jsx-a11y/label-has-associated-control": "off",
       "jsx-a11y/prefer-tag-over-role": "off"
     }
   },

@@ -29,7 +29,7 @@ Version mismatches or failed checks stop the workflow before publication. A GitH
 
 ## Manual fallback
 
-Use Node.js 24+, npm, Git and the Bun version declared in `package.json`. An npm account with package publishing permission and the required two-factor authentication is needed. Use this path when GitHub publishing is unavailable; avoid publishing the same version both manually and through a new GitHub release.
+Use Node.js 24.15+, npm, Git and the Bun version declared in `package.json`. An npm account with package publishing permission and the required two-factor authentication is needed. Use this path when GitHub publishing is unavailable; avoid publishing the same version both manually and through a new GitHub release.
 
 ### Prepare the version
 

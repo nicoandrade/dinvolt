@@ -20,9 +20,10 @@ export function developmentUrl(projectName: string) {
 }
 
 export function checkDevelopmentRuntime(version = process.versions.node) {
-  if (Number(version.split(".")[0]) < 24) {
+  const [major = 0, minor = 0] = version.split(".").map(Number);
+  if (major < 24 || (major === 24 && minor < 15)) {
     throw new Error(
-      "Creating a Portless starter requires Node.js 24 or later. Upgrade Node.js and run dinvolt create again."
+      "Creating a starter requires Node.js 24.15 or later for Portless and Ultracite. Upgrade Node.js and run dinvolt create again."
     );
   }
 }

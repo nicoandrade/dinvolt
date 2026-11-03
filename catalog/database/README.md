@@ -60,6 +60,7 @@ For example, projects with authentication already have a `user` table. This serv
 // src/lib/find-user.ts
 import "server-only";
 import { eq } from "drizzle-orm";
+
 import { getDb } from "@/db";
 import { user } from "@/db/schema";
 

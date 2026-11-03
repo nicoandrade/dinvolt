@@ -290,7 +290,7 @@ const generatedGuides: Record<string, string> = {
 
 function rewriteLinks(page: PreparedPage, pages: PreparedPage[]): string {
   return mapProse(page.text, (prose) =>
-    prose.replace(markdownLink, (match: string, target: string) => {
+    prose.replaceAll(markdownLink, (match: string, target: string) => {
       const [file = "", anchor = ""] = target.split("#");
       let resolved: string;
       if (!file) {

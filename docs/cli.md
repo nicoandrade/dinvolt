@@ -10,7 +10,7 @@ Use Dinvolt without a global installation:
 npx dinvolt --help
 ```
 
-Use **Node.js 24+** to create projects. Other commands support Node.js 22.18+.
+Use **Node.js 24.15+** to create projects. Other commands support Node.js 22.22.2+ (22.x) or 24.15+.
 
 To install or update a global command:
 

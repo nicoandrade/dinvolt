@@ -1,14 +1,14 @@
 {
-  "version": "1.7.10",
+  "version": "1.7.16",
   "dependencies": {
-    "better-auth": "1.7.10",
-    "@better-auth/drizzle-adapter": "1.7.10",
+    "better-auth": "1.7.16",
+    "@better-auth/drizzle-adapter": "1.7.16",
     "@react-email/components": "1.0.12",
-    "@react-email/render": "2.1.1"
+    "@react-email/render": "2.2.0"
   },
   "devDependencies": {
-    "auth": "1.7.10",
-    "@clack/prompts": "1.8.0",
+    "auth": "1.7.16",
+    "@clack/prompts": "1.8.1",
     "jiti": "2.7.0"
   }
 }

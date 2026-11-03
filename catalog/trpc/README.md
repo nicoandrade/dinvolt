@@ -17,6 +17,7 @@ Create a Client Component that uses the existing health query:
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTRPC } from "@/trpc/client";
 
@@ -69,6 +70,7 @@ For example, create a feature router that validates its input and uses the verif
 // src/trpc/routers/greeting.ts
 import "server-only";
 import { z } from "zod";
+
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
 export const greetingRouter = createTRPCRouter({
@@ -102,6 +104,7 @@ This example keeps the title outside the request-time boundary:
 // src/app/api-status/page.tsx
 import { connection } from "next/server";
 import { Suspense } from "react";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCaller } from "@/trpc/server";
 
@@ -136,6 +139,7 @@ Prefetch when a Client Component needs initial server data and later browser upd
 "use client";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
+
 import { useTRPC } from "@/trpc/client";
 
 export function ProfileDetails() {
@@ -158,9 +162,11 @@ This example is an administrator page. It authorizes the route before prefetchin
 // src/app/(admin)/admin/(protected)/profile/page.tsx
 import { connection } from "next/server";
 import { Suspense } from "react";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { requireAdmin } from "@/lib/admin-auth";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
+
 import { ProfileDetails } from "./profile-details";
 
 async function ProfileData() {
@@ -203,6 +209,7 @@ After a successful mutation, invalidate the affected query. For example, call th
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+
 import { useTRPC } from "@/trpc/client";
 
 export function useRefreshUsers() {

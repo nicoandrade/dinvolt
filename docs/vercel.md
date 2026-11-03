@@ -6,7 +6,7 @@ Connect your generated app to Vercel. Your Git repository supplies the code, and
 
 Prepare these first:
 
-- **Node.js 24+, npm and Git** on your computer.
+- **Node.js 24.15+, npm and Git** on your computer.
 - A Git repository with your app published on **`main`**.
 - A Vercel account with access to the repository. Authorize Vercel's Git provider app for your team.
 - For admin projects, a configured **production database**. Prepare staging too if you want Preview deployments.
@@ -204,7 +204,7 @@ Dinvolt configures these Vercel settings:
 | Build, install and output | Framework and lockfile defaults.              |
 | Production Branch         | `main`                                        |
 
-Locally, it saves `.vercel/project.json` and its Git ignore rule. It uses the pinned official Vercel CLI **64.5.0** through npm.
+Locally, it saves `.vercel/project.json` and its Git ignore rule. It uses the pinned official Vercel CLI **65.11.0** through npm.
 
 The command does not upload local source, commit or push changes. You manage the repository and migrations through your own workflow.
 

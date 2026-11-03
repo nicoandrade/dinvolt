@@ -6,7 +6,7 @@
     {
       "name": "accordion",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -26,7 +26,7 @@
     {
       "name": "alert",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -45,7 +45,7 @@
     {
       "name": "alert-dialog",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button"
@@ -68,7 +68,7 @@
     {
       "name": "aspect-ratio",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -87,7 +87,7 @@
     {
       "name": "attachment",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button"
@@ -103,7 +103,7 @@
     {
       "name": "avatar",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -123,7 +123,7 @@
     {
       "name": "badge",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -142,7 +142,7 @@
     {
       "name": "breadcrumb",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -161,7 +161,7 @@
     {
       "name": "bubble",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -174,7 +174,7 @@
     {
       "name": "button",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -193,7 +193,7 @@
     {
       "name": "button-group",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "separator"
@@ -215,7 +215,7 @@
     {
       "name": "calendar",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "react-day-picker@10.0.2",
         "date-fns@4.4.0"
       ],
@@ -240,7 +240,7 @@
     {
       "name": "card",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -259,7 +259,7 @@
     {
       "name": "carousel",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "embla-carousel-react@8.6.0"
       ],
       "registryDependencies": [
@@ -283,8 +283,8 @@
     {
       "name": "chart",
       "dependencies": [
-        "cn@0.5.0",
-        "recharts@3.8.0"
+        "cn@0.5.2",
+        "recharts@3.10.1"
       ],
       "registryDependencies": [
         "card"
@@ -306,7 +306,7 @@
     {
       "name": "checkbox",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -326,7 +326,7 @@
     {
       "name": "code-block",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button",
@@ -366,7 +366,7 @@
     {
       "name": "combobox",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "@base-ui/react@1.9.0"
       ],
       "registryDependencies": [
@@ -391,7 +391,7 @@
     {
       "name": "command",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "cmdk@1.1.1"
       ],
       "registryDependencies": [
@@ -416,7 +416,7 @@
     {
       "name": "context-menu",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -436,7 +436,7 @@
     {
       "name": "dialog",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button"
@@ -478,7 +478,7 @@
     {
       "name": "drawer",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "@base-ui/react@1.9.0"
       ],
       "files": [
@@ -499,7 +499,7 @@
     {
       "name": "dropdown-menu",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -519,7 +519,7 @@
     {
       "name": "empty",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -538,7 +538,7 @@
     {
       "name": "field",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "label",
@@ -569,7 +569,7 @@
     {
       "name": "hover-card",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -589,7 +589,7 @@
     {
       "name": "input",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -608,7 +608,7 @@
     {
       "name": "input-group",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button",
@@ -632,7 +632,7 @@
     {
       "name": "input-otp",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "input-otp@1.5.0"
       ],
       "files": [
@@ -653,7 +653,7 @@
     {
       "name": "item",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "separator"
@@ -675,7 +675,7 @@
     {
       "name": "kbd",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -694,7 +694,7 @@
     {
       "name": "label",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -714,7 +714,7 @@
     {
       "name": "marker",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -727,7 +727,7 @@
     {
       "name": "menubar",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "dropdown-menu"
@@ -750,7 +750,7 @@
     {
       "name": "message",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -763,7 +763,7 @@
     {
       "name": "message-scroller",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "@shadcn/react@0.3.1"
       ],
       "registryDependencies": [
@@ -780,7 +780,7 @@
     {
       "name": "native-select",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -799,7 +799,7 @@
     {
       "name": "navigation-menu",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -819,7 +819,7 @@
     {
       "name": "pagination",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button"
@@ -841,7 +841,7 @@
     {
       "name": "popover",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -861,7 +861,7 @@
     {
       "name": "progress",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -881,7 +881,7 @@
     {
       "name": "questionnaire",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "@shadcn/react@0.3.1"
       ],
       "registryDependencies": [
@@ -904,7 +904,7 @@
     {
       "name": "radio-group",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -924,8 +924,8 @@
     {
       "name": "resizable",
       "dependencies": [
-        "cn@0.5.0",
-        "react-resizable-panels@4.14.5"
+        "cn@0.5.2",
+        "react-resizable-panels@4.17.0"
       ],
       "files": [
         {
@@ -945,7 +945,7 @@
     {
       "name": "scroll-area",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -965,7 +965,7 @@
     {
       "name": "select",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -985,7 +985,7 @@
     {
       "name": "separator",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1005,7 +1005,7 @@
     {
       "name": "sheet",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button"
@@ -1028,7 +1028,7 @@
     {
       "name": "sidebar",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "button",
@@ -1056,7 +1056,7 @@
     {
       "name": "skeleton",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1075,7 +1075,7 @@
     {
       "name": "slider",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1116,7 +1116,7 @@
     {
       "name": "spinner",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1135,7 +1135,7 @@
     {
       "name": "switch",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1155,7 +1155,7 @@
     {
       "name": "table",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1174,7 +1174,7 @@
     {
       "name": "tabs",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1194,7 +1194,7 @@
     {
       "name": "textarea",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1213,7 +1213,7 @@
     {
       "name": "toast",
       "dependencies": [
-        "cn@0.5.0",
+        "cn@0.5.2",
         "@base-ui/react@1.9.0"
       ],
       "registryDependencies": [
@@ -1237,7 +1237,7 @@
     {
       "name": "toggle",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1257,7 +1257,7 @@
     {
       "name": "toggle-group",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "toggle"
@@ -1280,7 +1280,7 @@
     {
       "name": "tooltip",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1301,7 +1301,7 @@
     {
       "name": "trace",
       "dependencies": [
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "registryDependencies": [
         "collapsible"
@@ -1323,7 +1323,7 @@
     {
       "name": "use-highlighted-code",
       "dependencies": [
-        "shiki@4.5.0"
+        "shiki@4.6.0"
       ],
       "files": [
         {
@@ -1352,7 +1352,7 @@
       "type": "registry:ui",
       "dependencies": [
         "@base-ui/react@1.9.0",
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {
@@ -1366,7 +1366,7 @@
       "type": "registry:ui",
       "dependencies": [
         "@base-ui/react@1.9.0",
-        "cn@0.5.0"
+        "cn@0.5.2"
       ],
       "files": [
         {

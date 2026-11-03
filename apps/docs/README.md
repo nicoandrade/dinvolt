@@ -4,7 +4,7 @@ The official English documentation lives in this public repository and is built 
 
 ## Development
 
-Use Node.js 24+ and the repository's Bun version. Install from the repository root; `apps/docs` is a private Bun workspace with the shared root lockfile.
+Use Node.js 24.15+ and the repository's Bun version. Install from the repository root; `apps/docs` is a private Bun workspace with the shared root lockfile.
 
 ```sh
 bun install --frozen-lockfile

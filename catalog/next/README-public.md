@@ -4,7 +4,7 @@ This public website was initialized with **Dinvolt**. It includes Next.js App Ro
 
 ## Start here
 
-Use **Node.js 24+** and **{{PACKAGE_MANAGER}}**, the package manager selected for this project. Dependencies are already installed. From the project folder, run:
+Use **Node.js 24.15+** and **{{PACKAGE_MANAGER}}**, the package manager selected for this project. Dependencies are already installed. From the project folder, run:
 
 ```sh
 {{SCRIPT:dev}}

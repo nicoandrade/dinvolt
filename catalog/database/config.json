@@ -4,19 +4,19 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@next/env": "^16.4.2",
+    "@next/env": "^16.4.5",
     "drizzle-kit": "^0.31.11"
   },
   "providers": {
     "turso": {
       "dependencies": {
         "@tursodatabase/serverless": "^1.4.1",
-        "drizzle-orm": "1.0.0-rc.4"
+        "drizzle-orm": "1.0.0-rc.5"
       },
-      "devDependencies": { "drizzle-kit": "1.0.0-rc.4" }
+      "devDependencies": { "drizzle-kit": "1.0.0-rc.5" }
     },
     "planetscale-postgres": {
-      "dependencies": { "@vercel/functions": "^3.10.1", "pg": "^8.23.1" },
+      "dependencies": { "@vercel/functions": "^3.10.6", "pg": "^8.23.1" },
       "devDependencies": { "@types/pg": "^8.23.1" }
     }
   }

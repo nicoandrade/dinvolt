@@ -8,7 +8,7 @@
       "type": "registry:ui",
       "title": "Dinvolt admin spinner",
       "description": "Dinvolt's filled SVG arc spinner with a 500 ms rotation and the shadcn/ui Spinner API.",
-      "dependencies": ["cn@0.5.0"],
+      "dependencies": ["cn@0.5.2"],
       "meta": {
         "dinvolt": {
           "version": "1.0.0",
@@ -58,8 +58,8 @@
         "switch"
       ],
       "dependencies": [
-        "react-hook-form@7.90.0",
-        "@hookform/resolvers@5.9.2",
+        "react-hook-form@7.91.0",
+        "@hookform/resolvers@7.0.2",
         "zod@4.6.7",
         "@tanstack/react-table@9.3.1"
       ],
@@ -479,7 +479,7 @@
       "title": "Dinvolt public action buttons",
       "description": "ActionButton, CopyButton and two-step DeleteButton using the public Button, Spinner and theme.",
       "registryDependencies": ["button", "spinner"],
-      "dependencies": ["cn@0.5.0"],
+      "dependencies": ["cn@0.5.2"],
       "meta": {
         "dinvolt": {
           "version": "1.0.0",

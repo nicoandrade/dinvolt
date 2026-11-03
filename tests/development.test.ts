@@ -31,9 +31,11 @@ test("local URLs support package names that are not DNS labels", () => {
   );
 });
 
-test("only create requires the Node.js version needed by Portless", () => {
-  expect(() => checkDevelopmentRuntime("22.18.0")).toThrow("Node.js 24");
-  expect(() => checkDevelopmentRuntime("24.0.0")).not.toThrow();
+test("create checks the Node.js version needed by Portless and Ultracite", () => {
+  for (const version of ["22.22.2", "23.11.0", "24.0.0", "24.14.9"]) {
+    expect(() => checkDevelopmentRuntime(version)).toThrow("Node.js 24.15");
+  }
+  expect(() => checkDevelopmentRuntime("24.15.0")).not.toThrow();
   expect(() => checkDevelopmentRuntime("26.0.0")).not.toThrow();
 });
 
@@ -69,8 +71,8 @@ test.each([
     );
     expect(manifest.scripts.build).toBe("next build");
     expect(manifest.scripts.start).toBe("next start");
-    expect(manifest.devDependencies.portless).toBe("0.15.8");
-    expect(manifest.engines.node).toBe(">=24");
+    expect(manifest.devDependencies.portless).toBe("0.15.13");
+    expect(manifest.engines.node).toBe(">=24.15.0");
     expect(
       await readFile(join(project.path, "docs/licenses/dinvolt.txt"))
     ).toEqual(await readFile(new URL("../LICENSE", import.meta.url)));

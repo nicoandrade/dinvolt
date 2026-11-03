@@ -4,7 +4,7 @@ This app was initialized with **Dinvolt**. It comes with Next.js App Router, Typ
 
 ## Start here
 
-Use **Node.js 24+** and **{{PACKAGE_MANAGER}}**, the package manager selected for this project. Dinvolt has already installed the dependencies. From the project folder, run:
+Use **Node.js 24.15+** and **{{PACKAGE_MANAGER}}**, the package manager selected for this project. Dinvolt has already installed the dependencies. From the project folder, run:
 
 ```sh
 {{SCRIPT:dev}}

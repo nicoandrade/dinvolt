@@ -181,9 +181,9 @@ export async function prepareStarter(
   };
   manifest.devDependencies = {
     ...manifest.devDependencies,
-    portless: "0.15.8",
+    portless: "0.15.13",
   };
-  manifest.engines = { ...manifest.engines, node: ">=24" };
+  manifest.engines = { ...manifest.engines, node: ">=24.15.0" };
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   for (const [sourceName, target] of [
     ["page.tsx", "src/app/page.tsx"],
@@ -352,7 +352,7 @@ export async function configureProject(
             }
           : {}),
         ultracite: {
-          version: "8.0.1",
+          version: "8.1.1",
           linter: setup.linter,
           agents: ["universal"],
           frameworks: ["react", "next"],

@@ -26,7 +26,7 @@ See [what each project type includes](https://docs.dinvolt.com/project-types).
 
 ## Get started
 
-Use **Node.js 24 or later**, **npm** and **Git**. Bun, pnpm and Yarn are also supported for the generated application.
+Use **Node.js 24.15 or later**, **npm** and **Git**. Bun, pnpm and Yarn are also supported for the generated application.
 
 ### 1. Create your project
 

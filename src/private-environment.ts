@@ -128,7 +128,7 @@ export function mergeEnvironment(
 ) {
   const remaining = new Map(variables);
   const seen = new Set<string>();
-  const merged = original.replace(
+  const merged = original.replaceAll(
     assignment,
     (
       line,

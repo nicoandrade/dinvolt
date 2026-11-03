@@ -154,6 +154,7 @@ Client session checks control presentation. Validate a session again wherever se
 // src/lib/current-user.ts
 import "server-only";
 import { headers } from "next/headers";
+
 import { getAuth } from "@/lib/auth";
 
 export async function getCurrentUser() {

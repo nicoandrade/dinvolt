@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import settings from "../catalog/skills/config.json" with { type: "json" };
@@ -108,8 +108,13 @@ export async function installProjectSkills(
             throw new Error(`Empty SKILL.md for ${name} (${target.agent}).`);
           }
         }
+        // Skills stores local sources relative to the project in newer locks.
+        const lockedSource = lock.skills?.[name]?.source;
         if (
-          lock.skills?.[name]?.source !== installSource ||
+          typeof lockedSource !== "string" ||
+          (bundled
+            ? resolve(directory, lockedSource) !== installSource
+            : lockedSource !== installSource) ||
           !lock.skills[name].computedHash
         ) {
           throw new Error(`Missing project lock entry for ${name}.`);

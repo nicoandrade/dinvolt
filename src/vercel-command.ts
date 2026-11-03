@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 
 import { CancelledError } from "./wizard-prompts.ts";
 
-export const vercelVersion = "64.5.0";
+export const vercelVersion = "65.11.0";
 export interface VercelCommand {
   args: string[];
   input?: string;

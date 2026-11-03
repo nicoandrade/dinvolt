@@ -6,7 +6,7 @@ From the repository root, run:
 bun run test:e2e
 ```
 
-This is an internal, on-demand check. It does not run as part of `bun run check`, create GitHub workflows or deploy anything. It requires Node.js 24+, Bun, network access to install starter dependencies and reach Turso, and Playwright Chromium. If Chromium is missing, install it once with `bunx playwright install chromium`.
+This is an internal, on-demand check. It does not run as part of `bun run check`, create GitHub workflows or deploy anything. It requires Node.js 24.15+, Bun, network access to install starter dependencies and reach Turso, and Playwright Chromium. If Chromium is missing, install it once with `bunx playwright install chromium`.
 
 The root ignored `.env.demo.local` must contain `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` for the disposable internal test database. The runner reads only these two values, without executing the file or printing them. It strips inherited database/deployment/auth settings and injects explicit development credentials and a fresh auth secret into child processes. Before remote operations, the worker loads the generated app's dotenv files and checks its effective database selector and credentials against that internal source. Missing setup or a mismatch fails the run; it never falls back to another database.
 

@@ -17,7 +17,7 @@ const argumentSeparator = /^ -- /u;
 const explicitManager = /--package-manager(?:=|\s+)(?:npm|bun|pnpm|yarn)\b/gu;
 
 function convertLine(line: string, manager: PackageManager): string {
-  const selected = line.replace(
+  const selected = line.replaceAll(
     explicitManager,
     `--package-manager ${manager}`
   );
@@ -38,7 +38,7 @@ function convertLine(line: string, manager: PackageManager): string {
 
 /** Render ordinary repository shell examples with Blume's native code switcher. */
 export function withPackageManagerTabs(markdown: string): string {
-  return markdown.replace(
+  return markdown.replaceAll(
     shellFence,
     (fence: string, marker: string, language: string, body: string) => {
       const lines = body.trimEnd().split("\n");
