@@ -6,7 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.5.0...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.6.0...HEAD)
+
+## 0.6.0 - 2026-11-03
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.5.0...v0.6.0)
+
+### Changed
+
+- **Breaking:** creating projects and running newly generated apps now requires Node.js 24.15 or later. Other CLI commands require Node.js 22.22.2 or later on the 22.x line, or Node.js 24.15 or later. Upgrade Node.js before updating Dinvolt; the CLI checks the creation requirement before scaffolding.
+- Refresh the CLI, generated project dependencies and documentation tooling, including Next.js 16.4.5, Ultracite 8.1.1, shadcn 4.23.0, Skills 1.7.6, Portless 0.15.13 and Vercel CLI 65.11.0.
+- Update generated tRPC packages together to 11.23.0 and Turso's Drizzle ORM and Kit together to 1.0.0-rc.5. Refresh UI, form, email and query dependencies in both component profiles.
+
+### Fixed
+
+- Preserve bundled skill installation and portable lock entries with the relative local source paths written by the updated Skills CLI.
+- Keep generated label wrappers compatible with current lint rules while retaining label-association checks in application forms.
+
+### Security
+
+- New authenticated projects use Better Auth, its Drizzle adapter and its auth CLI at 1.7.16, including the fixes in the [November 3 security release](https://better-auth.com/blog/security-release-2026-11-03). Existing applications must update their own dependencies separately.
+- Update compatible transitive dependencies to address the body-parser, fast-uri and systeminformation advisories. Additional upstream advisories remain; this release does not claim a clean dependency audit.
 
 ## 0.5.0 - 2026-10-25
 
