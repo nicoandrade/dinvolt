@@ -38,12 +38,17 @@ const LoginForm = ({
   defaultValues?: { email: string; password: string };
 }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     defaultValues: defaultValues ?? { email: "", password: "" },
     resolver: zodResolver(loginSchema),
   });
+  const pending = form.formState.isSubmitting || isRedirecting;
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    if (isRedirecting) {
+      return;
+    }
     form.clearErrors("root");
     try {
       const result = await authClient.signIn.email(values);
@@ -53,9 +58,12 @@ const LoginForm = ({
         });
         return;
       }
+      // Keep the pending state until navigation unmounts the login form.
+      setIsRedirecting(true);
       await resetQueryCache();
       window.location.assign("/admin/home");
     } catch {
+      setIsRedirecting(false);
       form.setError("root", {
         message: "Unable to connect. Please try again.",
       });
@@ -64,7 +72,7 @@ const LoginForm = ({
 
   return (
     <form
-      aria-busy={form.formState.isSubmitting}
+      aria-busy={pending}
       className="flex flex-col gap-6"
       onSubmit={form.handleSubmit(onSubmit)}
     >
@@ -153,7 +161,7 @@ const LoginForm = ({
         )}
         <Field>
           <ActionButton
-            pending={form.formState.isSubmitting}
+            pending={pending}
             pendingLabel="Signing in…"
             size="lg"
             type="submit"
