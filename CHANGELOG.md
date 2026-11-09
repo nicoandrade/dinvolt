@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.6.0...HEAD)
+[Compare unreleased changes](https://github.com/nicoandrade/dinvolt/compare/v0.6.1...HEAD)
+
+## 0.6.1 - 2026-11-09
+
+[Compare changes](https://github.com/nicoandrade/dinvolt/compare/v0.6.0...v0.6.1)
+
+### Fixed
+
+- Keep the generated sign-in button's pending label and spinner active until successful navigation leaves the login page. Block duplicate submissions during that transition and allow retries if sign-in or navigation fails.
 
 ## 0.6.0 - 2026-11-03
 
